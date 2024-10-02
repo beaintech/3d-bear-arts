@@ -25,12 +25,12 @@
       // Enable gamma correction
       renderer.outputEncoding = THREE.sRGBEncoding;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.25;
+      renderer.toneMappingExposure = 1.25;  
       
       threeContainer.value.appendChild(renderer.domElement);
   
       // Add lighting (increase intensities and add a point light)
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Increased intensity
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Increased intensity
       scene.add(ambientLight);
   
       const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Increased intensity
@@ -74,14 +74,14 @@
 
         const hotPinkMaterial = new THREE.MeshStandardMaterial({
             color: 0xFF69B4,
-            metalness: -0.5,
-            roughness: 1
+            metalness: -0.8,
+            roughness: 0.7
         });
 
         const blueMaterial = new THREE.MeshStandardMaterial({
             color: 0x00FFFF,
-            metalness: 0.3,
-            roughness: 1
+            metalness: 0.4,
+            roughness: 0.7
         });
   
       // Create the bear group and all parts
@@ -176,7 +176,7 @@
           const xEyeGeometry = new TextGeometry('X', {
             font: font,
             size: 0.18, // Size of the X
-            height: 0.05,
+            depth: 0.05,
           });
   
           const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
@@ -189,14 +189,16 @@
         // Create the O eye
           const oEyeGeometry = new TextGeometry('+', {
             font: font,
-            size: 0.2, // Size of the O
-            height: 0.05, // Thickness of the O
+            size: 0.25, // Size of the O
+            depth: 0.1, // Thickness of the O
         });
 
             const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
             const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-            oEye.position.set(0.18, 0.98, 0.55); // Position on the head
-            oEye.rotation.y = THREE.MathUtils.degToRad(32);
+            oEye.position.set(0.17, 0.95, 0.5); // Position on the head
+            oEye.rotation.y = THREE.MathUtils.degToRad(12);
+            oEye.rotation.x = THREE.MathUtils.degToRad(-5);
+
 
             bearGroup.add(oEye);
         });

@@ -8,7 +8,6 @@
   import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; // Correct FontLoader import
   import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; // Correct TextGeometry import
   
-  
   const threeCanvas = ref<HTMLDivElement | null>(null);
   
   onMounted(() => {
