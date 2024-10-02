@@ -239,7 +239,7 @@
       // Animation function
       function animate() {
         requestAnimationFrame(animate);
-        bearGroup.rotation.y += 0.02; // Rotation speed fixed to match original
+        bearGroup.rotation.y += 0.05; // Rotation speed fixed to match original
         renderer.render(scene, camera);
       }
   

@@ -42,15 +42,15 @@ onMounted(() => {
 
     const bigHeartMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                time: { value: 0 }, // Time uniform for animation
-                color1: { value: new THREE.Color(0xFFD700) }, // Gold color
-                color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
-                metalness: 0.2, // Lower metalness for a more plastic feel
-            roughness: 0.6, // Increase roughness for a more matte appearance
-            clearcoat: 0.1, // Low clearcoat for minimal shine
-            clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
-            transparent: true,
-            opacity: 0.99, // Less transparent, more solid plastic look
+              time: { value: 0 }, // Time uniform for animation
+              color1: { value: new THREE.Color(0xFFD700) }, // Gold color
+              color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
+              metalness: 0.2, // Lower metalness for a more plastic feel
+              roughness: 0.6, // Increase roughness for a more matte appearance
+              clearcoat: 0.1, // Low clearcoat for minimal shine
+              clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
+              transparent: true,
+              opacity: 0.99, // Less transparent, more solid plastic look
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -242,8 +242,8 @@ onMounted(() => {
     // Animation function
     function animate() {
       requestAnimationFrame(animate);
-      bearGroup.rotation.y += 0.02; // Rotation speed fixed to match original
-      bigHeartMaterial.uniforms.time.value += 0.02; // Same animation speed
+      bearGroup.rotation.y += 0.04; // Rotation speed fixed to match original
+      bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
       renderer.render(scene, camera);
     }
 

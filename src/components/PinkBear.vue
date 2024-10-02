@@ -219,8 +219,8 @@
       // Animation function
       function animate() {
         requestAnimationFrame(animate);
-        bearGroup.rotation.y += 0.02; // Rotation speed fixed to match original
-        bigHeartMaterial.uniforms.time.value += 0.02; // Same animation speed
+        bearGroup.rotation.y += 0.04; // Rotation speed fixed to match original
+        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
         renderer.render(scene, camera);
       }
   
