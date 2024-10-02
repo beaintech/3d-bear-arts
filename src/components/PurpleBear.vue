@@ -40,35 +40,40 @@ onMounted(() => {
     pointLight.position.set(0, 2, 4); // Position near the front of the bear
     scene.add(pointLight);
 
-    // Shader material with gradient animation for the bear's body
     const bigHeartMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { value: 0 },
-        color1: { value: new THREE.Color(0xFFD700) }, // Gold color
-        color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
-      },
-      vertexShader: `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform float time;
-        uniform vec3 color1;
-        uniform vec3 color2;
-        varying vec2 vUv;
-        void main() {
-          vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
-          gl_FragColor = vec4(color, 1.0);
-        }
-      `,
-    });
+            uniforms: {
+                time: { value: 0 }, // Time uniform for animation
+                color1: { value: new THREE.Color(0xFFD700) }, // Gold color
+                color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
+                metalness: 0.2, // Lower metalness for a more plastic feel
+            roughness: 0.6, // Increase roughness for a more matte appearance
+            clearcoat: 0.1, // Low clearcoat for minimal shine
+            clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
+            transparent: true,
+            opacity: 0.99, // Less transparent, more solid plastic look
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                uniform vec3 color1;
+                uniform vec3 color2;
+                varying vec2 vUv;
+                void main() {
+                    vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5); // Gradient animation formula
+                    gl_FragColor = vec4(color, 1.0); // Set the fragment color
+                }
+            `
+        });
 
     // Gummy pink material for the bear (reduce roughness to make it shinier)
     const gummyMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xFF69B4, // Hot pink
+      color: 0xA155E8, // Hot pink
       metalness: 0.2, // Increased metalness for more light reflection
       roughness: 0.5, // Reduced roughness for a shinier appearance
       clearcoat: 0.1, // Higher clearcoat for more shine
@@ -86,6 +91,16 @@ onMounted(() => {
       transparent: true,
       opacity: 0.99,
     });
+
+    const yellowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFDE910, // Pink color (Hot Pink)
+            metalness: 0.2, // Lower metalness for a more plastic feel
+            roughness: 0.6, // Increase roughness for a more matte appearance
+            clearcoat: 0.1, // Low clearcoat for minimal shine
+            clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
+            transparent: true,
+            opacity: 0.99, // Less transparent, more solid plastic look
+        });
 
     // Create the bear group and all parts
     const bearGroup = new THREE.Group();
@@ -133,7 +148,7 @@ onMounted(() => {
     const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
     const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
 
-    const heart = new THREE.Mesh(heartGeometry, heartMaterial);
+    const heart = new THREE.Mesh(heartGeometry, bigHeartMaterial);
     heart.scale.set(0.5, 0.5, 0.5);
     heart.position.set(0, 0.34, 0.8);
     heart.rotation.y = Math.PI;
@@ -189,7 +204,7 @@ onMounted(() => {
 
     // Bear tail
     const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-    const tail = new THREE.Mesh(tailGeometry, heartMaterial);
+    const tail = new THREE.Mesh(tailGeometry, yellowMaterial);
     tail.position.set(0, -0.35, -0.8);
     bearGroup.add(tail);
 
@@ -206,14 +221,20 @@ onMounted(() => {
         const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
         xEye.position.set(-0.34, 1, 0.5); // Position on the head
         bearGroup.add(xEye);
-      });
 
-        // Create the O eye
-        const oEyeGeometry = new THREE.SphereGeometry(0.1, 32, 32); // Smaller sphere for O eye
+        const oEyeGeometry = new TextGeometry('O', {
+            font: font,
+            size: 0.2, // Size of the O
+            depth: 0.05, // Thickness of the O
+        });
+
         const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
         const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-        oEye.position.set(0.2, 1.1, 0.54); // Position on the head
+        oEye.position.set(0.18, 1, 0.53); // Position on the heart
+        oEye.rotation.y = THREE.MathUtils.degToRad(32);
+
         bearGroup.add(oEye);
+      });
 
     // Add bear group to the scene
     scene.add(bearGroup);
@@ -246,28 +267,28 @@ onMounted(() => {
 <style scoped>
 #three-canvas {
   margin: 0;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 182, 193, 0.8), rgba(135, 206, 250, 0.8), rgba(254, 0, 127, 0.993));
-  background-size: 200% 200%;
-  background-repeat: no-repeat;
-  animation: heartTunnel 1s infinite linear;
-}
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, rgb(247, 247, 0), rgba(135, 206, 250, 0.8), rgb(141, 2, 255));
+            background-size: 200% 200%;
+            background-repeat: no-repeat;
+            animation: heartTunnel 1s infinite linear;
+        }
 
-/* Keyframes for heart tunnel-like animation */
-@keyframes heartTunnel {
-  0% {
-    background-size: 150% 150%;
-    background-position: center;
-  }
-  50% {
-    background-size: 100% 100%;
-    background-position: center;
-  }
-  100% {
-    background-size: 150% 150%;
-    background-position: center;
-  }
-}
+        /* Keyframes for heart tunnel-like animation */
+        @keyframes heartTunnel {
+            0% {
+                background-size: 150% 150%;
+                background-position: center;
+            }
+            50% {
+                background-size: 100% 100%;
+                background-position: center;
+            }
+            100% {
+                background-size: 150% 150%;
+                background-position: center;
+            }
+        }
 </style>
