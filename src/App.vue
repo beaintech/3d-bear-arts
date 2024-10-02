@@ -1,7 +1,9 @@
 <template>
   <nav>
-      <router-link to="/">Pink Bear</router-link>
+      <router-link to="/pink">Pink Bear</router-link>
       <router-link to="/purple">Purple Bear</router-link>
+      <router-link to="/pinkBlue">Pink Blue Bear</router-link>
+      <router-link to="/diamond">Diamond Bear</router-link>
     </nav>
   <div id="app">
     <router-view></router-view>
