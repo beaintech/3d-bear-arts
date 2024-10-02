@@ -9,10 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.37"
+    "three": "^0.169.0",
+    "vue": "^3.4.37",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
+    "@types/three": "^0.169.0",
     "@vitejs/plugin-vue": "^5.1.2",
+    "@vue/compiler-sfc": "^3.5.10",
+    "@vue/runtime-core": "^3.5.10",
     "typescript": "^5.5.3",
     "vite": "^5.4.1",
     "vue-tsc": "^2.0.29"
