@@ -161,20 +161,20 @@ onMounted(() => {
     rightLeg.position.set(0.4, -1, 0);
     bearGroup.add(rightLeg);
 
-    // Define the boot front geometry
-    const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
+  // Define the boot front geometry
+  const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
 
-    // Left boot front
-    const leftBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
-    leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
-    leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
-    bearGroup.add(leftBootFront);
+  // Left boot front
+  const leftBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
+  leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
+  leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
+  bearGroup.add(leftBootFront);
 
-    // Right boot front
-    const rightBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
-    rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
-    rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
-    bearGroup.add(rightBootFront);
+  // Right boot front
+  const rightBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
+  rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
+  rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
+  bearGroup.add(rightBootFront);
 
          // Create rounded buttocks
          const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
