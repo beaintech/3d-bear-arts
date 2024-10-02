@@ -4,7 +4,7 @@ import PinkBear from '../components/PinkBear.vue';
 import PurpleBear from '../components/PurpleBear.vue';
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', name: 'ThreeScene', component: PinkBear },
+  { path: '/', name: 'ThreeScene', component: ThreeScene },
   { path: '/pink', name: 'PinkBear', component: PinkBear },
   { path: '/purple', name: 'PurpleBear', component: PurpleBear },
 ];
