@@ -1,5 +1,5 @@
 <template>
-  <div ref="threeContainer" class="three-container"></div>
+  <div ref="threeContainer" :class="background? 'no-bg':'three-container'"></div>
 </template>
 
   <script setup lang="ts">
@@ -296,7 +296,7 @@
   </script>
   
   <style scoped>
-  /* .three-container {
+  .three-container {
     margin: 0;
             height: 100vh;
             width: 100vw;
@@ -321,6 +321,14 @@
                 background-size: 200% 200%;
                 background-position: center;
             }
-        } */
+        } 
+
+        .no-bg {
+          margin: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: none;  
+        }
   </style>
   

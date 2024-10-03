@@ -49,7 +49,7 @@ const cameraPosition = ref(4);
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 130vh;;
+  height: 100vh;;
 }
 
 .bear-group {
