@@ -19,7 +19,7 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       
       // Enable gamma correction
-      renderer.outputEncoding = THREE.sRGBEncoding;
+      // renderer.outputEncoding = THREE.sRGBEncoding;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.25;
       

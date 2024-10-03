@@ -7,7 +7,7 @@ import { ref, onMounted } from 'vue';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; // Correct FontLoader import
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; // Correct TextGeometry import
-import { sRGBEncoding } from 'three';
+// import { sRGBEncoding } from 'three';
 
 const threeCanvas = ref<HTMLDivElement | null>(null);
 
@@ -20,7 +20,7 @@ onMounted(() => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     
     // Enable gamma correction
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    // renderer.outputEncoding = THREE.sRGBEncoding;
 
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
@@ -45,12 +45,12 @@ onMounted(() => {
               time: { value: 0 }, // Time uniform for animation
               color1: { value: new THREE.Color(0xFFD700) }, // Gold color
               color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
-              metalness: 0.2, // Lower metalness for a more plastic feel
-              roughness: 0.6, // Increase roughness for a more matte appearance
-              clearcoat: 0.1, // Low clearcoat for minimal shine
-              clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
-              transparent: true,
-              opacity: 0.99, // Less transparent, more solid plastic look
+              // metalness: 0.2, // Lower metalness for a more plastic feel
+              // roughness: 0.6, // Increase roughness for a more matte appearance
+              // clearcoat: 0.1, // Low clearcoat for minimal shine
+              // clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
+              // transparent: true,
+              // opacity: 0.99, // Less transparent, more solid plastic look
             },
             vertexShader: `
                 varying vec2 vUv;
