@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import ThreeScene from './components/ThreeScene.vue';
+
 // No additional script needed for the main layout in this case
 </script>
 
