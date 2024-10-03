@@ -4,6 +4,7 @@ import PinkBear from '../components/PinkBear.vue';
 import PurpleBear from '../components/PurpleBear.vue';
 import DiamondBear from '../components/DiamondBear.vue';
 import PinkBlueBear from '../components/PinkBlueBear.vue';
+import GlassBear from '../components/GlassBear.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'ThreeScene', component: ThreeScene },
@@ -11,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/purple', name: 'PurpleBear', component: PurpleBear },
   { path: '/pinkBlue', name: 'PinkBlueBear', component: PinkBlueBear },
   { path: '/diamond', name: 'DiamondBear', component: DiamondBear },
-
+  { path: '/glass', name: 'GlassBear', component: GlassBear },
 ];
 
 const router = createRouter({
