@@ -161,10 +161,10 @@ onMounted(() => {
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
         const leftLeg = new THREE.Mesh(legGeometry, gummyMaterial);
-        leftLeg.position.set(-0.4, -1, 0);
+        leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
         const rightLeg = new THREE.Mesh(legGeometry, gummyMaterial);
-        rightLeg.position.set(0.4, -1, 0);
+        rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
@@ -281,7 +281,7 @@ function __VLS_template() {
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeCanvas"), id: ("three-canvas"), });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeCanvas"), id: ("three-canvas"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-container')) }, });
     // @ts-ignore navigation for `const threeCanvas = ref()`
     __VLS_ctx.threeCanvas;
     var __VLS_slots;

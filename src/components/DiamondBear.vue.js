@@ -111,10 +111,10 @@ onMounted(() => {
     bearGroup.add(rightBootFront);
     const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
     const leftLeg = new THREE.Mesh(legGeometry, shaderMaterial);
-    leftLeg.position.set(-0.4, -1, 0);
+    leftLeg.position.set(-0.4, -1.05, 0);
     bearGroup.add(leftLeg);
     const rightLeg = new THREE.Mesh(legGeometry, shaderMaterial);
-    rightLeg.position.set(0.4, -1, 0);
+    rightLeg.position.set(0.4, -1.05, 0);
     bearGroup.add(rightLeg);
     // Buttocks and tail
     const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32);
