@@ -181,7 +181,7 @@
   
           const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
             const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
-            xEye.position.set(-0.34, 0.95, 0.5); // Position on the head
+            xEye.position.set(-0.3, 0.95, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
             bearGroup.add(xEye);
@@ -195,7 +195,7 @@
 
             const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
             const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-            oEye.position.set(0.17, 0.95, 0.5); // Position on the head
+            oEye.position.set(0.14, 0.95, 0.5); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
 
@@ -239,7 +239,7 @@
       // Animation function
       function animate() {
         requestAnimationFrame(animate);
-        bearGroup.rotation.y += 0.05; // Rotation speed fixed to match original
+        bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
         renderer.render(scene, camera);
       }
   
@@ -266,7 +266,7 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, rgb(2, 234, 6), rgba(252, 248, 1, 0.99), rgb(141, 2, 255), rgb(255, 120, 2),rgb(255, 2, 133));
+            background: radial-gradient(circle at 50% 50%, rgb(255, 255, 255), rgba(252, 248, 1, 0.99), rgb(141, 2, 255), rgb(255, 120, 2),rgb(255, 2, 133));
             background-size: 200% 200%;
             background-repeat: no-repeat;
             animation: heartTunnel 3s infinite linear;

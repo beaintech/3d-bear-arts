@@ -5,8 +5,8 @@
   <script setup lang="ts">
   import { ref, onMounted } from 'vue';
   import * as THREE from 'three';
-  import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; // Correct FontLoader import
-  import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; // Correct TextGeometry import
+  import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; 
+  import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
   
   const threeCanvas = ref<HTMLDivElement | null>(null);
   
@@ -219,8 +219,8 @@
       // Animation function
       function animate() {
         requestAnimationFrame(animate);
-        bearGroup.rotation.y += 0.04; // Rotation speed fixed to match original
-        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
+        bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
+        bigHeartMaterial.uniforms.time.value += 0.03; // Same animation speed
         renderer.render(scene, camera);
       }
   

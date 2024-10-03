@@ -230,7 +230,7 @@ onMounted(() => {
 
         const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
         const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-        oEye.position.set(0.18, 1, 0.53); // Position on the heart
+        oEye.position.set(0.16, 1, 0.53); // Position on the heart
         oEye.rotation.y = THREE.MathUtils.degToRad(32);
 
         bearGroup.add(oEye);
@@ -242,8 +242,8 @@ onMounted(() => {
     // Animation function
     function animate() {
       requestAnimationFrame(animate);
-      bearGroup.rotation.y += 0.04; // Rotation speed fixed to match original
-      bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
+      bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
+      bigHeartMaterial.uniforms.time.value += 0.03; // Same animation speed
       renderer.render(scene, camera);
     }
 
