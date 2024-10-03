@@ -151,11 +151,11 @@
       // Bear legs
       const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
       const leftLeg = new THREE.Mesh(legGeometry, hotPinkMaterial);
-      leftLeg.position.set(-0.4, -1, 0);
+      leftLeg.position.set(-0.4, -1.05, 0);
       bearGroup.add(leftLeg);
   
       const rightLeg = new THREE.Mesh(legGeometry, blueMaterial);
-      rightLeg.position.set(0.4, -1, 0);
+      rightLeg.position.set(0.4, -1.05, 0);
       bearGroup.add(rightLeg);
   
     // Define the boot front geometry

@@ -68,7 +68,7 @@ onMounted(() => {
     const bodyMaterial = new THREE.ShaderMaterial({
         uniforms: {
             time: { value: 0.0 }, // Time uniform to animate the shader
-            opacity: { value: 0.6 } // Opacity uniform (set to 0.6 for 60% transparency)
+            opacity: { value: 0.65 } // Opacity uniform (set to 0.6 for 60% transparency)
         },
         vertexShader,
         fragmentShader,

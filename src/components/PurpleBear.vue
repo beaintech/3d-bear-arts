@@ -1,5 +1,5 @@
 <template>
-  <div ref="threeCanvas" id="three-canvas"></div>
+  <div ref="threeCanvas" id="three-canvas" :class="background? 'no-bg':'three-container'"></div>
 </template>
 
 <script setup lang="ts">
@@ -189,11 +189,11 @@ onMounted(() => {
     // Bear legs
     const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
     const leftLeg = new THREE.Mesh(legGeometry, gummyMaterial);
-    leftLeg.position.set(-0.4, -1, 0);
+    leftLeg.position.set(-0.4, -1.05, 0);
     bearGroup.add(leftLeg);
 
     const rightLeg = new THREE.Mesh(legGeometry, gummyMaterial);
-    rightLeg.position.set(0.4, -1, 0);
+    rightLeg.position.set(0.4, -1.05, 0);
     bearGroup.add(rightLeg);
 
     // Define the boot front geometry
@@ -285,8 +285,6 @@ onMounted(() => {
       camera.lookAt(props.bodyPosition.x, 0, 0);
     });
   
-  
-
     // Handle window resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -324,4 +322,16 @@ onMounted(() => {
                 background-position: center;
             }
         }
+
+  .three-container {
+    background-color: transparent;
+  }
+
+  .no-bg {
+          margin: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: none;  
+      }
 </style>

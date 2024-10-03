@@ -274,10 +274,9 @@ function __VLS_template() {
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeContainer"), ...{ class: ("three-container") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeContainer"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-container')) }, });
     // @ts-ignore navigation for `const threeContainer = ref()`
     __VLS_ctx.threeContainer;
-    __VLS_styleScopedClasses['three-container'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
     const __VLS_refs = {

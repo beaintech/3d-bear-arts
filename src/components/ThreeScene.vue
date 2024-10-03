@@ -4,18 +4,6 @@
     <PurpleBear :background="true" :cameraPosition="8" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
     <PinkBlueBear :background="true" :cameraPosition="8" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
 
-  <!-- <div class="bear-page">
-      <PinkBear :background="true" :cameraPosition="8" :bodyPosition="{ x:-15, y:0, z: 0 }"/>
-  </div>
-
-  <div class="bear-group">
-    <div class="bear-container">
-      <PurpleBear :background="true" :cameraPosition="8" :bodyPosition="{ x: -15,  y: 0, z: 0 }"/>
-    </div>
-    <div class="bear-container">
-      <PinkBlueBear :background="true" :cameraPosition="8" :bodyPosition="{ x: -18,  y: 0, z: 0 }"/>
-    </div>
-  </div> -->
 </div>
 </template>
 
