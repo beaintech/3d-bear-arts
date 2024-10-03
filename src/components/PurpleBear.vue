@@ -269,7 +269,7 @@ onMounted(() => {
     // Start animation
     animate();
 
-    // Set initial positions for bearGroup and camera
+ // Set initial positions for bearGroup and camera
     bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
     camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
     camera.lookAt(props.bodyPosition.x, 0, 0);
@@ -284,6 +284,7 @@ onMounted(() => {
       camera.position.set(props.bodyPosition.x, 1, newPos);
       camera.lookAt(props.bodyPosition.x, 0, 0);
     });
+  
   
 
     // Handle window resize

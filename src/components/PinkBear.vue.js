@@ -1,8 +1,22 @@
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
+const props = defineProps({
+    background: {
+        type: Boolean,
+        default: false
+    },
+    cameraPosition: {
+        type: Number,
+        default: 4
+    },
+    bodyPosition: {
+        type: Object,
+        default: () => ({ x: 0, y: 0, z: 0 })
+    }
+});
 const threeCanvas = ref(null);
 onMounted(() => {
     if (threeCanvas.value) {
@@ -11,6 +25,12 @@ onMounted(() => {
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        if (props.background) {
+            renderer.setClearColor(0x87CEFA); // Light blue background if background is true
+        }
+        else {
+            renderer.setClearColor(0x000000, 0); // Transparent background
+        }
         // Enable gamma correction
         // renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -187,9 +207,18 @@ onMounted(() => {
         }
         // Start animation
         animate();
+        // Watch for changes in bearGroup position prop
+        watch(() => props.bodyPosition, (newPos) => {
+            bearGroup.position.set(newPos.x, newPos.y, newPos.z);
+        });
         // Set camera position and look at the bear
-        camera.position.set(0, 1, 4);
-        camera.lookAt(0, 0, 0);
+        camera.position.set(4, 1, 2);
+        camera.lookAt(3, 0, 0);
+        // Update camera position if the prop changes
+        watch(() => props.cameraPosition, (newPos) => {
+            camera.position.set(0, 1, newPos);
+            camera.lookAt(0, 0, 0);
+        });
         // Handle window resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -198,7 +227,22 @@ onMounted(() => {
         });
     }
 });
-const __VLS_fnComponent = (await import('vue')).defineComponent({});
+const __VLS_fnComponent = (await import('vue')).defineComponent({
+    props: {
+        background: {
+            type: Boolean,
+            default: false
+        },
+        cameraPosition: {
+            type: Number,
+            default: 4
+        },
+        bodyPosition: {
+            type: Object,
+            default: () => ({ x: 0, y: 0, z: 0 })
+        }
+    },
+});
 ;
 let __VLS_functionalComponentProps;
 function __VLS_template() {
@@ -240,10 +284,38 @@ const __VLS_self = (await import('vue')).defineComponent({
             threeCanvas: threeCanvas,
         };
     },
+    props: {
+        background: {
+            type: Boolean,
+            default: false
+        },
+        cameraPosition: {
+            type: Number,
+            default: 4
+        },
+        bodyPosition: {
+            type: Object,
+            default: () => ({ x: 0, y: 0, z: 0 })
+        }
+    },
 });
 export default (await import('vue')).defineComponent({
     setup() {
         return {};
+    },
+    props: {
+        background: {
+            type: Boolean,
+            default: false
+        },
+        cameraPosition: {
+            type: Number,
+            default: 4
+        },
+        bodyPosition: {
+            type: Object,
+            default: () => ({ x: 0, y: 0, z: 0 })
+        }
     },
 });
 ;

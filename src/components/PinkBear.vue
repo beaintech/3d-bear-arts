@@ -247,19 +247,20 @@
       // Start animation
       animate();
 
-    // Watch for changes in bearGroup position prop
+ // Set initial positions for bearGroup and camera
+ bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+    camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
+    camera.lookAt(props.bodyPosition.x, 0, 0);
+
+    // Watch for changes in bodyPosition
     watch(() => props.bodyPosition, (newPos) => {
       bearGroup.position.set(newPos.x, newPos.y, newPos.z);
     });
-  
-      // Set camera position and look at the bear
-      camera.position.set(4, 1, 2);
-      camera.lookAt(3, 0, 0);
 
-    // Update camera position if the prop changes
-    watch(() => props.cameraPosition, (newPos: number) => {
-      camera.position.set(0, 1, newPos);
-      camera.lookAt(0, 0, 0);
+    // Watch for changes in cameraPosition
+    watch(() => props.cameraPosition, (newPos) => {
+      camera.position.set(props.bodyPosition.x, 1, newPos);
+      camera.lookAt(props.bodyPosition.x, 0, 0);
     });
   
       // Handle window resize

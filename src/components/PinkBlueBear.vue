@@ -3,14 +3,27 @@
 </template>
 
   <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, watch } from 'vue';
   import * as THREE from 'three';
   import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; // Correct FontLoader import
   import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; // Correct TextGeometry import
   
-  
-    const threeContainer = ref<HTMLDivElement | null>(null);
-  
+  const threeContainer = ref<HTMLDivElement | null>(null);
+  const props = defineProps({
+  background: {
+    type: Boolean,
+    default: false
+  },
+  cameraPosition: {
+    type: Number,
+    default: 4
+  },
+  bodyPosition: {
+    type: Object,
+    default: () => ({ x: 0, y: 0, z: 0 })
+  }
+});
+
   onMounted(() => {
     if (threeContainer.value) {
       // Initialize the Three.js scene
@@ -41,6 +54,12 @@
       const pointLight = new THREE.PointLight(0xffffff, 2, 50); // Strong point light
       pointLight.position.set(0, 2, 4); // Position near the front of the bear
       scene.add(pointLight);
+
+    if (props.background) {
+      renderer.setClearColor(0x87CEFA); // Light blue background if background is true
+    } else {
+      renderer.setClearColor(0x000000, 0); // Transparent background
+    }
 
       const vertexShader = `
             varying vec3 vPosition;
@@ -249,6 +268,22 @@
       // Set camera position and look at the bear
       camera.position.set(0, 1, 4);
       camera.lookAt(0, 0, 0);
+
+       // Set initial positions for bearGroup and camera
+    bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+    camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
+    camera.lookAt(props.bodyPosition.x, 0, 0);
+
+    // Watch for changes in bodyPosition
+    watch(() => props.bodyPosition, (newPos) => {
+      bearGroup.position.set(newPos.x, newPos.y, newPos.z);
+    });
+
+    // Watch for changes in cameraPosition
+    watch(() => props.cameraPosition, (newPos) => {
+      camera.position.set(props.bodyPosition.x, 1, newPos);
+      camera.lookAt(props.bodyPosition.x, 0, 0);
+    });
   
       // Handle window resize
       window.addEventListener('resize', () => {
@@ -261,7 +296,7 @@
   </script>
   
   <style scoped>
-  .three-container {
+  /* .three-container {
     margin: 0;
             height: 100vh;
             width: 100vw;
@@ -272,7 +307,7 @@
             animation: heartTunnel 3s infinite linear;
         }
 
-        /* Keyframes for heart tunnel-like animation */
+       
         @keyframes heartTunnel {
             0% {
                 background-size: 100% 100%;
@@ -286,6 +321,6 @@
                 background-size: 200% 200%;
                 background-position: center;
             }
-        }
+        } */
   </style>
   
