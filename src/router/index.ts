@@ -7,7 +7,7 @@ import PinkBlueBear from '../components/PinkBlueBear.vue';
 import GlassBear from '../components/GlassBear.vue';
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', name: 'ThreeScene', component: ThreeScene },
+  { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
   { path: '/pink', name: 'PinkBear', component: PinkBear },
   { path: '/purple', name: 'PurpleBear', component: PurpleBear },
   { path: '/pinkBlue', name: 'PinkBlueBear', component: PinkBlueBear },

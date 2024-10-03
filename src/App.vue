@@ -17,6 +17,7 @@
 
 <style scoped>
   nav {
+    position: absolute;
     display: flex;
     justify-content: center;
     gap: 20px;
