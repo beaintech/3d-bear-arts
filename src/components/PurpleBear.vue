@@ -1,5 +1,5 @@
 <template>
-  <div ref="threeCanvas" id="three-canvas" :class="background? 'no-bg':'three-container'"></div>
+  <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
 </template>
 
 <script setup lang="ts">
@@ -32,12 +32,7 @@ onMounted(() => {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    if (props.background) {
-      renderer.setClearColor(0x87CEFA); // Light blue background if background is true
-    } else {
-      renderer.setClearColor(0x000000, 0); // Transparent background
-    }
+    
     // Enable gamma correction
     // renderer.outputEncoding = THREE.sRGBEncoding;
 
@@ -296,9 +291,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#three-canvas {
+.three-canvas {
   margin: 0;
-            height: 100vh;
+  height: 100vh;
             width: 100vw;
             overflow: hidden;
             background: radial-gradient(circle at 50% 50%, rgb(247, 247, 0), rgba(135, 206, 250, 0.8), rgb(141, 2, 255));

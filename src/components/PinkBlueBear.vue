@@ -55,12 +55,6 @@
       pointLight.position.set(0, 2, 4); // Position near the front of the bear
       scene.add(pointLight);
 
-    if (props.background) {
-      renderer.setClearColor(0x87CEFA); // Light blue background if background is true
-    } else {
-      renderer.setClearColor(0x000000, 0); // Transparent background
-    }
-
       const vertexShader = `
             varying vec3 vPosition;
             varying vec3 vNormal;

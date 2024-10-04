@@ -1,5 +1,5 @@
 <template>
-    <div ref="threeCanvas" id="three-canvas" :class="background? 'no-bg':'three-container'"></div>
+    <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
   </template>
   
   <script setup lang="ts">
@@ -32,11 +32,11 @@
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       
-      if (props.background) {
-      renderer.setClearColor(0x87CEFA); // Light blue background if background is true
-    } else {
-      renderer.setClearColor(0x000000, 0); // Transparent background
-    }
+      // if (!props.background) {
+      // renderer.setClearColor(0x87CEFA); // Light blue background if background is true
+      // } else {
+      //   renderer.setClearColor(0x000000, 0); // Transparent background
+      // }
 
       // Enable gamma correction
       // renderer.outputEncoding = THREE.sRGBEncoding;
@@ -180,20 +180,20 @@
       rightLeg.position.set(0.4, -1.05, 0);
       bearGroup.add(rightLeg);
   
-    // Define the boot front geometry
-    const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
-  
-    // Left boot front
-    const leftBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
-    leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
-    leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
-    bearGroup.add(leftBootFront);
-  
-    // Right boot front
-    const rightBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
-    rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
-    rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
-    bearGroup.add(rightBootFront);
+      // Define the boot front geometry
+      const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
+    
+      // Left boot front
+      const leftBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
+      leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
+      leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
+      bearGroup.add(leftBootFront);
+    
+      // Right boot front
+      const rightBootFront = new THREE.Mesh(bootFrontGeometry, gummyMaterial);
+      rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
+      rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
+      bearGroup.add(rightBootFront);
   
            // Create rounded buttocks
            const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
@@ -274,7 +274,7 @@
   </script>
   
   <style scoped>
-  #three-canvas {
+  .three-canvas {
     margin: 0;
     height: 100vh;
     width: 100vw;

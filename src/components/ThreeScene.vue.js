@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import PinkBear from './PinkBear.vue';
 import PurpleBear from './PurpleBear.vue';
 import PinkBlueBear from './PinkBlueBear.vue';
+import BearFace from './BearFace.vue';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const background = ref(false);
 // Reactive state for bear and camera position
@@ -43,7 +44,13 @@ function __VLS_template() {
     // @ts-ignore
     const __VLS_10 = __VLS_asFunctionalComponent(PinkBlueBear, new PinkBlueBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
     const __VLS_11 = __VLS_10({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_10));
+    // @ts-ignore
+    [BearFace,];
+    // @ts-ignore
+    const __VLS_15 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-page") }, }));
+    const __VLS_16 = __VLS_15({ ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_15));
     __VLS_styleScopedClasses['flex'];
+    __VLS_styleScopedClasses['bear-page'];
     __VLS_styleScopedClasses['bear-page'];
     __VLS_styleScopedClasses['bear-page'];
     __VLS_styleScopedClasses['bear-page'];
@@ -64,6 +71,7 @@ const __VLS_self = (await import('vue')).defineComponent({
             PinkBear: PinkBear,
             PurpleBear: PurpleBear,
             PinkBlueBear: PinkBlueBear,
+            BearFace: BearFace,
         };
     },
 });
