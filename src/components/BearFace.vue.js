@@ -6,6 +6,9 @@ onMounted(() => {
     const canvas = bearCanvas.value;
     // Ensure the canvas is available
     if (canvas) {
+        // Set the canvas size dynamically
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight * 0.6; // 70% of the viewport height
         const ctx = canvas.getContext('2d');
         // Ensure the context is available
         if (ctx) {
@@ -13,56 +16,51 @@ onMounted(() => {
             const drawBearFace = () => {
                 const centerX = canvas.width / 2;
                 const centerY = canvas.height / 2;
+                // Adjust size based on canvas height (keep proportional scaling)
+                const faceRadius = canvas.height / 2.5;
+                const earRadius = faceRadius * 0.35; // Adjusted ear size
+                const eyeRadius = faceRadius * 0.18; // Adjusted eye size
+                const snoutRadius = faceRadius * 0.3; // Adjusted snout size
+                const noseRadius = snoutRadius * 0.35;
                 // Draw the bear's head
                 ctx.fillStyle = '#FF69B4'; // Pink color
                 ctx.beginPath();
-                ctx.arc(centerX, centerY, 100, 0, Math.PI * 2, true); // Circle for the head
+                ctx.arc(centerX, centerY, faceRadius, 0, Math.PI * 2, true); // Circle for the head
                 ctx.fill();
-                // Draw the ears
+                // Draw the ears (closer to the head)
                 ctx.fillStyle = '#FF69B4'; // Same pink color as the head
-                // Left ear
+                // Left ear (closer to the head)
                 ctx.beginPath();
-                ctx.arc(centerX - 70, centerY - 80, 30, 0, Math.PI * 2, true); // Circle for the left ear
+                ctx.arc(centerX - faceRadius * 1.1, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Closer left ear
                 ctx.fill();
-                // Right ear
+                // Right ear (closer to the head)
                 ctx.beginPath();
-                ctx.arc(centerX + 70, centerY - 80, 30, 0, Math.PI * 2, true); // Circle for the right ear
+                ctx.arc(centerX + faceRadius * 1.1, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Closer right ear
                 ctx.fill();
-                // Draw the left "O" eye (circular)
+                // Draw the left "O" eye (moved higher)
                 ctx.fillStyle = '#000000'; // Black color for the eye
                 ctx.beginPath();
-                ctx.arc(centerX - 40, centerY - 30, 15, 0, Math.PI * 2, true); // Circle for "O" eye
+                ctx.arc(centerX - faceRadius * 0.4, centerY - faceRadius * 0.2, eyeRadius, 0, Math.PI * 2, true); // Higher circle for "O" eye
                 ctx.fill();
-                // Draw the right "X" eye
+                // Draw the right "X" eye (moved higher)
                 ctx.lineWidth = 5;
                 ctx.beginPath();
-                ctx.moveTo(centerX + 25, centerY - 45); // First stroke of "X"
-                ctx.lineTo(centerX + 55, centerY - 15);
-                ctx.moveTo(centerX + 55, centerY - 45); // Second stroke of "X"
-                ctx.lineTo(centerX + 25, centerY - 15);
+                ctx.moveTo(centerX + faceRadius * 0.2, centerY - faceRadius * 0.25); // First stroke of "X" (higher)
+                ctx.lineTo(centerX + faceRadius * 0.4, centerY - faceRadius * 0.1);
+                ctx.moveTo(centerX + faceRadius * 0.4, centerY - faceRadius * 0.25); // Second stroke of "X"
+                ctx.lineTo(centerX + faceRadius * 0.2, centerY - faceRadius * 0.1);
                 ctx.strokeStyle = '#000000'; // Black color for "X"
                 ctx.stroke();
-                // Draw the snout
+                // Draw the snout (moved lower for better spacing)
                 ctx.fillStyle = '#F0E68C'; // Light khaki color for snout
                 ctx.beginPath();
-                ctx.ellipse(centerX, centerY + 30, 40, 30, 0, 0, Math.PI * 2); // Ellipse for the snout
+                ctx.arc(centerX, centerY + faceRadius * 0.3, snoutRadius, 0, Math.PI * 2, true); // Lower snout
                 ctx.fill();
                 // Draw the snout details (nose)
                 ctx.fillStyle = '#000000'; // Black for the nose
                 ctx.beginPath();
-                ctx.arc(centerX, centerY + 30, 10, 0, Math.PI * 2, true); // Circle for the nose
+                ctx.arc(centerX, centerY + faceRadius * 0.3, noseRadius, 0, Math.PI * 2, true); // Circle for the nose
                 ctx.fill();
-                // Draw the snout mouth line
-                ctx.beginPath();
-                ctx.moveTo(centerX, centerY + 40);
-                ctx.lineTo(centerX, centerY + 60);
-                ctx.strokeStyle = '#000000'; // Black color for the mouth line
-                ctx.stroke();
-                // Draw the mouth
-                ctx.beginPath();
-                ctx.arc(centerX - 15, centerY + 60, 15, 0, Math.PI, false); // Left side of the mouth
-                ctx.arc(centerX + 15, centerY + 60, 15, 0, Math.PI, false); // Right side of the mouth
-                ctx.stroke();
             };
             // Call the draw function
             drawBearFace();
@@ -90,7 +88,7 @@ function __VLS_template() {
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("bear-face-container") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.canvas, __VLS_intrinsicElements.canvas)({ ref: ("bearCanvas"), width: ("400"), height: ("400"), });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.canvas, __VLS_intrinsicElements.canvas)({ ref: ("bearCanvas"), });
     // @ts-ignore navigation for `const bearCanvas = ref()`
     __VLS_ctx.bearCanvas;
     __VLS_styleScopedClasses['bear-face-container'];

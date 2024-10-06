@@ -3,6 +3,7 @@
     <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/pink">Pink Bear</router-link>
       <router-link to="/3d-bear-arts/purple">Purple Bear</router-link>
+      <router-link to="/3d-bear-arts/blue">Blue Bear</router-link>
       <router-link to="/3d-bear-arts/pinkBlue">Pink Blue Bear</router-link>
       <router-link to="/3d-bear-arts/diamond">Diamond Bear</router-link>
       <router-link to="/3d-bear-arts/glass">Glass Bear</router-link>
@@ -25,6 +26,13 @@ import ThreeScene from './components/ThreeScene.vue';
     justify-content: center;
     gap: 20px;
     margin-bottom: 20px;
+    z-index: 999;
+    background-color: #ff69b4;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: "Press Start 2P", sans-serif; /* Pixel style font */
   }
 
   router-link {
@@ -34,5 +42,6 @@ import ThreeScene from './components/ThreeScene.vue';
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
+    font-family: "Press Start 2P", sans-serif; /* Pixel style font */
   }
 </style>

@@ -25,12 +25,6 @@ onMounted(() => {
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        if (props.background) {
-            renderer.setClearColor(0x87CEFA); // Light blue background if background is true
-        }
-        else {
-            renderer.setClearColor(0x000000, 0); // Transparent background
-        }
         // Enable gamma correction
         // renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -281,7 +275,7 @@ function __VLS_template() {
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeCanvas"), id: ("three-canvas"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-container')) }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeCanvas"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-canvas')) }, });
     // @ts-ignore navigation for `const threeCanvas = ref()`
     __VLS_ctx.threeCanvas;
     var __VLS_slots;

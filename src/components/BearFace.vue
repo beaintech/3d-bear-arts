@@ -1,6 +1,6 @@
 <template>
   <div class="bear-face-container">
-    <canvas ref="bearCanvas"></canvas>
+    <!-- <canvas ref="bearCanvas"></canvas> -->
   </div>
 </template>
 

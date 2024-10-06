@@ -2,18 +2,19 @@
   <div class="flex">
     <!-- Bear face background, placed first so it's rendered in the background -->
     <BearFace class="bear-background" />
-    <BearFaceBlackAndWhite class="bear-background" />
+     <!-- <BearFaceBlackAndWhite class="bear-background" />  -->
 
     <!-- Other bear components on top of the background -->
-    <PinkBear :background="true" :cameraPosition="8" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
-    <PurpleBear :background="true" :cameraPosition="8" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
-    <PinkBlueBear :background="true" :cameraPosition="8" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
+    <PinkBear :background="true" :cameraPosition="6" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
+    <PurpleBear :background="true" :cameraPosition="4" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
+    <BlueBear :background="true" :cameraPosition="6" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import PinkBear from './PinkBear.vue';
 import PurpleBear from './PurpleBear.vue';
+import BlueBear from './BlueBear.vue';
 import PinkBlueBear from './PinkBlueBear.vue';
 import BearFace from './BearFace.vue';
 import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';

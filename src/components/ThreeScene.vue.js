@@ -1,13 +1,9 @@
-import { ref } from 'vue';
 import PinkBear from './PinkBear.vue';
 import PurpleBear from './PurpleBear.vue';
 import PinkBlueBear from './PinkBlueBear.vue';
 import BearFace from './BearFace.vue';
+import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
-const background = ref(false);
-// Reactive state for bear and camera position
-const bodyPosition = ref({ x: 0, y: 0, z: 0 });
-const cameraPosition = ref(4);
 const __VLS_fnComponent = (await import('vue')).defineComponent({});
 ;
 let __VLS_functionalComponentProps;
@@ -30,27 +26,33 @@ function __VLS_template() {
     let __VLS_resolvedLocalAndGlobalComponents;
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("flex") }, });
     // @ts-ignore
+    [BearFace,];
+    // @ts-ignore
+    const __VLS_0 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-background") }, }));
+    const __VLS_1 = __VLS_0({ ...{ class: ("bear-background") }, }, ...__VLS_functionalComponentArgsRest(__VLS_0));
+    // @ts-ignore
+    [BearFaceBlackAndWhite,];
+    // @ts-ignore
+    const __VLS_5 = __VLS_asFunctionalComponent(BearFaceBlackAndWhite, new BearFaceBlackAndWhite({ ...{ class: ("bear-background") }, }));
+    const __VLS_6 = __VLS_5({ ...{ class: ("bear-background") }, }, ...__VLS_functionalComponentArgsRest(__VLS_5));
+    // @ts-ignore
     [PinkBear,];
     // @ts-ignore
-    const __VLS_0 = __VLS_asFunctionalComponent(PinkBear, new PinkBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
-    const __VLS_1 = __VLS_0({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_0));
+    const __VLS_10 = __VLS_asFunctionalComponent(PinkBear, new PinkBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
+    const __VLS_11 = __VLS_10({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_10));
     // @ts-ignore
     [PurpleBear,];
     // @ts-ignore
-    const __VLS_5 = __VLS_asFunctionalComponent(PurpleBear, new PurpleBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
-    const __VLS_6 = __VLS_5({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_5));
+    const __VLS_15 = __VLS_asFunctionalComponent(PurpleBear, new PurpleBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
+    const __VLS_16 = __VLS_15({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_15));
     // @ts-ignore
     [PinkBlueBear,];
     // @ts-ignore
-    const __VLS_10 = __VLS_asFunctionalComponent(PinkBlueBear, new PinkBlueBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
-    const __VLS_11 = __VLS_10({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_10));
-    // @ts-ignore
-    [BearFace,];
-    // @ts-ignore
-    const __VLS_15 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-page") }, }));
-    const __VLS_16 = __VLS_15({ ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_15));
+    const __VLS_20 = __VLS_asFunctionalComponent(PinkBlueBear, new PinkBlueBear({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
+    const __VLS_21 = __VLS_20({ background: ((true)), cameraPosition: ((8)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_20));
     __VLS_styleScopedClasses['flex'];
-    __VLS_styleScopedClasses['bear-page'];
+    __VLS_styleScopedClasses['bear-background'];
+    __VLS_styleScopedClasses['bear-background'];
     __VLS_styleScopedClasses['bear-page'];
     __VLS_styleScopedClasses['bear-page'];
     __VLS_styleScopedClasses['bear-page'];
@@ -72,6 +74,7 @@ const __VLS_self = (await import('vue')).defineComponent({
             PurpleBear: PurpleBear,
             PinkBlueBear: PinkBlueBear,
             BearFace: BearFace,
+            BearFaceBlackAndWhite: BearFaceBlackAndWhite,
         };
     },
 });

@@ -107,14 +107,14 @@ onMounted(() => {
     });
 
     const yellowMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFDE910, // Pink color (Hot Pink)
-            metalness: 0.2, // Lower metalness for a more plastic feel
-            roughness: 0.6, // Increase roughness for a more matte appearance
-            clearcoat: 0.1, // Low clearcoat for minimal shine
-            clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
-            transparent: true,
-            opacity: 0.99, // Less transparent, more solid plastic look
-        });
+      color: 0xFFD700,  // Gold color
+        metalness: 0.05,   // High metalness for a shiny, metallic look
+        roughness: 10,  // Very low roughness for maximum reflectivity
+        clearcoat: 0.6,   // Increased clear coat for more surface shine
+        clearcoatRoughness: 0.1, // Keep clear coat smooth for enhanced reflections
+        opacity: 1.0,     // Fully opaque (no transparency)
+        transparent: false,  // Disable transparency
+    });
 
     // Create the bear group and all parts
     const bearGroup = new THREE.Group();
