@@ -25,6 +25,7 @@ import HalfBearFace from './HalfBearFace.vue';
 import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
 import { isBigTablet, isBigMobile } from '../utils/window-size';
 import PixelBearFace from './PixelBearFace.vue';
+import HalfBlueBear from './HalfBlueBear.vue';
 
 const isBearFace = ref(true); // Controls which bear face is displayed
 let switchInterval: number | undefined | any;

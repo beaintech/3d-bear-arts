@@ -8,6 +8,8 @@
       <router-link to="/3d-bear-arts/pinkBlue">PinkBlue</router-link>
       <router-link to="/3d-bear-arts/diamond">Diamond</router-link>
       <router-link to="/3d-bear-arts/glass">Glass</router-link>
+      <router-link to="/3d-bear-arts/halfBlue">halfBlue</router-link>
+
     </nav>
     <router-view></router-view>
   </div>

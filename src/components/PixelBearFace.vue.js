@@ -10,56 +10,55 @@ onMounted(() => {
     const canvas = bearCanvas.value;
     if (canvas) {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight * 0.6;
+        canvas.height = window.innerHeight * 0.55;
         const ctx = canvas.getContext('2d');
         if (ctx) {
             const drawBearFace = () => {
                 const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
+                const centerY = canvas.height / 1.9;
                 const faceRadius = canvas.height / 2.5;
                 const earRadius = faceRadius * 0.45;
                 const eyeRadius = faceRadius * 0.18;
                 const snoutRadius = faceRadius * 0.3;
                 const noseRadius = snoutRadius * 0.35;
-                // Draw the bear's head
-                ctx.fillStyle = '#FF69B4'; // Pink color
+                // Set stroke style for pixel-like drawing
+                ctx.lineWidth = 15; // Default stroke width
+                ctx.strokeStyle = '#000000'; // White pixelated stroke for face elements
+                // Draw the ears with pixelated style (behind the face)
+                ctx.beginPath();
+                ctx.arc(centerX - faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(centerX + faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Right ear
+                ctx.stroke();
+                // Draw the bear's head with a thicker stroke to cover the inside of the ears
+                ctx.lineWidth = 15; // Thicker stroke for the face
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, faceRadius, 0, Math.PI * 2, true); // Circle for the head
-                ctx.fill();
-                // Draw the ears
-                ctx.fillStyle = '#FF69B4';
-                ctx.beginPath();
-                ctx.arc(centerX - faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(centerX + faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true);
-                ctx.fill();
-                // Draw the left "O" eye
-                ctx.fillStyle = '#000000';
-                ctx.beginPath();
-                ctx.arc(centerX - faceRadius * 0.4, centerY - faceRadius * 0.2, eyeRadius, 0, Math.PI * 2, true);
-                ctx.fill();
-                // Draw the right "X" eye
+                ctx.stroke();
+                // Draw the left "O" eye with pixel style
                 ctx.lineWidth = 15;
                 ctx.beginPath();
-                // First stroke of "X" (longer)
+                ctx.arc(centerX - faceRadius * 0.4, centerY - faceRadius * 0.2, eyeRadius, 0, Math.PI * 2, true);
+                ctx.stroke();
+                // Draw the right "X" eye with pixel style
+                ctx.lineWidth = 15;
+                ctx.beginPath();
                 ctx.moveTo(centerX + faceRadius * 0.2, centerY - faceRadius * 0.3); // Start further left and higher
                 ctx.lineTo(centerX + faceRadius * 0.5, centerY - faceRadius * 0.05); // End further right and lower
-                // Second stroke of "X" (longer)
                 ctx.moveTo(centerX + faceRadius * 0.5, centerY - faceRadius * 0.3); // Start further right and higher
                 ctx.lineTo(centerX + faceRadius * 0.2, centerY - faceRadius * 0.05); // End further left and lower
-                ctx.strokeStyle = '#000000'; // Black color for "X"
+                ctx.strokeStyle = '#000000'; // White color for "X"
                 ctx.stroke();
-                // Draw the snout
-                ctx.fillStyle = '#F0E68C';
+                // Draw the snout in pixelated style
+                ctx.lineWidth = 15;
                 ctx.beginPath();
                 ctx.ellipse(centerX, centerY + faceRadius * 0.4, snoutRadius * 1.5, snoutRadius, 0, 0, Math.PI * 2);
-                ctx.fill();
-                // Draw the snout details (nose)
-                ctx.fillStyle = '#000000';
+                ctx.stroke();
+                // Draw the snout details (nose) with pixel style
                 ctx.beginPath();
                 ctx.arc(centerX, centerY + faceRadius * 0.3, noseRadius * 1.2, 0, Math.PI * 2, true);
-                ctx.fill();
+                ctx.stroke();
             };
             drawBearFace();
         }

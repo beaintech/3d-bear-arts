@@ -28,7 +28,7 @@
       if (ctx) {
         const drawBearFace = () => {
           const centerX = canvas.width / 2;
-          const centerY = canvas.height / 2;
+          const centerY = canvas.height / 1.9;
   
           const faceRadius = canvas.height / 2.5;
           const strokeFaceRadius = canvas.height / 2.58;
