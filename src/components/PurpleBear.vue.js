@@ -81,7 +81,7 @@ onMounted(() => {
             opacity: 0.99,
         });
         const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xCC0000, // Pink color for the heart
+            color: 0xFFD700, // Pink color for the heart
             metalness: 0.4,
             roughness: 0.3, // Reduced roughness for shinier heart
             clearcoat: 0.3,

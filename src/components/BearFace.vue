@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isHidden" class="bear-face-container">
     <canvas ref="bearCanvas"></canvas>
-    <button @click="toggleComponent">Enter the first Metaverse</button>
+    <button @click="toggleComponent" class="pixel-button">Enter</button>
   </div>
 </template>
 
@@ -118,7 +118,23 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #ff85c1;
+.pixel-button {
+  font-family: 'Press Start 2P', sans-serif; /* Pixel-style font */
+  font-size: 18px;
+  padding: 15px 40px;
+  background-color: #ff69b4; /* Bright pink background */
+  color: white;
+  border: 4px solid #000000; /* Black pixelated border */
+  box-shadow: 5px 5px 0 #000000, 10px 10px 0 #ffffff; /* Pixel-style shadow */
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Hover effect for the button */
+.pixel-button:hover {
+  background-color: #ffcc00; /* Change background to gold on hover */
+  color: black;
+  transform: translate(-3px, -3px); /* Pixel push effect */
+  box-shadow: 5px 5px 0 #ffffff, 10px 10px 0 #000000;
 }
 </style>
