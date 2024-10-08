@@ -17,7 +17,6 @@ const routes = [
     { path: '/3d-bear-arts/diamond', name: 'DiamondBear', component: DiamondBear },
     { path: '/3d-bear-arts/glass', name: 'GlassBear', component: GlassBear },
     { path: '/3d-bear-arts/halfBlue', name: 'HalfBlue', component: HalfBlue },
-
 ];
 const router = createRouter({
     history: createWebHistory(),
