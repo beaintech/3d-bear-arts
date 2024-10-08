@@ -88,15 +88,10 @@ function __VLS_template() {
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("bear-face-container") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.canvas, __VLS_intrinsicElements.canvas)({ ref: ("bearCanvas"), });
-    // @ts-ignore navigation for `const bearCanvas = ref()`
-    __VLS_ctx.bearCanvas;
     __VLS_styleScopedClasses['bear-face-container'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
-    const __VLS_refs = {
-        "bearCanvas": __VLS_nativeElements['canvas'],
-    };
+    const __VLS_refs = {};
     var $refs;
     return {
         slots: __VLS_slots,
@@ -107,9 +102,7 @@ function __VLS_template() {
 ;
 const __VLS_self = (await import('vue')).defineComponent({
     setup() {
-        return {
-            bearCanvas: bearCanvas,
-        };
+        return {};
     },
 });
 export default (await import('vue')).defineComponent({

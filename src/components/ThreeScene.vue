@@ -5,9 +5,9 @@
      <!-- <BearFaceBlackAndWhite class="bear-background" />  -->
 
     <!-- Other bear components on top of the background -->
-    <PinkBear :background="true" :cameraPosition="6" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
-    <PurpleBear :background="true" :cameraPosition="4" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
-    <BlueBear :background="true" :cameraPosition="6" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
+    <PinkBear :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
+    <PurpleBear :background="true" :cameraPosition="isBigMobile? 10: isBigTablet? 6: 4" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
+    <BlueBear :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import BlueBear from './BlueBear.vue';
 import PinkBlueBear from './PinkBlueBear.vue';
 import BearFace from './BearFace.vue';
 import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
+import { isBigTablet, isBigMobile } from '../utils/window-size';
 
 </script>
 
@@ -28,7 +29,8 @@ import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
   height: 100vh;
   justify-content: center;
   align-items: center;
-  position: relative; /* Ensure the child elements respect the position */
+  position: relative; 
+  background: radial-gradient(circle at 50% 50%, rgba(255, 182, 193, 0.8), rgba(135, 206, 250, 0.8), rgba(254, 0, 127, 0.993));
 }
 
 .bear-page {
@@ -37,7 +39,7 @@ import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
   justify-content: center;
   align-items: center;
   height: 100vh;
-  z-index: 1; /* Ensure these elements are above the background */
+
 }
 
 .bear-background {
@@ -46,6 +48,5 @@ import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1; /* Lower z-index to place it behind everything */
 }
 </style>

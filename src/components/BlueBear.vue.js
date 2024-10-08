@@ -1,7 +1,7 @@
 import { ref, onMounted, watch } from 'vue';
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; // Correct FontLoader import
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; // Correct TextGeometry import
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const props = defineProps({
     background: {
@@ -25,6 +25,11 @@ onMounted(() => {
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        // if (!props.background) {
+        // renderer.setClearColor(0x87CEFA); // Light blue background if background is true
+        // } else {
+        //   renderer.setClearColor(0x000000, 0); // Transparent background
+        // }
         // Enable gamma correction
         // renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -33,46 +38,41 @@ onMounted(() => {
         // Add lighting (increase intensities and add a point light)
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Increased intensity
         scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5); // Increased intensity
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Increased intensity
         directionalLight.position.set(5, 5, 5);
         scene.add(directionalLight);
         // Point light to focus more light on the bear
         const pointLight = new THREE.PointLight(0xffffff, 2, 50); // Strong point light
         pointLight.position.set(0, 2, 4); // Position near the front of the bear
         scene.add(pointLight);
+        // Shader material with gradient animation for the bear's body
         const bigHeartMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                time: { value: 0 }, // Time uniform for animation
+                time: { value: 0 },
                 color1: { value: new THREE.Color(0xFFD700) }, // Gold color
                 color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
-                // metalness: 0.2, // Lower metalness for a more plastic feel
-                // roughness: 0.6, // Increase roughness for a more matte appearance
-                // clearcoat: 0.1, // Low clearcoat for minimal shine
-                // clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
-                // transparent: true,
-                // opacity: 0.99, // Less transparent, more solid plastic look
             },
             vertexShader: `
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
             fragmentShader: `
-                uniform float time;
-                uniform vec3 color1;
-                uniform vec3 color2;
-                varying vec2 vUv;
-                void main() {
-                    vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5); // Gradient animation formula
-                    gl_FragColor = vec4(color, 1.0); // Set the fragment color
-                }
-            `
+          uniform float time;
+          uniform vec3 color1;
+          uniform vec3 color2;
+          varying vec2 vUv;
+          void main() {
+            vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
+            gl_FragColor = vec4(color, 1.0);
+          }
+        `,
         });
         // Gummy pink material for the bear (reduce roughness to make it shinier)
         const gummyMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xA155E8, // Hot pink
+            color: 0x00FFFF, // Hot pink
             metalness: 0.2, // Increased metalness for more light reflection
             roughness: 0.5, // Reduced roughness for a shinier appearance
             clearcoat: 0.1, // Higher clearcoat for more shine
@@ -81,18 +81,9 @@ onMounted(() => {
             opacity: 0.99,
         });
         const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xCC0000, // Pink color for the heart
-            metalness: 0.4,
-            roughness: 0.3, // Reduced roughness for shinier heart
-            clearcoat: 0.3,
-            clearcoatRoughness: 0.2,
-            transparent: true,
-            opacity: 0.99,
-        });
-        const yellowMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFFD700, // Gold color
-            metalness: 0.05, // High metalness for a shiny, metallic look
-            roughness: 10, // Very low roughness for maximum reflectivity
+            color: 0xFF69B4, // Gold color
+            metalness: 0.5, // High metalness for a shiny, metallic look
+            roughness: 30, // Very low roughness for maximum reflectivity
             clearcoat: 0.6, // Increased clear coat for more surface shine
             clearcoatRoughness: 0.1, // Keep clear coat smooth for enhanced reflections
             opacity: 1.0, // Fully opaque (no transparency)
@@ -136,7 +127,7 @@ onMounted(() => {
         // Extrude the heart shape into 3D
         const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
-        const heart = new THREE.Mesh(heartGeometry, bigHeartMaterial);
+        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
         heart.scale.set(0.5, 0.5, 0.5);
         heart.position.set(0, 0.34, 0.8);
         heart.rotation.y = Math.PI;
@@ -182,10 +173,9 @@ onMounted(() => {
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, yellowMaterial);
+        const tail = new THREE.Mesh(tailGeometry, heartMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
-        // Load font and create 3D text
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             const xEyeGeometry = new TextGeometry('X', {
@@ -197,7 +187,7 @@ onMounted(() => {
             const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
             xEye.position.set(-0.34, 1, 0.5); // Position on the head
             bearGroup.add(xEye);
-            const oEyeGeometry = new TextGeometry('O', {
+            const oEyeGeometry = new TextGeometry('X', {
                 font: font,
                 size: 0.2, // Size of the O
                 depth: 0.05, // Thickness of the O

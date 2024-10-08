@@ -6,7 +6,6 @@ import DiamondBear from '../components/DiamondBear.vue';
 import PinkBlueBear from '../components/PinkBlueBear.vue';
 import GlassBear from '../components/GlassBear.vue';
 import BlueBear from '../components/BlueBear.vue';
-
 const routes = [
     { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     { path: '/3d-bear-arts/pink', name: 'PinkBear', component: PinkBear },

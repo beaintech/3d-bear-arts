@@ -1,20 +1,20 @@
 import { onMounted, ref } from 'vue';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
-// Define the canvas ref with correct typing
 const bearCanvas = ref(null);
 onMounted(() => {
     const canvas = bearCanvas.value;
     // Ensure the canvas is available
     if (canvas) {
-        canvas.width = window.innerWidth * 0.8; // Make the bear face occupy 80% of the width
-        canvas.height = window.innerHeight * 0.8; // Make the bear face occupy 80% of the height
+        // Set canvas to occupy 80% of the viewport
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.8;
         const ctx = canvas.getContext('2d');
         // Ensure the context is available
         if (ctx) {
             const drawBearFace = () => {
                 const centerX = canvas.width / 2;
                 const centerY = canvas.height / 2;
-                ctx.lineWidth = 8; // Set the stroke thickness
+                ctx.lineWidth = 10; // Set the stroke thickness
                 ctx.strokeStyle = '#FFFFFF'; // White stroke color
                 // Draw the bear's head
                 ctx.beginPath();
@@ -34,7 +34,7 @@ onMounted(() => {
                 ctx.arc(centerX - canvas.width * 0.1, centerY - canvas.height * 0.05, canvas.height * 0.06, 0, Math.PI * 2, true);
                 ctx.stroke();
                 // Draw the right "X" eye
-                ctx.lineWidth = 8;
+                ctx.lineWidth = 10;
                 ctx.beginPath();
                 ctx.moveTo(centerX + canvas.width * 0.06, centerY - canvas.height * 0.1);
                 ctx.lineTo(centerX + canvas.width * 0.14, centerY - canvas.height * 0.02);
@@ -50,7 +50,7 @@ onMounted(() => {
                 ctx.arc(centerX, centerY + canvas.height * 0.1, canvas.height * 0.04, 0, Math.PI * 2, true);
                 ctx.stroke();
                 // Draw the mouth
-                ctx.lineWidth = 6;
+                ctx.lineWidth = 8;
                 ctx.beginPath();
                 ctx.arc(centerX - canvas.width * 0.05, centerY + canvas.height * 0.15, canvas.height * 0.04, 0, Math.PI, false);
                 ctx.arc(centerX + canvas.width * 0.05, centerY + canvas.height * 0.15, canvas.height * 0.04, 0, Math.PI, false);
