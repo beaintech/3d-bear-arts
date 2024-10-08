@@ -172,7 +172,7 @@ onMounted(() => {
             });
             const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
             const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-            oEye.position.set(0.14, .99, 0.5); // Position on the head
+            oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);

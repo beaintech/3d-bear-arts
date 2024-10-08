@@ -47,7 +47,7 @@ onMounted(() => {
     });
 
     // Function to create a bear
-    const createBear = (material) => {
+    const createBear = (material: any) => {
       const bearGroup = new THREE.Group();
 
       // Body

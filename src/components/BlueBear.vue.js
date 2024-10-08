@@ -204,7 +204,7 @@ onMounted(() => {
         function animate() {
             requestAnimationFrame(animate);
             bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
-            bigHeartMaterial.uniforms.time.value += 0.03; // Same animation speed
+            bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
             renderer.render(scene, camera);
         }
         // Start animation
