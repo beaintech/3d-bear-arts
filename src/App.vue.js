@@ -32,8 +32,8 @@ function __VLS_template() {
     const __VLS_6 = __VLS_resolvedLocalAndGlobalComponents.RouterLink;
     /** @type { [typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, ] } */
     // @ts-ignore
-    const __VLS_7 = __VLS_asFunctionalComponent(__VLS_6, new __VLS_6({ to: ("/3d-bear-arts/halfTransparent"), }));
-    const __VLS_8 = __VLS_7({ to: ("/3d-bear-arts/halfTransparent"), }, ...__VLS_functionalComponentArgsRest(__VLS_7));
+    const __VLS_7 = __VLS_asFunctionalComponent(__VLS_6, new __VLS_6({ to: ("/3d-bear-arts/half"), }));
+    const __VLS_8 = __VLS_7({ to: ("/3d-bear-arts/half"), }, ...__VLS_functionalComponentArgsRest(__VLS_7));
     __VLS_nonNullable(__VLS_11.slots).default;
     const __VLS_11 = __VLS_pickFunctionalComponentCtx(__VLS_6, __VLS_8);
     const __VLS_12 = __VLS_resolvedLocalAndGlobalComponents.RouterLink;
