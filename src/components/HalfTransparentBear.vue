@@ -124,7 +124,7 @@ onMounted(() => {
       clearcoat: 0.1,
       clearcoatRoughness: 0.8,
       transparent: true,
-      opacity: 0.99,
+      opacity: 0.59,
     });
 
     const pinkMaterial = new THREE.MeshPhysicalMaterial({
@@ -143,7 +143,7 @@ onMounted(() => {
             opacity: { value: 1 } // Opacity uniform (set to 0.6 for 60% transparency)
         },
         vertexShader,
-        fragmentShader,
+        fragmentShader:fragmentShader,
         transparent: true, // Enable transparency in the material
         depthWrite: false // Disable depth writing to ensure proper rendering
     });
@@ -152,13 +152,44 @@ onMounted(() => {
     const createBear = (material: any) => {
       const bearGroup = new THREE.Group();
 
-      // Body
-      const bodyGeometry = new THREE.SphereGeometry(1, 32, 32);
+            // Body
+            // const bodyGeometry = new THREE.SphereGeometry(1, 32, 32);
+            // Create a half-sphere geometry
+      const bodyGeometry = new THREE.SphereGeometry(
+          1,            // Radius
+          32,           // Width segments
+          32,           // Height segments
+          0,            // phiStart
+          Math.PI       // phiLength (half of the sphere)
+      );
       const body = new THREE.Mesh(bodyGeometry, material);
+      const bodyLeft = new THREE.Mesh(bodyGeometry, material);
+
       body.scale.set(0.85, 0.85, 0.8);
+      bodyLeft.scale.set(0.85, 0.85, 0.8);
 
       body.position.y = -0.2;
-      bearGroup.add(body);
+      bodyLeft.position.y = -0.2;
+
+      body.rotation.y = Math.PI / 2;
+      bodyLeft.rotation.y = Math.PI * 1.5;
+
+      // Create a plane geometry to fill the flat side
+      const planeGeometry = new THREE.PlaneGeometry(2, 2, 32, 32); // Size matching the diameter of the half-sphere
+      const plane = new THREE.Mesh(planeGeometry, material);
+
+      // Position the plane to cover the flat side
+      plane.position.set(0, 0, -0.2); // Adjust position based on the sphere's orientation
+      plane.rotation.y = Math.PI / 2; // Rotate the plane to match the half-sphere's orientation
+
+      // Create a group to combine the half-sphere and the plane
+      const halfSphereGroup = new THREE.Group();
+      halfSphereGroup.add(body);
+      halfSphereGroup.add(bodyLeft);
+
+      // Add the combined geometry to the scene or parent group
+
+      bearGroup.add(halfSphereGroup);
 
       // Head
       const headGeometry = new THREE.SphereGeometry(0.6, 32, 32);
@@ -206,38 +237,9 @@ onMounted(() => {
         
     });
           
-    // Create a 2D heart shape tatoo 
-    const heartShape = new THREE.Shape();
-        
-    heartShape.moveTo(0, 0);
-    heartShape.bezierCurveTo(0, -0.3, -0.6, -0.3, -0.6, 0);
-    heartShape.bezierCurveTo(-0.6, 0.3, 0, 0.6, 0, 1);
-    heartShape.bezierCurveTo(0, 0.6, 0.6, 0.3, 0.6, 0);
-    heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
-
-    // Extrude the heart shape to give it 3D depth
-    const extrudeSettings = { depth: 0.05, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.05, bevelThickness: 0.05 };
-    const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
-
-    // Create the black material for the heart
-     const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-
-    // Create the heart mesh
-    const smallHeart = new THREE.Mesh(heartGeometry, blackMaterial);
-    smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
-
-    // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
-    smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
-    smallHeart.rotation.x = THREE.MathUtils.degToRad(5);
-    smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
-    smallHeart.position.set(-0.4, 0.9, 0.45); // Position it on the pink side of the face
-
-    // Add the heart to the bear group
-    bearGroup.add(smallHeart);
-
       // Ears
       const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-      const leftEar = new THREE.Mesh(earGeometry, bodyMaterial);
+      const leftEar = new THREE.Mesh(earGeometry, cyanMaterial);
       leftEar.position.set(-0.45, 1.35, -0.1);
       bearGroup.add(leftEar);
 
@@ -247,7 +249,7 @@ onMounted(() => {
 
       // Bear arms
       const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-      const leftArm = new THREE.Mesh(armGeometry, bodyMaterial);
+      const leftArm = new THREE.Mesh(armGeometry, cyanMaterial);
       leftArm.scale.set(0.75, 1.25, 0.65);
       leftArm.position.set(-0.7, -0.15, 0.2);
       bearGroup.add(leftArm);
@@ -259,7 +261,7 @@ onMounted(() => {
   
       // Bear legs
       const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-      const leftLeg = new THREE.Mesh(legGeometry, bodyMaterial);
+      const leftLeg = new THREE.Mesh(legGeometry, cyanMaterial);
       leftLeg.position.set(-0.4, -1.05, 0);
       bearGroup.add(leftLeg);
   
@@ -271,7 +273,7 @@ onMounted(() => {
       const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
     
       // Left boot front
-      const leftBootFront = new THREE.Mesh(bootFrontGeometry, bodyMaterial);
+      const leftBootFront = new THREE.Mesh(bootFrontGeometry, cyanMaterial);
       leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
       leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
       bearGroup.add(leftBootFront);
@@ -284,7 +286,7 @@ onMounted(() => {
   
       // Create rounded buttocks
       const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-      const leftButtock = new THREE.Mesh(buttockGeometry, bodyMaterial);
+      const leftButtock = new THREE.Mesh(buttockGeometry, cyanMaterial);
       leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
       bearGroup.add(leftButtock);
   
@@ -306,7 +308,7 @@ onMounted(() => {
     const bearGroup = new THREE.Group();
 
     // Create two bears, one cyan and one pink
-    const leftBear = createBear(bodyMaterial);
+    const leftBear = createBear(cyanMaterial);
     const rightBear = createBear(pinkMaterial);
 
     // Slightly offset each bear by a very small amount to overlap perfectly

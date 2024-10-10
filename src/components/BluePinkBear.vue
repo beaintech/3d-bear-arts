@@ -265,9 +265,30 @@ onMounted(() => {
   
   <style scoped>
   .three-canvas {
-    width: 100vw;
+    margin: 0;
     height: 100vh;
-    background: radial-gradient(circle at 50% 50%, rgb(247, 247, 0), rgba(135, 206, 250, 0.8), rgb(141, 2, 255));
+    width: 100vw;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, rgb(255, 255, 255), rgba(252, 248, 1, 0.99), rgb(141, 2, 255), rgb(255, 120, 2),rgb(255, 2, 133));
+    background-size: 200% 200%;
+    background-repeat: no-repeat;
+    animation: heartTunnel 1s infinite linear;
+  }
+  
+  /* Keyframes for heart tunnel-like animation */
+  @keyframes heartTunnel {
+    0% {
+      background-size: 150% 150%;
+      background-position: center;
+    }
+    50% {
+      background-size: 100% 100%;
+      background-position: center;
+    }
+    100% {
+      background-size: 150% 150%;
+      background-position: center;
+    }
   }
   </style>
   

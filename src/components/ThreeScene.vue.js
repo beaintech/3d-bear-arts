@@ -2,7 +2,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import PinkBear from './PinkBear.vue';
 import PurpleBear from './PurpleBear.vue';
 import BlueBear from './BlueBear.vue';
-import HalfBearFace from './HalfBearFace.vue';
+import BearFace from './BearFace.vue';
 import { isBigTablet, isBigMobile } from '../utils/window-size';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const isBearFace = ref(true); // Controls which bear face is displayed
@@ -43,9 +43,9 @@ function __VLS_template() {
     let __VLS_resolvedLocalAndGlobalComponents;
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("flex") }, });
     // @ts-ignore
-    [HalfBearFace,];
+    [BearFace,];
     // @ts-ignore
-    const __VLS_0 = __VLS_asFunctionalComponent(HalfBearFace, new HalfBearFace({ ...{ class: ("bear-background") }, }));
+    const __VLS_0 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-background") }, }));
     const __VLS_1 = __VLS_0({ ...{ class: ("bear-background") }, }, ...__VLS_functionalComponentArgsRest(__VLS_0));
     // @ts-ignore
     [PinkBear,];
@@ -84,7 +84,7 @@ const __VLS_self = (await import('vue')).defineComponent({
             PinkBear: PinkBear,
             PurpleBear: PurpleBear,
             BlueBear: BlueBear,
-            HalfBearFace: HalfBearFace,
+            BearFace: BearFace,
             isBigTablet: isBigTablet,
             isBigMobile: isBigMobile,
         };
