@@ -86,7 +86,7 @@
   
       // Gummy pink material for the bear (reduce roughness to make it shinier)
       const gummyMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x00CED1, // Hot pink
+        color: 0x00CED1, // Blue pink
         metalness: 0.2, // Increased metalness for more light reflection
         roughness: 0.5, // Reduced roughness for a shinier appearance
         clearcoat: 0.1, // Higher clearcoat for more shine

@@ -2,14 +2,14 @@
   <div id="app">
     <nav>
       <router-link to="/3d-bear-arts">Home</router-link>
+      <router-link to="/3d-bear-arts/halfTransparent">New</router-link>
       <router-link to="/3d-bear-arts/pink">Pink</router-link>
       <router-link to="/3d-bear-arts/purple">Purple</router-link>
       <router-link to="/3d-bear-arts/blue">Blue</router-link>
-      <router-link to="/3d-bear-arts/pinkBlue">PinkBlue</router-link>
+      <!-- <router-link to="/3d-bear-arts/pinkBlue">PinkBlue</router-link> -->
       <router-link to="/3d-bear-arts/diamond">Diamond</router-link>
       <router-link to="/3d-bear-arts/glass">Glass</router-link>
-      <router-link to="/3d-bear-arts/halfBlue">halfBlue</router-link>
-
+      <router-link to="/3d-bear-arts/bluePink">BluePink</router-link>
     </nav>
     <router-view></router-view>
   </div>

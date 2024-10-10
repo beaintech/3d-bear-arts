@@ -1,10 +1,6 @@
 <template>
   <div class="flex">
-    <!-- Bear face background, placed first so it's rendered in the background -->
-    <!-- <BearFace v-if="isBearFace" class="bear-background" />
-    <PixelBearFace v-else class="bear-background" /> -->
-    <HalfBearFace class="bear-background" />
-    <!-- <BearFaceBlackAndWhite class="bear-background" />  -->
+    <BearFace class="bear-background" />
 
     <!-- Other bear components on top of the background -->
     <PinkBear :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
@@ -20,12 +16,7 @@ import PurpleBear from './PurpleBear.vue';
 import BlueBear from './BlueBear.vue';
 import PinkBlueBear from './PinkBlueBear.vue';
 import BearFace from './BearFace.vue';
-import HalfBearFace from './HalfBearFace.vue';
-
-import BearFaceBlackAndWhite from './BearFaceBlackAndWhite.vue';
 import { isBigTablet, isBigMobile } from '../utils/window-size';
-import PixelBearFace from './PixelBearFace.vue';
-import HalfBlueBear from './HalfBlueBear.vue';
 
 const isBearFace = ref(true); // Controls which bear face is displayed
 let switchInterval: number | undefined | any;
@@ -50,6 +41,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Pixel style font */
+
 .flex {
   display: flex;
   flex-direction: row;
@@ -76,8 +69,6 @@ onUnmounted(() => {
   width: 100vw;
   height: 100vh;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Pixel style font */
 
 nav {
     position: absolute;

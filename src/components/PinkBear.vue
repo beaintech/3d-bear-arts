@@ -9,19 +9,19 @@
   import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
 
   const props = defineProps({
-  background: {
-    type: Boolean,
-    default: false
-  },
-  cameraPosition: {
-    type: Number,
-    default: 4
-  },
-  bodyPosition: {
-    type: Object,
-    default: () => ({ x: 0, y: 0, z: 0 })
-  }
-});
+    background: {
+      type: Boolean,
+      default: false
+    },
+    cameraPosition: {
+      type: Number,
+      default: 4
+    },
+    bodyPosition: {
+      type: Object,
+      default: () => ({ x: 0, y: 0, z: 0 })
+    }
+  });
   const threeCanvas = ref<HTMLDivElement | null>(null);
   
   onMounted(() => {
@@ -248,7 +248,7 @@
       animate();
 
  // Set initial positions for bearGroup and camera
- bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+    bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
     camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
     camera.lookAt(props.bodyPosition.x, 0, 0);
 
