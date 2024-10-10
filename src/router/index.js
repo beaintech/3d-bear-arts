@@ -3,11 +3,10 @@ import ThreeScene from '../components/ThreeScene.vue';
 import PinkBear from '../components/PinkBear.vue';
 import PurpleBear from '../components/PurpleBear.vue';
 import DiamondBear from '../components/DiamondBear.vue';
-import PinkBlueBear from '../components/PinkBlueBear.vue';
 import GlassBear from '../components/GlassBear.vue';
 import BlueBear from '../components/BlueBear.vue';
 import BluePinkBear from '../components/BluePinkBear.vue';
-import HalfBear from '../components/HalfBear.vue';
+import HalfBear from '../components/HalfBlueBear.vue';
 const routes = [
     { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     { path: '/3d-bear-arts/half', name: 'NewBear', component: HalfBear },

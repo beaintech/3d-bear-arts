@@ -8,7 +8,7 @@ import GlassBear from '../components/GlassBear.vue';
 import BlueBear from '../components/BlueBear.vue';
 import BluePinkBear from '../components/BluePinkBear.vue';
 import HalfTransparentBear from '../components/HalfTransparentBear.vue';
-import HalfBear from '../components/HalfBear.vue';
+import HalfBear from '../components/HalfBlueBear.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
