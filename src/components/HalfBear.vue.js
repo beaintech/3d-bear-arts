@@ -225,7 +225,7 @@ onMounted(() => {
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
         const leftSnout = new THREE.Mesh(leftSnoutGeometry, bodyMaterial);
-        leftSnout.scale.set(1.25, 0.6, 0.8); // Make it wider at the front
+        leftSnout.scale.set(1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.82, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
         // Geometry for the right half of the snout
@@ -236,7 +236,7 @@ onMounted(() => {
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
         const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentBodyMaterial);
-        rightSnout.scale.set(1.25, 0.6, 0.8); // Make it wider at the front
+        rightSnout.scale.set(1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.82, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides

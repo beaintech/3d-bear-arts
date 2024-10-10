@@ -10,14 +10,13 @@ import BluePinkBear from '../components/BluePinkBear.vue';
 import HalfBear from '../components/HalfBear.vue';
 const routes = [
     { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
+    { path: '/3d-bear-arts/half', name: 'NewBear', component: HalfBear },
+    { path: '/3d-bear-arts/bluePink', name: 'BluePinkBear', component: BluePinkBear },
+    { path: '/3d-bear-arts/diamond', name: 'DiamondBear', component: DiamondBear },
     { path: '/3d-bear-arts/pink', name: 'PinkBear', component: PinkBear },
     { path: '/3d-bear-arts/purple', name: 'PurpleBear', component: PurpleBear },
-    { path: '/3d-bear-arts/half', name: 'NewBear', component: HalfBear },
     { path: '/3d-bear-arts/blue', name: 'BlueBear', component: BlueBear },
-    { path: '/3d-bear-arts/pinkBlue', name: 'PinkBlueBear', component: PinkBlueBear },
-    { path: '/3d-bear-arts/diamond', name: 'DiamondBear', component: DiamondBear },
     { path: '/3d-bear-arts/glass', name: 'GlassBear', component: GlassBear },
-    { path: '/3d-bear-arts/bluePink', name: 'BluePinkBear', component: BluePinkBear },
 ];
 const router = createRouter({
     history: createWebHistory(),
