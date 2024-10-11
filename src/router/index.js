@@ -6,9 +6,8 @@ import DiamondBear from '../components/DiamondBear.vue';
 import GlassBear from '../components/GlassBear.vue';
 import BlueBear from '../components/BlueBear.vue';
 import BluePinkBear from '../components/BluePinkBear.vue';
-import HalfBear from '../components/HalfBlueBear.vue';
 import Transparent from '../components/HalfTransparentBear.vue';
-
+import HalfBear from '../components/HalfBlueBear.vue';
 import Cube from '../components/Cube.vue';
 
 const routes = [
