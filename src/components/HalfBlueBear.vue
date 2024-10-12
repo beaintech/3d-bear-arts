@@ -512,7 +512,7 @@ const hotPinkHeartMaterial = new THREE.MeshPhysicalMaterial({
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         isAnimating = true; // Resume animation after 3 seconds
-      }, 1000);
+      }, 500);
     };
 
     // Add event listener for mouse movement
