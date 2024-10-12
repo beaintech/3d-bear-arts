@@ -10,7 +10,7 @@ const props = defineProps({
     },
     cameraPosition: {
         type: Number,
-        default: 4
+        default: 5
     },
     bodyPosition: {
         type: Object,
@@ -63,6 +63,30 @@ onMounted(() => {
           }
         `,
         });
+        const bigHeartMaterial1 = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                color1: { value: new THREE.Color(0x00CED1) }, // Gold color
+                color2: { value: new THREE.Color(0xFF69B4) }, // Hotpink color
+            },
+            vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+            fragmentShader: `
+          uniform float time;
+          uniform vec3 color1;
+          uniform vec3 color2;
+          varying vec2 vUv;
+          void main() {
+            vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
+            gl_FragColor = vec4(color, 1.0);
+          }
+        `,
+        });
         const cyanMaterial = new THREE.MeshPhysicalMaterial({
             color: 0x00CED1, // Cyan
             metalness: 0.2,
@@ -79,7 +103,7 @@ onMounted(() => {
             clearcoat: 0.1,
             clearcoatRoughness: 0.8,
             transparent: true,
-            opacity: 0.39,
+            opacity: 0.44,
         });
         const pinkMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF69B4, // Pink
@@ -101,13 +125,15 @@ onMounted(() => {
             opacity: 0.99,
         });
         const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xCC0000, // Pink color (Hot Pink)
+            color: 0xCC0000, // Red color
             metalness: 0.2, // Lower metalness for a more plastic feel
             roughness: 0.6, // Increase roughness for a more matte appearance
             clearcoat: 0.1, // Low clearcoat for minimal shine
             clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
-            transparent: true,
-            opacity: 0.99, // Less transparent, more solid plastic look
+            transparent: true, // Enable transparency
+            opacity: 0.99, // Slight transparency
+            depthWrite: false, // Disable depth writing
+            depthTest: true, // Ensure depth testing
         });
         // Vertex shader
         const vertexShader = `
@@ -296,8 +322,9 @@ onMounted(() => {
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
         // Create the black material for the heart
         const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const pinkHeartMaterial = new THREE.MeshBasicMaterial({ color: 0xFF69B4 });
         // Create the small black heart tattoo mesh
-        const smallHeart = new THREE.Mesh(heartGeometry, blackMaterial);
+        const smallHeart = new THREE.Mesh(heartGeometry, pinkMaterial);
         smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
         // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
         smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
@@ -305,18 +332,19 @@ onMounted(() => {
         smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
         smallHeart.position.set(-0.4, 0.9, 0.45); // Position it on the pink side of the face
         // Add the heart to the bear group
-        bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
-        heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.25, 0, 0); // Position it in front of the body
+        // bearGroup.add(smallHeart);
+        const heart = new THREE.Mesh(heartGeometry, bigHeartMaterial);
+        heart.scale.set(0.35, 0.35, 0.35);
+        heart.position.set(0.3, -0.3, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
-        const heart2 = new THREE.Mesh(heartGeometry, heartMaterial);
+        const heart2 = new THREE.Mesh(heartGeometry, bigHeartMaterial1);
         heart2.scale.set(0.25, 0.25, 0.25);
-        heart2.position.set(0, 0, 0); // Position it in front of the body
+        heart2.position.set(0.27, 0.2, 0); // Position it in front of the body
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
+        bearGroup.add(heart2);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
         const leftArm = new THREE.Mesh(armGeometry, cyanMaterial);
@@ -387,6 +415,18 @@ onMounted(() => {
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
+        // Update heart renderOrder to ensure it's always drawn last
+        heart.renderOrder = 0;
+        heart2.renderOrder = 1;
+        // Set the body and head to render first
+        leftBody.renderOrder = 0;
+        rightBody.renderOrder = 0;
+        leftHead.renderOrder = 0;
+        rightHead.renderOrder = 0;
+        // Set the buttocks to render last and not visible inside the body
+        leftButtock.renderOrder = -1;
+        rightButtock.renderOrder = -1;
+        tail.renderOrder = 1;
         // Add bear group to the scene
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
@@ -454,7 +494,7 @@ const __VLS_fnComponent = (await import('vue')).defineComponent({
         },
         cameraPosition: {
             type: Number,
-            default: 4
+            default: 5
         },
         bodyPosition: {
             type: Object,
@@ -510,7 +550,7 @@ const __VLS_self = (await import('vue')).defineComponent({
         },
         cameraPosition: {
             type: Number,
-            default: 4
+            default: 5
         },
         bodyPosition: {
             type: Object,
@@ -529,7 +569,7 @@ export default (await import('vue')).defineComponent({
         },
         cameraPosition: {
             type: Number,
-            default: 4
+            default: 5
         },
         bodyPosition: {
             type: Object,

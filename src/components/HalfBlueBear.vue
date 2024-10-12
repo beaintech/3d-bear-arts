@@ -75,31 +75,6 @@
           }
         `,
       });
-
-      const bigHeartMaterial1 = new THREE.ShaderMaterial({
-        uniforms: {
-          time: { value: 0 },
-          color1: { value: new THREE.Color(0x00CED1) }, // Gold color
-          color2: { value: new THREE.Color(0xFF69B4) }, // Hotpink color
-        },
-        vertexShader: `
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform float time;
-          uniform vec3 color1;
-          uniform vec3 color2;
-          varying vec2 vUv;
-          void main() {
-            vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
-            gl_FragColor = vec4(color, 1.0);
-          }
-        `,
-      });
             
     const cyanMaterial = new THREE.MeshPhysicalMaterial({
       color: 0x00CED1, // Cyan
@@ -118,7 +93,7 @@
       clearcoat: 0.1,
       clearcoatRoughness: 0.8,
       transparent: true,
-      opacity: 0.44,
+      opacity: 0.35,
     });
 
     const pinkMaterial = new THREE.MeshPhysicalMaterial({
@@ -131,26 +106,39 @@
       opacity: 0.99,
     });
 
-      // Gummy pink material for the bear (reduce roughness to make it shinier)
-      const gummyMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x00CED1, // Blue pink
-        metalness: 0.2, // Increased metalness for more light reflection
-        roughness: 0.5, // Reduced roughness for a shinier appearance
-        clearcoat: 0.1, // Higher clearcoat for more shine
-        clearcoatRoughness: 0.8, // Reduced clearcoat roughness for shinier coat
-        transparent: true,
-        opacity: 0.99,
-      });
-
-      const heartMaterial = new THREE.MeshPhysicalMaterial({
+      const redHeartMaterial = new THREE.MeshPhysicalMaterial({
         color: 0xCC0000,          // Red color
         metalness: 0.2,           // Lower metalness for a more plastic feel
         roughness: 0.6,           // Increase roughness for a more matte appearance
         clearcoat: 0.1,           // Low clearcoat for minimal shine
         clearcoatRoughness: 0.8,  // Higher clearcoat roughness for a matte finish
-        transparent: true,        // Enable transparency
+        transparent: false,        // Enable transparency
         opacity: 0.99,            // Slight transparency
-        depthWrite: false,        // Disable depth writing
+        depthWrite: true,        // Disable depth writing
+        depthTest: true,          // Ensure depth testing
+});
+
+const hotPinkHeartMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xFF69B4,          // Red color
+        metalness: 0.2,           // Lower metalness for a more plastic feel
+        roughness: 0.6,           // Increase roughness for a more matte appearance
+        clearcoat: 0.1,           // Low clearcoat for minimal shine
+        clearcoatRoughness: 0.8,  // Higher clearcoat roughness for a matte finish
+        transparent: false,        // Enable transparency
+        opacity: 0.99,            // Slight transparency
+        depthWrite: true,        // Disable depth writing
+        depthTest: true,          // Ensure depth testing
+});
+
+const purpleHeartMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xFF69B4,          // Red color
+        metalness: 0.2,           // Lower metalness for a more plastic feel
+        roughness: 0.6,           // Increase roughness for a more matte appearance
+        clearcoat: 0.1,           // Low clearcoat for minimal shine
+        clearcoatRoughness: 0.8,  // Higher clearcoat roughness for a matte finish
+        transparent: false,        // Enable transparency
+        opacity: 0.99,            // Slight transparency
+        depthWrite: true,        // Disable depth writing
         depthTest: true,          // Ensure depth testing
 });
 
@@ -199,21 +187,10 @@
       },
       vertexShader,
       fragmentShader:fragmentShader,
-      transparent: true, // Enable transparency in the material
-      depthWrite: false // Disable depth writing to ensure proper rendering
+      transparent: false, // Enable transparency in the material
+      depthWrite: true // Disable depth writing to ensure proper rendering
   });
 
-
-  const transparentBodyMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-          time: { value: 0.0 }, // Time uniform to animate the shader
-          opacity: { value: .4 } // Opacity uniform (set to 0.6 for 60% transparency)
-      },
-      vertexShader,
-      fragmentShader:fragmentShader,
-      transparent: true, // Enable transparency in the material
-      depthWrite: false // Disable depth writing to ensure proper rendering
-  });
   
   // Create the bear group and all parts
   const bearGroup = new THREE.Group();
@@ -376,7 +353,6 @@
 
       // Create the black material for the heart
      const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-     const pinkHeartMaterial = new THREE.MeshBasicMaterial({ color: 0xFF69B4 });
 
       // Create the small black heart tattoo mesh
       const smallHeart = new THREE.Mesh(heartGeometry, pinkMaterial);
@@ -390,20 +366,40 @@
 
       // Add the heart to the bear group
       // bearGroup.add(smallHeart);
-  
-      const heart = new THREE.Mesh(heartGeometry, bigHeartMaterial);
-      heart.scale.set(0.35, 0.35, 0.35);
-      heart.position.set(0.3, -0.3, 0); // Position it in front of the body
+      const heart = new THREE.Mesh(heartGeometry, bodyMaterial);
+      heart.scale.set(0.5, 0.5, 0.5);
+      heart.position.set(0.3, 0, 0); // Position it in front of the body
       heart.rotation.y = Math.PI;
       heart.rotation.x = Math.PI;
       bearGroup.add(heart);
+  
+      const heart1 = new THREE.Mesh(heartGeometry, bigHeartMaterial);
+      heart.scale.set(0.35, 0.35, 0.35);
+      heart.position.set(0.3, 0, 0); // Position it in front of the body
+      heart.rotation.y = Math.PI;
+      heart.rotation.x = Math.PI;
+      // bearGroup.add(heart1);
       
-      const heart2 = new THREE.Mesh(heartGeometry, bigHeartMaterial1);
+      const heart2 = new THREE.Mesh(heartGeometry, hotPinkHeartMaterial);
       heart2.scale.set(0.25, 0.25, 0.25);
       heart2.position.set(0.27, 0.2, 0); // Position it in front of the body
       heart2.rotation.y = Math.PI;
       heart2.rotation.x = Math.PI;
-      bearGroup.add(heart2);
+      // bearGroup.add(heart2);
+
+      const heart3 = new THREE.Mesh(heartGeometry, redHeartMaterial);
+      heart3.scale.set(0.3, 0.3, 0.3);
+      heart3.position.set(0.23, -0.5, 0.3); // Position it in front of the body
+      heart3.rotation.y = Math.PI;
+      heart3.rotation.x = Math.PI;
+      // bearGroup.add(heart3);
+      
+      const heart4 = new THREE.Mesh(heartGeometry, bodyMaterial);
+      heart4.scale.set(0.4, 0.4, 0.4);
+      heart4.position.set(0.27, 0, 0.35); // Position it in front of the body
+      heart4.rotation.y = Math.PI;
+      heart4.rotation.x = Math.PI;
+      // bearGroup.add(heart4);
       
       // Bear arms
       const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -454,7 +450,7 @@
   
       // Bear tail
       const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-      const tail = new THREE.Mesh(tailGeometry, heartMaterial);
+      const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
       tail.position.set(0, -0.35, -0.8);
       bearGroup.add(tail);
   
@@ -490,21 +486,11 @@
     });
 
     // Update heart renderOrder to ensure it's always drawn last
-    heart.renderOrder = 0;
-    heart2.renderOrder = 1;
 
-    // Set the body and head to render first
-    leftBody.renderOrder = 0;
-    rightBody.renderOrder = 0;
-    leftHead.renderOrder = 0;
-    rightHead.renderOrder = 0;
-
-    // Set the buttocks to render last and not visible inside the body
-    leftButtock.renderOrder = -1;
-    rightButtock.renderOrder = -1;
     tail.renderOrder = 1;
 
     // Add bear group to the scene
+    bearGroup.scale.set(1.2, 1.2, 1.2); 
     scene.add(bearGroup);
 
  // Set initial positions for bearGroup and camera
@@ -538,7 +524,7 @@
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         isAnimating = true; // Resume animation after 3 seconds
-      }, 100000);
+      }, 1000);
     };
 
     // Add event listener for mouse movement
@@ -550,11 +536,12 @@
 
         if (isAnimating) {
         bearGroup.rotation.y += 0.03; // Rotate the bear slightly on the Y-axis
-        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
       }
         renderer.render(scene, camera);
       }
   
+      bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
+
       // Start animation
       animate();
 
