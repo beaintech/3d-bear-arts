@@ -20,14 +20,70 @@ const props = defineProps({
 const threeCanvas = ref(null);
 onMounted(() => {
     if (threeCanvas.value) {
-        // Initialize the Three.js scene
+        // Scene setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.25;
-        threeCanvas.value.appendChild(renderer.domElement);
+        document.body.appendChild(renderer.domElement);
+        // Add a gradient background to simulate the sky
+        const skyGradient = new THREE.PlaneGeometry(500, 500);
+        const skyMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                color1: { value: new THREE.Color(0x87CEEB) }, // Light sky blue
+                color2: { value: new THREE.Color(0xFFFFFF) } // White for horizon
+            },
+            vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+            fragmentShader: `
+    uniform vec3 color1;
+    uniform vec3 color2;
+    varying vec2 vUv;
+    void main() {
+      vec3 color = mix(color1, color2, vUv.y);
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `,
+            side: THREE.BackSide
+        });
+        const sky = new THREE.Mesh(skyGradient, skyMaterial);
+        sky.position.z = -50;
+        sky.rotation.x = Math.PI / 2;
+        scene.add(sky);
+        // Add ground (grass)
+        const groundGeometry = new THREE.PlaneGeometry(500, 500);
+        const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x228B22 }); // Grass green
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
+        // Add a few campus-like buildings (Box Geometry)
+        const buildingGeometry = new THREE.BoxGeometry(10, 20, 10);
+        const buildingMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 }); // Brownish building color
+        for (let i = -20; i <= 20; i += 20) {
+            const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+            building.position.set(i, 10, -30); // Elevate the building
+            scene.add(building);
+        }
+        // Add trees using a cone for the foliage and cylinder for the trunk
+        const treeTrunkGeometry = new THREE.CylinderGeometry(1, 1, 5);
+        const treeTrunkMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
+        const treeTopGeometry = new THREE.ConeGeometry(3, 6);
+        const treeTopMaterial = new THREE.MeshBasicMaterial({ color: 0x006400 }); // Dark green
+        for (let i = -40; i <= 40; i += 20) {
+            // Tree trunk
+            const trunk = new THREE.Mesh(treeTrunkGeometry, treeTrunkMaterial);
+            trunk.position.set(i, 2.5, -20);
+            scene.add(trunk);
+            // Tree top
+            const top = new THREE.Mesh(treeTopGeometry, treeTopMaterial);
+            top.position.set(i, 8, -20);
+            scene.add(top);
+        }
         // Add lighting (increase intensities and add a point light)
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Increased intensity
         scene.add(ambientLight);
@@ -46,22 +102,22 @@ onMounted(() => {
                 color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
             },
             vertexShader: `
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
             fragmentShader: `
-          uniform float time;
-          uniform vec3 color1;
-          uniform vec3 color2;
-          varying vec2 vUv;
-          void main() {
-            vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
-            gl_FragColor = vec4(color, 1.0);
-          }
-        `,
+            uniform float time;
+            uniform vec3 color1;
+            uniform vec3 color2;
+            varying vec2 vUv;
+            void main() {
+              vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
+              gl_FragColor = vec4(color, 1.0);
+            }
+          `,
         });
         const cyanMaterial = new THREE.MeshPhysicalMaterial({
             color: 0x00CED1, // Cyan
@@ -111,40 +167,40 @@ onMounted(() => {
         });
         // Vertex shader
         const vertexShader = `
-    varying vec2 vUv;
-          void main() {
-              vUv = uv;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-    `;
+      varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+      `;
         // Fragment shader
         const fragmentShader = `
-      uniform float time;
-          uniform float opacity; // Add opacity uniform
-          varying vec2 vUv;
-      
-          void main() {
-              // Dynamic water-like gradient effect
-              vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
-              float len = length(p); // Get the length of the vector (distance from center)
-              float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
-      
-              // Create a time-based oscillating value for smooth gradient transitions
-              float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
-      
-              // Color gradient based on the angle and distance from the center
-              vec3 color1 = vec3(1.0, 0.3, 0.5); // Pinkish
-              vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
-              vec3 color3 = vec3(1.0, 0.0, 0.8); // Magenta
-      
-              // Mix the colors based on wave and angle for a dynamic effect
-              vec3 color = mix(color1, color2, wave);
-              color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
-      
-              // Set the fragment color with opacity
-              gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
-          }
-    `;
+        uniform float time;
+            uniform float opacity; // Add opacity uniform
+            varying vec2 vUv;
+        
+            void main() {
+                // Dynamic water-like gradient effect
+                vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
+                float len = length(p); // Get the length of the vector (distance from center)
+                float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
+        
+                // Create a time-based oscillating value for smooth gradient transitions
+                float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
+        
+                // Color gradient based on the angle and distance from the center
+                vec3 color1 = vec3(1.0, 0.3, 0.5); // Pinkish
+                vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
+                vec3 color3 = vec3(1.0, 0.0, 0.8); // Magenta
+        
+                // Mix the colors based on wave and angle for a dynamic effect
+                vec3 color = mix(color1, color2, wave);
+                color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
+        
+                // Set the fragment color with opacity
+                gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
+            }
+      `;
         const bodyMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0.0 }, // Time uniform to animate the shader
@@ -167,6 +223,8 @@ onMounted(() => {
         });
         // Create the bear group and all parts
         const bearGroup = new THREE.Group();
+        // Bear body
+        // const bodyGeometry = new THREE.SphereGeometry(1, 32, 32);
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
         32, // Width segments
@@ -218,9 +276,8 @@ onMounted(() => {
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
         const headCircle = new THREE.Mesh(headCircleGeometry, cyanMaterial);
         // Position the circle to cover the flat side
-        headCircle.position.set(0, 1, 0); // Set to the same height as the heads
+        headCircle.position.set(0, 0.97, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
-        headCircle.scale.set(1, 0.95, 0.95); // Make it wider at the front
         // Create a group to combine the two half-spheres and the circle
         const halfHeadSphereGroup = new THREE.Group();
         halfHeadSphereGroup.add(leftHead);
@@ -261,10 +318,9 @@ onMounted(() => {
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
         const snoutCircle = new THREE.Mesh(snoutCircleGeometry, cyanMaterial);
-        snoutCircle.scale.set(0.8, 0.6, 0.8);
-        // Position and rotate the circle to align with the vertical side of the snout
-        snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
-        snoutCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the vertical flat side
+        snoutCircle.scale.set(1.25, 0.6, 0.8);
+        snoutCircle.position.set(0, 0.85, 0.5); // Position at the front of the snout
+        snoutCircle.rotation.x = Math.PI / 2; // Rotate the circle to face forward
         // Group the left, right snout halves, and the circle together
         const halfSnoutGroup = new THREE.Group();
         halfSnoutGroup.add(leftSnout);
@@ -294,21 +350,9 @@ onMounted(() => {
             envMapIntensity: 1, // Make environment reflections more prominent
         });
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        // Create the black material for the heart
-        const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        // Create the small black heart tattoo mesh
-        const smallHeart = new THREE.Mesh(heartGeometry, blackMaterial);
-        smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
-        // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
-        smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
-        smallHeart.rotation.x = THREE.MathUtils.degToRad(5);
-        smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
-        smallHeart.position.set(-0.4, 0.9, 0.45); // Position it on the pink side of the face
-        // Add the heart to the bear group
-        bearGroup.add(smallHeart);
         const heart = new THREE.Mesh(heartGeometry, heartMaterial);
-        heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.25, 0, 0); // Position it in front of the body
+        heart.scale.set(0.25, 0.25, 0.25);
+        heart.position.set(.5, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
@@ -389,46 +433,19 @@ onMounted(() => {
         });
         // Add bear group to the scene
         scene.add(bearGroup);
-        // Set initial positions for bearGroup and camera
-        bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
-        camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
-        camera.lookAt(props.bodyPosition.x, 0, 0);
-        camera.position.z = 4;
-        // New mouse tracking functionality
-        const mouse = { x: 0, y: 0 };
-        let isAnimating = true; // To track if the bear should be rotating
-        let timeoutId = null; // To track the timeout when resuming the animation
-        // Update bearGroup rotation based on mouse movement
-        const onMouseMove = (event) => {
-            isAnimating = false;
-            // Normalize mouse coordinates from -1 to 1
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            // Calculate rotation based on mouse position
-            const targetRotationY = mouse.x * Math.PI * 0.2; // Y-axis rotation (left-right)
-            const targetRotationX = mouse.y * Math.PI * 0.2; // X-axis rotation (up-down)
-            // Apply the calculated rotation to the bear group
-            bearGroup.rotation.y = targetRotationY;
-            bearGroup.rotation.x = targetRotationX;
-            // Clear the existing timeout and set a new one for 3 seconds to resume the animation
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                isAnimating = true; // Resume animation after 3 seconds
-            }, 100000);
-        };
-        // Add event listener for mouse movement
-        window.addEventListener('mousemove', onMouseMove);
         // Animation function
         function animate() {
             requestAnimationFrame(animate);
-            if (isAnimating) {
-                bearGroup.rotation.y += 0.03; // Rotate the bear slightly on the Y-axis
-                bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
-            }
+            bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
+            bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
             renderer.render(scene, camera);
         }
         // Start animation
         animate();
+        // Set initial positions for bearGroup and camera
+        bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+        camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
+        camera.lookAt(props.bodyPosition.x, 0, 0);
         // Watch for changes in bodyPosition
         watch(() => props.bodyPosition, (newPos) => {
             bearGroup.position.set(newPos.x, newPos.y, newPos.z);
