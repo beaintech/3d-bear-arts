@@ -188,11 +188,9 @@
       depthWrite: false // Disable depth writing to ensure proper rendering
   });
   
-      // Create the bear group and all parts
-      const bearGroup = new THREE.Group();
+  // Create the bear group and all parts
+  const bearGroup = new THREE.Group();
   
-      // Bear body
-    // const bodyGeometry = new THREE.SphereGeometry(1, 32, 32);
     // Create a half-sphere geometry
       const bodyGeometry = new THREE.SphereGeometry(
           1,            // Radius
@@ -258,8 +256,9 @@
       const headCircle = new THREE.Mesh(headCircleGeometry, cyanMaterial);
 
       // Position the circle to cover the flat side
-      headCircle.position.set(0, 0.97, 0); // Set to the same height as the heads
+      headCircle.position.set(0, 1, 0); // Set to the same height as the heads
       headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
+      headCircle.scale.set(1, 0.95, 0.95); // Make it wider at the front
 
       // Create a group to combine the two half-spheres and the circle
       const halfHeadSphereGroup = new THREE.Group();
@@ -309,9 +308,10 @@
       // Circle to cover the flat sides
       const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
       const snoutCircle = new THREE.Mesh(snoutCircleGeometry, cyanMaterial);
-      snoutCircle.scale.set(1.25, 0.6, 0.8);
-      snoutCircle.position.set(0, 0.85, 0.5); // Position at the front of the snout
-      snoutCircle.rotation.x = Math.PI / 2; // Rotate the circle to face forward
+      snoutCircle.scale.set(0.8, 0.6, 0.8);
+      // Position and rotate the circle to align with the vertical side of the snout
+      snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
+      snoutCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the vertical flat side
 
       // Group the left, right snout halves, and the circle together
       const halfSnoutGroup = new THREE.Group();
@@ -346,13 +346,34 @@
       });
       
       const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
+
+      // Create the black material for the heart
+     const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+      // Create the small black heart tattoo mesh
+      const smallHeart = new THREE.Mesh(heartGeometry, blackMaterial);
+      smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
+
+      // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
+      smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
+      smallHeart.rotation.x = THREE.MathUtils.degToRad(5);
+      smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
+      smallHeart.position.set(-0.4, 0.9, 0.45); // Position it on the pink side of the face
+
+      // Add the heart to the bear group
+      bearGroup.add(smallHeart);
   
       const heart = new THREE.Mesh(heartGeometry, heartMaterial);
       heart.scale.set(0.5, 0.5, 0.5);
-      heart.position.set(0, 0, 0); // Position it in front of the body
+      heart.position.set(0.25, 0, 0); // Position it in front of the body
       heart.rotation.y = Math.PI;
       heart.rotation.x = Math.PI;
       bearGroup.add(heart);
+      const heart2 = new THREE.Mesh(heartGeometry, heartMaterial);
+      heart2.scale.set(0.25, 0.25, 0.25);
+      heart2.position.set(0, 0, 0); // Position it in front of the body
+      heart2.rotation.y = Math.PI;
+      heart2.rotation.x = Math.PI;
   
       // Bear arms
       const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -391,15 +412,15 @@
       rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
       bearGroup.add(rightBootFront);
   
-           // Create rounded buttocks
-           const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-          const leftButtock = new THREE.Mesh(buttockGeometry, cyanMaterial);
-          leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
-          bearGroup.add(leftButtock);
+      // Create rounded buttocks
+      const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
+      const leftButtock = new THREE.Mesh(buttockGeometry, cyanMaterial);
+      leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
+      bearGroup.add(leftButtock);
   
-          const rightButtock = new THREE.Mesh(buttockGeometry, transparentMaterial);
-          rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
-          bearGroup.add(rightButtock);
+      const rightButtock = new THREE.Mesh(buttockGeometry, transparentMaterial);
+      rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
+      bearGroup.add(rightButtock);
   
       // Bear tail
       const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
@@ -409,53 +430,88 @@
   
       // Load font and create 3D text
       const loader = new FontLoader();
-          loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-          const xEyeGeometry = new TextGeometry('X', {
-              font: font,
-              size: 0.18, // Size of the X
-              depth: 0.05,
-          });
+      loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
+      const xEyeGeometry = new TextGeometry('X', {
+          font: font,
+          size: 0.18, // Size of the X
+          depth: 0.05,
+       });
       
-          const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-          const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
-          xEye.position.set(-0.3, .99, 0.53); // Position on the head
-          xEye.rotation.x = THREE.MathUtils.degToRad(-5);
-          xEye.rotation.y = THREE.MathUtils.degToRad(-15);
-          bearGroup.add(xEye);
+      const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+      const xEye = new THREE.Mesh(xEyeGeometry, xEyeMaterial);
+      xEye.position.set(-0.3, .99, 0.53); // Position on the head
+      xEye.rotation.x = THREE.MathUtils.degToRad(-5);
+      xEye.rotation.y = THREE.MathUtils.degToRad(-15);
+      bearGroup.add(xEye);
 
-          // Create the O eye
-          const oEyeGeometry = new TextGeometry('+', {
-              font: font,
-              size: 0.25, // Size of the O
-              depth: 0.1, // Thickness of the O
-          });
-
-          const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-          const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
-          oEye.position.set(0.14, .99, 0.53); // Position on the head
-          oEye.rotation.y = THREE.MathUtils.degToRad(12);
-          oEye.rotation.x = THREE.MathUtils.degToRad(-5);
-          bearGroup.add(oEye);
+     // Create the O eye
+      const oEyeGeometry = new TextGeometry('+', {
+      font: font,
+      size: 0.25, // Size of the O
+      depth: 0.1, // Thickness of the O
       });
+
+      const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
+      const oEye = new THREE.Mesh(oEyeGeometry, oEyeMaterial);
+      oEye.position.set(0.14, .99, 0.53); // Position on the head
+      oEye.rotation.y = THREE.MathUtils.degToRad(12);
+      oEye.rotation.x = THREE.MathUtils.degToRad(-5);
+      bearGroup.add(oEye);
+    });
   
-      // Add bear group to the scene
-      scene.add(bearGroup);
-  
-      // Animation function
-      function animate() {
-        requestAnimationFrame(animate);
-        bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
-        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
-        renderer.render(scene, camera);
-      }
-  
-      // Start animation
-      animate();
+    // Add bear group to the scene
+    scene.add(bearGroup);
 
  // Set initial positions for bearGroup and camera
     bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
     camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
     camera.lookAt(props.bodyPosition.x, 0, 0);
+
+    camera.position.z = 4;
+
+    // New mouse tracking functionality
+    const mouse = { x: 0, y: 0 };
+    let isAnimating = true;  // To track if the bear should be rotating
+    let timeoutId: any = null;  // To track the timeout when resuming the animation
+
+    // Update bearGroup rotation based on mouse movement
+    const onMouseMove = (event: MouseEvent) => {
+      isAnimating = false;
+      // Normalize mouse coordinates from -1 to 1
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      // Calculate rotation based on mouse position
+      const targetRotationY = mouse.x * Math.PI * 0.2; // Y-axis rotation (left-right)
+      const targetRotationX = mouse.y * Math.PI * 0.2; // X-axis rotation (up-down)
+
+      // Apply the calculated rotation to the bear group
+      bearGroup.rotation.y = targetRotationY;
+      bearGroup.rotation.x = targetRotationX;
+
+      // Clear the existing timeout and set a new one for 3 seconds to resume the animation
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        isAnimating = true; // Resume animation after 3 seconds
+      }, 100000);
+    };
+
+    // Add event listener for mouse movement
+    window.addEventListener('mousemove', onMouseMove);
+      
+      // Animation function
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (isAnimating) {
+        bearGroup.rotation.y += 0.03; // Rotate the bear slightly on the Y-axis
+        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
+      }
+        renderer.render(scene, camera);
+      }
+  
+      // Start animation
+      animate();
 
     // Watch for changes in bodyPosition
     watch(() => props.bodyPosition, (newPos) => {

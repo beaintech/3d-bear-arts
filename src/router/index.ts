@@ -9,8 +9,7 @@ import BlueBear from '../components/BlueBear.vue';
 import BluePinkBear from '../components/BluePinkBear.vue';
 import Transparent from '../components/HalfTransparentBear.vue';
 import HalfBear from '../components/HalfBlueBear.vue';
-import Cube from '../components/Cube.vue';
-
+import SkyBear from '../components/SkyBear.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
@@ -22,8 +21,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/3d-bear-arts/purple', name: 'PurpleBear', component: PurpleBear },
   { path: '/3d-bear-arts/blue', name: 'BlueBear', component: BlueBear },
   { path: '/3d-bear-arts/glass', name: 'GlassBear', component: GlassBear },
-  { path: '/3d-bear-arts/cube', name: 'Cube', component: Cube },
-
+  { path: '/3d-bear-arts/sky', name: 'SkyBear', component: SkyBear },
 ];
 const router = createRouter({
   history: createWebHistory(),
