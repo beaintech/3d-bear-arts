@@ -88,7 +88,7 @@ onMounted(() => {
             clearcoat: 0.1,
             clearcoatRoughness: 0.8,
             transparent: true,
-            opacity: 0.99,
+            opacity: 0.79,
         });
         const redHeartMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xCC0000, // Red color
@@ -102,17 +102,6 @@ onMounted(() => {
             depthTest: true, // Ensure depth testing
         });
         const hotPinkHeartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFF69B4, // Red color
-            metalness: 0.2, // Lower metalness for a more plastic feel
-            roughness: 0.6, // Increase roughness for a more matte appearance
-            clearcoat: 0.1, // Low clearcoat for minimal shine
-            clearcoatRoughness: 0.8, // Higher clearcoat roughness for a matte finish
-            transparent: false, // Enable transparency
-            opacity: 0.99, // Slight transparency
-            depthWrite: true, // Disable depth writing
-            depthTest: true, // Ensure depth testing
-        });
-        const purpleHeartMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF69B4, // Red color
             metalness: 0.2, // Lower metalness for a more plastic feel
             roughness: 0.6, // Increase roughness for a more matte appearance
@@ -312,15 +301,15 @@ onMounted(() => {
         // bearGroup.add(smallHeart);
         const heart = new THREE.Mesh(heartGeometry, bodyMaterial);
         heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.3, 0, 0); // Position it in front of the body
+        heart.position.set(0.35, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
         const heart1 = new THREE.Mesh(heartGeometry, bigHeartMaterial);
-        heart.scale.set(0.35, 0.35, 0.35);
-        heart.position.set(0.3, 0, 0); // Position it in front of the body
-        heart.rotation.y = Math.PI;
-        heart.rotation.x = Math.PI;
+        heart1.scale.set(0.35, 0.35, 0.35);
+        heart1.position.set(0.3, 0, 0); // Position it in front of the body
+        heart1.rotation.y = Math.PI;
+        heart1.rotation.x = Math.PI;
         // bearGroup.add(heart1);
         const heart2 = new THREE.Mesh(heartGeometry, hotPinkHeartMaterial);
         heart2.scale.set(0.25, 0.25, 0.25);
@@ -380,7 +369,7 @@ onMounted(() => {
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
+        const tail = new THREE.Mesh(tailGeometry, pinkMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
