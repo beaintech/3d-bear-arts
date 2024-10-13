@@ -96,6 +96,26 @@
       opacity: 0.35,
     });
 
+    const sliverMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xD3D3D3, // Lighter silver color (light grey)
+      metalness: 0.7,  // Reduce metalness for a more visible material (not too dark)
+      roughness: 0.25,  // Lower roughness for smooth reflections
+      clearcoat: 0.4,  // Slight clearcoat for shine
+      clearcoatRoughness: 0.1, // Keep clearcoat reflections smooth
+      transparent: false,  // Not transparent
+      opacity: 1.0,  // Fully opaque
+    });
+
+    const transparenSliverMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xC0C0C0, // Silver color (light gray)
+      metalness: 1.0,  // Full metalness for a shiny metal look
+      roughness: 0.3,  // Lower roughness for a smooth surface
+      clearcoat: 0.5,  // Clearcoat for extra shine
+      clearcoatRoughness: 0.1, // Low roughness for smoother reflections
+      transparent: true,  // Enable transparency
+      opacity: 0.35,  // Partially transparent for glass-like metal
+    });
+
     const pinkMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xFF69B4, // Pink
       metalness: 0.2,
