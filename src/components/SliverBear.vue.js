@@ -373,19 +373,19 @@ onMounted(() => {
         heart1.position.set(0.3, 0, 0); // Position it in front of the body
         heart1.rotation.y = Math.PI;
         heart1.rotation.x = Math.PI;
-        // bearGroup.add(heart1);
+        bearGroup.add(heart1);
         const heart2 = new THREE.Mesh(heartGeometry, hotPinkHeartMaterial);
         heart2.scale.set(0.25, 0.25, 0.25);
         heart2.position.set(0.27, 0.2, 0); // Position it in front of the body
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
-        // bearGroup.add(heart2);
+        bearGroup.add(heart2);
         const heart3 = new THREE.Mesh(heartGeometry, redHeartMaterial);
         heart3.scale.set(0.3, 0.3, 0.3);
         heart3.position.set(0.23, -0.5, 0.3); // Position it in front of the body
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
-        // bearGroup.add(heart3);
+        bearGroup.add(heart3);
         const heart4 = new THREE.Mesh(heartGeometry, bodyMaterial);
         heart4.scale.set(0.4, 0.4, 0.4);
         heart4.position.set(0.27, 0, 0.35); // Position it in front of the body
