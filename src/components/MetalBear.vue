@@ -373,18 +373,25 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
   
         // Add the heart to the bear group
         // bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, leatherMaterialWithLV);
-        heart.scale.set(0.5, 0.5, 0.5);
+        const heart = new THREE.Mesh(heartGeometry, blackLeatherMaterialWithLV);
+        heart.scale.set(0.6, 0.5, 0.5);
         heart.position.set(0.35, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         // bearGroup.add(heart);
 
+        const heart3 = new THREE.Mesh(heartGeometry, blackLeatherMaterialWithLV);
+        heart3.scale.set(0.2, 0.2, 0.2);
+        heart3.position.set(0.3, -0.1, 0.2); // Position it in front of the body
+        heart3.rotation.y = Math.PI;
+        heart3.rotation.x = Math.PI;
+        bearGroup.add(heart3);
+
 
         const bagGeometry = new THREE.BoxGeometry(1.3, 1.2, 0.6); // Increased thickness for the bag
         const bag = new THREE.Mesh(bagGeometry, leatherMaterialWithLV);
         bag.scale.set(0.45, 0.45, 0.45); // Scale of the bag
-        bag.position.set(0.35, -0.2, 0); // Position the bag in front of the bear
+        bag.position.set(0.35, -0.2, 0.1); // Position the bag in front of the bear
         bag.rotation.y = Math.PI; // Rotate the bag
 
         // Create handles for the bag
@@ -400,7 +407,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
 
         // Left handle
         const handle1 = new THREE.Mesh(handleGeometry, leatherMaterialWithLV);
-        handle1.position.set(0.35, 0.1, 0); // Adjusted position to match the top of the bag
+        handle1.position.set(0.35, 0.1, 0.1); // Adjusted position to match the top of the bag
         handle1.rotation.z = Math.PI / 2; // Vertical rotation to align the handle properly
         handle1.rotation.x = Math.PI / 8; // Slight angle for natural look
         handle1.rotation.y = Math.PI / 14; // Slight angle for natural look
@@ -408,7 +415,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
 
         // Right handle
         const handle2 = new THREE.Mesh(handleGeometry, leatherMaterialWithLV);
-        handle2.position.set(0.35, 0.1, 0.03); // Adjusted position for the right handle
+        handle2.position.set(0.35, 0.1, 0.13); // Adjusted position for the right handle
         handle2.rotation.z = Math.PI / 2; // Same vertical rotation for symmetry
         handle2.rotation.x = Math.PI / -8; // Same slight angle for a natural look
         handle2.rotation.y = Math.PI / 12; // Slight angle for natural look
@@ -512,7 +519,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
       tail.renderOrder = 1;
   
       // Add bear group to the scene
-      bearGroup.scale.set(1.2, 1.2, 1.2); 
+      bearGroup.scale.set(1.35, 1.35, 1.35); 
       scene.add(bearGroup);
   
    // Set initial positions for bearGroup and camera
@@ -589,15 +596,14 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
     </script>
     
     <style scoped>
-.three-canvas {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #f5e1c0, #d2a679, #8b5e34, #5b3a1e); /* Creamy to brownie gradient */
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-
+    .three-canvas {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 50%, #f5e1c0, #d2a679, #8b5e34, #5b3a1e); /* Creamy to brownie gradient */
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
 
     .no-bg {
             margin: 0;
