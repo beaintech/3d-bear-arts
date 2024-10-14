@@ -41,6 +41,10 @@ onMounted(() => {
         const pointLight = new THREE.PointLight(0xffffff, 5, 50); // Strong point light
         pointLight.position.set(0, 2, 4); // Close to the object
         scene.add(pointLight);
+        // Load gradient-like texture
+        const textureLoader = new THREE.TextureLoader();
+        const gradientTexture = textureLoader.load('3d-bear-arts/src/assets/gradient_texture.jpg');
+        // Configure cube render target for reflections
         const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
             format: THREE.RGBAFormat,
             generateMipmaps: true,
@@ -48,25 +52,39 @@ onMounted(() => {
         });
         // Create CubeCamera with the correct WebGLCubeRenderTarget
         const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
-        // Set the bear material to use the cube camera's render target texture for reflection
+        // Reflective material using gradient texture as envMap
         const sliverMaterial1 = new THREE.MeshPhysicalMaterial({
-            metalness: 1.0,
-            roughness: 0.1,
-            envMap: cubeRenderTarget.texture, // Use cube camera's texture for reflections
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            transparent: true,
-            opacity: 1.0,
+            color: 0xFF69B4, // Hot pink or silver color
+            metalness: 1.0, // Full metalness for maximum reflectivity
+            roughness: 0.1, // Low roughness for sharper reflections
+            clearcoat: 1.0, // High clearcoat for added shine
+            clearcoatRoughness: 0.1, // Low clearcoat roughness for shininess
+            envMap: gradientTexture, // Use gradient texture for reflections
+            envMapIntensity: 1.5, // Increase reflection intensity
         });
-        // Add the bear and cubeCamera to the scene and start capturing reflections
+        // Transparent reflective material using gradient texture as envMap
+        const transparentSliverMaterial1 = new THREE.MeshPhysicalMaterial({
+            color: 0xC0C0C0, // Silver color for transparency
+            metalness: 1.0, // Full metalness for reflectivity
+            roughness: 0.05, // Lower roughness for sharper reflections
+            clearcoat: 1.0, // High clearcoat for added shine
+            clearcoatRoughness: 0.1, // Low clearcoat roughness for shininess
+            transparent: true, // Enable transparency
+            opacity: 0.35, // Semi-transparent
+            envMap: cubeRenderTarget.texture, // Use cube render target texture for reflections
+            envMapIntensity: 1.5, // Increase reflection intensity
+        });
+        // Add the cubeCamera and bear group to the scene
         scene.add(cubeCamera);
+        scene.environment = cubeRenderTarget.texture; // Set environment map for reflections
+        // Update reflections regularly
         function updateReflection() {
-            bearGroup.visible = false; // Hide the bear when capturing environment reflections
-            cubeCamera.update(renderer, scene);
+            bearGroup.visible = false; // Hide bear during cube camera reflection capture
+            cubeCamera.update(renderer, scene); // Update cube camera to reflect environment
             bearGroup.visible = true; // Show the bear again
             requestAnimationFrame(updateReflection);
         }
-        updateReflection();
+        updateReflection(); // Start reflection updates
         const mirrorLoader = new THREE.CubeTextureLoader();
         const environmentMap = mirrorLoader.load([
             'https://threejs.org/examples/textures/cube/Park2/posx.jpg',
@@ -76,6 +94,12 @@ onMounted(() => {
             'https://threejs.org/examples/textures/cube/Park2/posz.jpg',
             'https://threejs.org/examples/textures/cube/Park2/negz.jpg',
         ]);
+        const universeEnvMap = mirrorLoader.load([
+            'path_to_universe_posx.jpg', 'path_to_universe_negx.jpg',
+            'path_to_universe_posy.jpg', 'path_to_universe_negy.jpg',
+            'path_to_universe_posz.jpg', 'path_to_universe_negz.jpg',
+        ]);
+        scene.environment = universeEnvMap;
         scene.environment = environmentMap;
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF69B4, // Silver color
