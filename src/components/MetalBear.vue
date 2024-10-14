@@ -76,8 +76,20 @@ const leatherMaterialWithLV = new THREE.MeshPhysicalMaterial({
   envMapIntensity: 0.7,  // Adjust the intensity of reflections if needed
 });
 
+const blackLeatherMaterialWithLV = new THREE.MeshPhysicalMaterial({
+  color: 0x5b3a1e, // Brown leather color similar to LV
+  metalness: 0.0,  // Non-metallic
+  roughness: 0.8,  // High roughness for matte finish
+  bumpMap: leatherBumpMap,  // Bump map for leather texture
+  bumpScale: 0.1,  // Intensity of the leather grain texture
+  clearcoat: 0.2,  // Slight clearcoat for a subtle sheen
+  clearcoatRoughness: 0.9,  // Rough clearcoat to keep the matte look
+  map: lvLogoTexture,  // Apply the LV logo texture as the main texture
+  envMapIntensity: 0.7,  // Adjust the intensity of reflections if needed
+});
+
 const transparentLeatherMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xC0C0C0,  // Brown leather color (LV-style)
+    color: 0xC8B19C,  // Brown leather color (LV-style)
   metalness: 0.2,   // Increase metalness for more reflectivity
   roughness: 0.05,   // Lower roughness for a smooth, glass-like finish
   bumpMap: leatherBumpMap,  // Bump map for leather grain texture
@@ -86,12 +98,24 @@ const transparentLeatherMaterial = new THREE.MeshPhysicalMaterial({
   clearcoatRoughness: 0.05,  // Lower clearcoat roughness to enhance the glassy effect
   map: lvLogoTexture,  // Overlay the LV logo texture
   transparent: true,  // Enable transparency
-  opacity: 0.5,  // Make it more see-through like glass
+  opacity: 0.4,  // Make it more see-through like glass
   transmission: 0.9,  // Add transmission to give it a glass-like appearance
   envMapIntensity: 1.0,  // Increase reflection intensity
   reflectivity: 0.9,  // Enhance reflectivity to simulate glass
   ior: 1.45,  // Index of refraction to give it more of a glass feel
   side: THREE.DoubleSide,  // Ensure the material renders on both sides
+});
+
+const blackLeatherMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0x000000,  // Black leather color
+  metalness: 0.2,   // Low metalness for a natural look
+  roughness: 0.7,   // Higher roughness to reduce shine, give it a matte appearance
+  bumpMap: leatherBumpMap,  // Bump map to simulate leather grain
+  bumpScale: 0.15,  // Stronger bump effect for leather texture
+  clearcoat: 0.2,   // Slight clearcoat for a subtle sheen, like polished leather
+  clearcoatRoughness: 0.5,  // Slightly rough clearcoat to reduce extreme gloss
+  reflectivity: 0.2,  // Low reflectivity for a more matte finish
+  envMapIntensity: 0.3,  // Subtle environment reflection
 });
       
 const metallicMaterial = new THREE.MeshPhysicalMaterial({
@@ -274,7 +298,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
             Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
             Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leatherMaterialWithLV);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, blackLeatherMaterialWithLV);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -349,40 +373,55 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
   
         // Add the heart to the bear group
         // bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, bodyMaterial);
+        const heart = new THREE.Mesh(heartGeometry, leatherMaterialWithLV);
         heart.scale.set(0.5, 0.5, 0.5);
         heart.position.set(0.35, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
-    
-        const heart1 = new THREE.Mesh(heartGeometry, bigHeartMaterial);
-        heart1.scale.set(0.35, 0.35, 0.35);
-        heart1.position.set(0.3, 0, 0); // Position it in front of the body
-        heart1.rotation.y = Math.PI;
-        heart1.rotation.x = Math.PI;
-        // bearGroup.add(heart1);
-        
-        const heart2 = new THREE.Mesh(heartGeometry, leatherMaterialWithLV);
-        heart2.scale.set(0.25, 0.25, 0.25);
-        heart2.position.set(0.27, 0.2, 0); // Position it in front of the body
-        heart2.rotation.y = Math.PI;
-        heart2.rotation.x = Math.PI;
-        // bearGroup.add(heart2);
-  
-        const heart3 = new THREE.Mesh(heartGeometry, leatherMaterialWithLV);
-        heart3.scale.set(0.3, 0.3, 0.3);
-        heart3.position.set(0.23, -0.5, 0.3); // Position it in front of the body
-        heart3.rotation.y = Math.PI;
-        heart3.rotation.x = Math.PI;
-        // bearGroup.add(heart3);
-        
-        const heart4 = new THREE.Mesh(heartGeometry, bodyMaterial);
-        heart4.scale.set(0.4, 0.4, 0.4);
-        heart4.position.set(0.27, 0, 0.35); // Position it in front of the body
-        heart4.rotation.y = Math.PI;
-        heart4.rotation.x = Math.PI;
-        // bearGroup.add(heart4);
+        // bearGroup.add(heart);
+
+
+        const bagGeometry = new THREE.BoxGeometry(1.3, 1.2, 0.6); // Increased thickness for the bag
+        const bag = new THREE.Mesh(bagGeometry, leatherMaterialWithLV);
+        bag.scale.set(0.45, 0.45, 0.45); // Scale of the bag
+        bag.position.set(0.35, -0.2, 0); // Position the bag in front of the bear
+        bag.rotation.y = Math.PI; // Rotate the bag
+
+        // Create handles for the bag
+        const handleGeometry = new THREE.TorusGeometry(0.15, 0.025, 10, 100);
+
+        // Darker material for the handles
+        const handleMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x7F4F28, // Darker leather color for the handles
+        metalness: 0.3,
+        roughness: 0.4,
+        clearcoat: 0.5,
+        });
+
+        // Left handle
+        const handle1 = new THREE.Mesh(handleGeometry, leatherMaterialWithLV);
+        handle1.position.set(0.35, 0.1, 0); // Adjusted position to match the top of the bag
+        handle1.rotation.z = Math.PI / 2; // Vertical rotation to align the handle properly
+        handle1.rotation.x = Math.PI / 8; // Slight angle for natural look
+        handle1.rotation.y = Math.PI / 14; // Slight angle for natural look
+
+
+        // Right handle
+        const handle2 = new THREE.Mesh(handleGeometry, leatherMaterialWithLV);
+        handle2.position.set(0.35, 0.1, 0.03); // Adjusted position for the right handle
+        handle2.rotation.z = Math.PI / 2; // Same vertical rotation for symmetry
+        handle2.rotation.x = Math.PI / -8; // Same slight angle for a natural look
+        handle2.rotation.y = Math.PI / 12; // Slight angle for natural look
+
+
+        // Group bag and handles together
+        const bagGroup = new THREE.Group();
+        bagGroup.add(bag);
+        bagGroup.add(handle1);
+        bagGroup.add(handle2);
+
+        // Add the bag group to the bear group
+        bearGroup.add(bagGroup);
         
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -433,7 +472,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
     
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
+        const tail = new THREE.Mesh(tailGeometry, leatherMaterialWithLV);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
     
@@ -447,7 +486,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
          });
         
         const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const xEye = new THREE.Mesh(xEyeGeometry, bodyMaterial);
+        const xEye = new THREE.Mesh(xEyeGeometry, blackLeatherMaterialWithLV);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
         xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -461,7 +500,7 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
         });
   
         const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const oEye = new THREE.Mesh(oEyeGeometry, bodyMaterial);
+        const oEye = new THREE.Mesh(oEyeGeometry, blackLeatherMaterialWithLV);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -550,39 +589,16 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
     </script>
     
     <style scoped>
-  .three-canvas {
+.three-canvas {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f);
+    background: radial-gradient(circle at 50% 50%, #f5e1c0, #d2a679, #8b5e34, #5b3a1e); /* Creamy to brownie gradient */
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    animation: waterEffect 5s infinite ease-in-out;
-  }
-  
-  @keyframes waterEffect {
-    0% {
-      background-size: 100% 100%;
-      background-position: 0% 50%;
-    }
-    25% {
-      background-size: 150% 150%;
-      background-position: 50% 100%;
-    }
-    50% {
-      background-size: 200% 200%;
-      background-position: 100% 50%;
-    }
-    75% {
-      background-size: 150% 150%;
-      background-position: 50% 0%;
-    }
-    100% {
-      background-size: 100% 100%;
-      background-position: 0% 50%;
-    }
-  }
-  
+}
+
+
     .no-bg {
             margin: 0;
               height: 100vh;

@@ -10,7 +10,6 @@ import Transparent from '../components/HalfTransparentBear.vue';
 import HalfBear from '../components/HalfBlueBear.vue';
 import SliverBear from '../components/SliverBear.vue';
 import MetalBear from '../components/MetalBear.vue';
-
 const routes = [
     { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     { path: '/3d-bear-arts/half', name: 'NewBear', component: HalfBear },
