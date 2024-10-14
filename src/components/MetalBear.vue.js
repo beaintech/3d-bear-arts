@@ -88,94 +88,12 @@ onMounted(() => {
             ior: 1.45, // Index of refraction to give it more of a glass feel
             side: THREE.DoubleSide, // Ensure the material renders on both sides
         });
-        const blackLeatherMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x000000, // Black leather color
-            metalness: 0.2, // Low metalness for a natural look
-            roughness: 0.7, // Higher roughness to reduce shine, give it a matte appearance
-            bumpMap: leatherBumpMap, // Bump map to simulate leather grain
-            bumpScale: 0.15, // Stronger bump effect for leather texture
-            clearcoat: 0.2, // Slight clearcoat for a subtle sheen, like polished leather
-            clearcoatRoughness: 0.5, // Slightly rough clearcoat to reduce extreme gloss
-            reflectivity: 0.2, // Low reflectivity for a more matte finish
-            envMapIntensity: 0.3, // Subtle environment reflection
-        });
         const metallicMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xCCCCCC, // Light gray/silver color to resemble metal
             metalness: 1.0, // Set metalness to 1.0 for full metallic appearance
             roughness: 0.5, // Adjust roughness (higher values make it more matte, lower values make it more polished)
             clearcoat: 0.3, // Add some clearcoat for subtle shine
             clearcoatRoughness: 0.3, // Rough clearcoat for a more brushed metal look
-        });
-        // Shader material with gradient animation for the bear's body
-        const bigHeartMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 },
-                color1: { value: new THREE.Color(0xFFD700) }, // Gold color
-                color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
-            },
-            vertexShader: `
-            varying vec2 vUv;
-            void main() {
-              vUv = uv;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-          `,
-            fragmentShader: `
-            uniform float time;
-            uniform vec3 color1;
-            uniform vec3 color2;
-            varying vec2 vUv;
-            void main() {
-              vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
-              gl_FragColor = vec4(color, 1.0);
-            }
-          `,
-        });
-        // Vertex shader
-        const vertexShader = `
-      varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-      `;
-        // Fragment shader
-        const fragmentShader = `
-        uniform float time;
-            uniform float opacity; // Add opacity uniform
-            varying vec2 vUv;
-        
-            void main() {
-                // Dynamic water-like gradient effect
-                vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
-                float len = length(p); // Get the length of the vector (distance from center)
-                float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
-        
-                // Create a time-based oscillating value for smooth gradient transitions
-                float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
-        
-                // Color gradient based on the angle and distance from the center
-                vec3 color1 = vec3(1.0, 0.3, 0.5); // Pinkish
-                vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
-                vec3 color3 = vec3(1.0, 0.0, 0.8); // Magenta
-        
-                // Mix the colors based on wave and angle for a dynamic effect
-                vec3 color = mix(color1, color2, wave);
-                color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
-        
-                // Set the fragment color with opacity
-                gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
-            }
-      `;
-        const bodyMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0.0 }, // Time uniform to animate the shader
-                opacity: { value: 1 } // Opacity uniform (set to 0.6 for 60% transparency)
-            },
-            vertexShader,
-            fragmentShader: fragmentShader,
-            transparent: false, // Enable transparency in the material
-            depthWrite: true // Disable depth writing to ensure proper rendering
         });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
@@ -473,7 +391,6 @@ onMounted(() => {
             }
             renderer.render(scene, camera);
         }
-        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
         // Start animation
         animate();
         // Watch for changes in bodyPosition
