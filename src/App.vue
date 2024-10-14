@@ -10,7 +10,7 @@
       <router-link to="/3d-bear-arts/diamond">Diamond</router-link>
       <router-link to="/3d-bear-arts/pink">Pink</router-link>
       <router-link to="/3d-bear-arts/purple">Purple</router-link>
-      <router-link to="/3d-bear-arts/blue">Blue</router-link>
+      <!-- <router-link to="/3d-bear-arts/blue">Blue</router-link> -->
       <router-link to="/3d-bear-arts/glass">Glass</router-link>
     </nav>
     <router-view></router-view>

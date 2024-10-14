@@ -20,7 +20,7 @@ const routes = [
     { path: '/3d-bear-arts/diamond', name: 'DiamondBear', component: DiamondBear },
     { path: '/3d-bear-arts/pink', name: 'PinkBear', component: PinkBear },
     { path: '/3d-bear-arts/purple', name: 'PurpleBear', component: PurpleBear },
-    { path: '/3d-bear-arts/blue', name: 'BlueBear', component: BlueBear },
+    // { path: '/3d-bear-arts/blue', name: 'BlueBear', component: BlueBear },
     { path: '/3d-bear-arts/glass', name: 'GlassBear', component: GlassBear },
 ];
 const router = createRouter({
