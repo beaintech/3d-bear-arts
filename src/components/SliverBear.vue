@@ -115,13 +115,6 @@ updateReflection();  // Start reflection updates
       'https://threejs.org/examples/textures/cube/Park2/negz.jpg',
     ]);
 
-    const universeEnvMap = mirrorLoader.load([
-      'path_to_universe_posx.jpg', 'path_to_universe_negx.jpg',
-      'path_to_universe_posy.jpg', 'path_to_universe_negy.jpg',
-      'path_to_universe_posz.jpg', 'path_to_universe_negz.jpg',
-    ]);
-
-  scene.environment = universeEnvMap; 
     scene.environment = environmentMap;
       
     const sliverMaterial = new THREE.MeshPhysicalMaterial({

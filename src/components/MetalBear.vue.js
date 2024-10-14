@@ -43,8 +43,8 @@ onMounted(() => {
         scene.add(pointLight);
         const textureLoader = new THREE.TextureLoader();
         // Load a bump map or texture that resembles leather grain
-        const leatherBumpMap = textureLoader.load('src/assets/lv2.jpg');
-        const lvLogoTexture = textureLoader.load('src/assets/lv2.jpg');
+        const leatherBumpMap = textureLoader.load('3d-bear-arts/src/assets/lv2.jpg');
+        const lvLogoTexture = textureLoader.load('3d-bear-arts/src/assets/lv2.jpg');
         // Ensure the textures repeat across the object surface
         leatherBumpMap.wrapS = leatherBumpMap.wrapT = THREE.RepeatWrapping;
         lvLogoTexture.wrapS = lvLogoTexture.wrapT = THREE.RepeatWrapping;
