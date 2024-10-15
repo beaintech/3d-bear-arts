@@ -23,7 +23,14 @@
     }
   });
     const threeCanvas = ref<HTMLDivElement | null>(null);
-    
+      let timeoutId: any = null; // To store the timeout ID for 2 seconds
+      let isRotatingRight = ref(false);
+      let isRotatingLeft = ref(false);
+
+      // Track the current rotation
+      let currentRotationY = 0;
+      let currentRotationX = 0;
+
     onMounted(() => {
       if (threeCanvas.value) {
         // Initialize the Three.js scene
@@ -31,88 +38,86 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-  
-        // renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        // renderer.toneMappingExposure = 1.25;
-        
+
         threeCanvas.value.appendChild(renderer.domElement);
-            // Create the bear group and all parts
-    const bearGroup = new THREE.Group();
-    
-// Ambient Light (provides soft overall illumination)
-const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Stronger ambient light
-scene.add(ambientLight);
 
-// Directional Light (for strong highlights)
-const directionalLight = new THREE.DirectionalLight(0xffffff, 4); // Increase intensity
-directionalLight.position.set(5, 5, 5); // Position it above and to the side of the object
-scene.add(directionalLight);
+        // Create the bear group and all parts
+        const bearGroup = new THREE.Group();
+            
+        // Ambient Light (provides soft overall illumination)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Stronger ambient light
+        scene.add(ambientLight);
 
-// Point Light (for localized bright spots)
-const pointLight = new THREE.PointLight(0xffffff, 5, 50); // Strong point light
-pointLight.position.set(0, 2, 4); // Close to the object
-scene.add(pointLight);
+        // Directional Light (for strong highlights)
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 4); // Increase intensity
+        directionalLight.position.set(5, 5, 5); // Position it above and to the side of the object
+        scene.add(directionalLight);
 
-const textureLoader = new THREE.TextureLoader();
+        // Point Light (for localized bright spots)
+        const pointLight = new THREE.PointLight(0xffffff, 5, 50); // Strong point light
+        pointLight.position.set(0, 2, 4); // Close to the object
+        scene.add(pointLight);
 
-// Load a bump map or texture that resembles leather grain
-const leatherBumpMap = textureLoader.load('/3d-bear-arts/assets/lv2.jpg');
-const lvLogoTexture = textureLoader.load('/3d-bear-arts/assets/lv2.jpg');
+        const textureLoader = new THREE.TextureLoader();
 
-// Ensure the textures repeat across the object surface
-leatherBumpMap.wrapS = leatherBumpMap.wrapT = THREE.RepeatWrapping;
-lvLogoTexture.wrapS = lvLogoTexture.wrapT = THREE.RepeatWrapping;
+        // Load a bump map or texture that resembles leather grain
+        const leatherBumpMap = textureLoader.load('/3d-bear-arts/assets/lv2.jpg');
+        const lvLogoTexture = textureLoader.load('/3d-bear-arts/assets/lv2.jpg');
 
-// Simulate the leather material using MeshPhysicalMaterial
-const leatherMaterialWithLV = new THREE.MeshPhysicalMaterial({
-  color: 0x7F4F28, // Brown leather color similar to LV
-  metalness: 0.0,  // Non-metallic
-  roughness: 0.8,  // High roughness for matte finish
-  bumpMap: leatherBumpMap,  // Bump map for leather texture
-  bumpScale: 0.1,  // Intensity of the leather grain texture
-  clearcoat: 0.2,  // Slight clearcoat for a subtle sheen
-  clearcoatRoughness: 0.9,  // Rough clearcoat to keep the matte look
-  map: lvLogoTexture,  // Apply the LV logo texture as the main texture
-  envMapIntensity: 0.7,  // Adjust the intensity of reflections if needed
-});
+        // Ensure the textures repeat across the object surface
+        leatherBumpMap.wrapS = leatherBumpMap.wrapT = THREE.RepeatWrapping;
+        lvLogoTexture.wrapS = lvLogoTexture.wrapT = THREE.RepeatWrapping;
 
-const blackLeatherMaterialWithLV = new THREE.MeshPhysicalMaterial({
-  color: 0x5b3a1e, // Brown leather color similar to LV
-  metalness: 0.0,  // Non-metallic
-  roughness: 0.8,  // High roughness for matte finish
-  bumpMap: leatherBumpMap,  // Bump map for leather texture
-  bumpScale: 0.1,  // Intensity of the leather grain texture
-  clearcoat: 0.2,  // Slight clearcoat for a subtle sheen
-  clearcoatRoughness: 0.9,  // Rough clearcoat to keep the matte look
-  map: lvLogoTexture,  // Apply the LV logo texture as the main texture
-  envMapIntensity: 0.7,  // Adjust the intensity of reflections if needed
-});
+        // Simulate the leather material using MeshPhysicalMaterial
+        const leatherMaterialWithLV = new THREE.MeshPhysicalMaterial({
+          color: 0x7F4F28, // Brown leather color similar to LV
+          metalness: 0.0,  // Non-metallic
+          roughness: 0.8,  // High roughness for matte finish
+          bumpMap: leatherBumpMap,  // Bump map for leather texture
+          bumpScale: 0.1,  // Intensity of the leather grain texture
+          clearcoat: 0.2,  // Slight clearcoat for a subtle sheen
+          clearcoatRoughness: 0.9,  // Rough clearcoat to keep the matte look
+          map: lvLogoTexture,  // Apply the LV logo texture as the main texture
+          envMapIntensity: 0.7,  // Adjust the intensity of reflections if needed
+        });
 
-const transparentLeatherMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xC8B19C,  // Brown leather color (LV-style)
-  metalness: 0.2,   // Increase metalness for more reflectivity
-  roughness: 0.05,   // Lower roughness for a smooth, glass-like finish
-  bumpMap: leatherBumpMap,  // Bump map for leather grain texture
-  bumpScale: 0.05,  // Reduce bump scale for a more subtle texture
-  clearcoat: 1.0,   // Full clearcoat for high gloss and shine
-  clearcoatRoughness: 0.05,  // Lower clearcoat roughness to enhance the glassy effect
-  map: lvLogoTexture,  // Overlay the LV logo texture
-  transparent: true,  // Enable transparency
-  opacity: 0.4,  // Make it more see-through like glass
-  transmission: 0.9,  // Add transmission to give it a glass-like appearance
-  envMapIntensity: 1.0,  // Increase reflection intensity
-  reflectivity: 0.9,  // Enhance reflectivity to simulate glass
-  ior: 1.45,  // Index of refraction to give it more of a glass feel
-  side: THREE.DoubleSide,  // Ensure the material renders on both sides
-});
+        const blackLeatherMaterialWithLV = new THREE.MeshPhysicalMaterial({
+          color: 0x5b3a1e, // Brown leather color similar to LV
+          metalness: 0.0,  // Non-metallic
+          roughness: 0.8,  // High roughness for matte finish
+          bumpMap: leatherBumpMap,  // Bump map for leather texture
+          bumpScale: 0.1,  // Intensity of the leather grain texture
+          clearcoat: 0.2,  // Slight clearcoat for a subtle sheen
+          clearcoatRoughness: 0.9,  // Rough clearcoat to keep the matte look
+          map: lvLogoTexture,  // Apply the LV logo texture as the main texture
+          envMapIntensity: 0.7,  // Adjust the intensity of reflections if needed
+        });
 
-const metallicMaterial = new THREE.MeshPhysicalMaterial({
-  color: 0xCCCCCC, // Light gray/silver color to resemble metal
-  metalness: 1.0,  // Set metalness to 1.0 for full metallic appearance
-  roughness: 0.5,  // Adjust roughness (higher values make it more matte, lower values make it more polished)
-  clearcoat: 0.3,  // Add some clearcoat for subtle shine
-  clearcoatRoughness: 0.3, // Rough clearcoat for a more brushed metal look
-});
+        const transparentLeatherMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xC8B19C,  // Brown leather color (LV-style)
+          metalness: 0.2,   // Increase metalness for more reflectivity
+          roughness: 0.05,   // Lower roughness for a smooth, glass-like finish
+          bumpMap: leatherBumpMap,  // Bump map for leather grain texture
+          bumpScale: 0.05,  // Reduce bump scale for a more subtle texture
+          clearcoat: 1.0,   // Full clearcoat for high gloss and shine
+          clearcoatRoughness: 0.05,  // Lower clearcoat roughness to enhance the glassy effect
+          map: lvLogoTexture,  // Overlay the LV logo texture
+          transparent: true,  // Enable transparency
+          opacity: 0.4,  // Make it more see-through like glass
+          transmission: 0.9,  // Add transmission to give it a glass-like appearance
+          envMapIntensity: 1.0,  // Increase reflection intensity
+          reflectivity: 0.9,  // Enhance reflectivity to simulate glass
+          ior: 1.45,  // Index of refraction to give it more of a glass feel
+          side: THREE.DoubleSide,  // Ensure the material renders on both sides
+        });
+
+        const metallicMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xCCCCCC, // Light gray/silver color to resemble metal
+          metalness: 1.0,  // Set metalness to 1.0 for full metallic appearance
+          roughness: 0.5,  // Adjust roughness (higher values make it more matte, lower values make it more polished)
+          clearcoat: 0.3,  // Add some clearcoat for subtle shine
+          clearcoatRoughness: 0.3, // Rough clearcoat for a more brushed metal look
+        });
   
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(
@@ -444,12 +449,39 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
   
       // New mouse tracking functionality
       const mouse = { x: 0, y: 0 };
-      let isAnimating = true;  // To track if the bear should be rotating
-      let timeoutId: any = null;  // To track the timeout when resuming the animation
   
+      const startRotateRight = () => {
+      isRotatingRight.value = true;
+      isRotatingLeft.value = false;
+    };
+
+    // Function to start rotating to the left
+    const startRotateLeft = () => {
+      isRotatingLeft.value = true;
+      isRotatingRight.value = false;
+    };
+
+    // Function to stop rotating
+    const stopRotation = () => {
+      isRotatingRight.value = false;
+      isRotatingLeft.value = false;
+    };
+        
+          // Update the bear's rotation based on mouse position
+        const handleMouseStop = (mouseX: number) => {
+          const bearCenterX = window.innerWidth / 2;
+
+          if (mouseX > bearCenterX) {
+            startRotateRight(); // Rotate to the right if mouse is on the right side
+          } else {
+            startRotateLeft(); // Rotate to the left if mouse is on the left side
+          }
+        };
+
+
       // Update bearGroup rotation based on mouse movement
       const onMouseMove = (event: MouseEvent) => {
-        isAnimating = false;
+       
         // Normalize mouse coordinates from -1 to 1
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -461,30 +493,41 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
         // Apply the calculated rotation to the bear group
         bearGroup.rotation.y = targetRotationY;
         bearGroup.rotation.x = targetRotationX;
-  
-        // Clear the existing timeout and set a new one for 3 seconds to resume the animation
+        
         clearTimeout(timeoutId);
+        stopRotation(); // Stop any ongoing rotation when mouse moves
+
+        // Store the current rotation of the bear
+        currentRotationY = bearGroup.rotation.y;
+        currentRotationX = bearGroup.rotation.x;
+
+        // Set a 2-second delay to trigger the rotation logic
         timeoutId = setTimeout(() => {
-          isAnimating = true; // Resume animation after 3 seconds
+          handleMouseStop(event.clientX);
         }, 500);
       };
   
       // Add event listener for mouse movement
       window.addEventListener('mousemove', onMouseMove);
-        
-        // Animation function
-        function animate() {
-          requestAnimationFrame(animate);
+
+    // Animation function
+    function animate() {
+      requestAnimationFrame(animate);
   
-          if (isAnimating) {
-          bearGroup.rotation.y += 0.03; // Rotate the bear slightly on the Y-axis
-        }
-          renderer.render(scene, camera);
-        }
+      if (isRotatingRight.value) {
+        bearGroup.rotation.y += 0.03; // Rotate the bear to the right
+        currentRotationY = bearGroup.rotation.y; // Update current rotation
+      } else if (isRotatingLeft.value) {
+        bearGroup.rotation.y -= 0.03; // Rotate the bear to the left
+        currentRotationY = bearGroup.rotation.y; // Update current rotation
+      }
+
+        renderer.render(scene, camera);
+    }
   
         // Start animation
         animate();
-  
+
       // Watch for changes in bodyPosition
       watch(() => props.bodyPosition, (newPos) => {
         bearGroup.position.set(newPos.x, newPos.y, newPos.z);
@@ -504,6 +547,20 @@ const metallicMaterial = new THREE.MeshPhysicalMaterial({
         });
       }
     });
+
+    const rotateLeft = () => {
+      isRotatingLeft.value = true;
+    };
+
+    const rotateRight = () => {
+      isRotatingRight.value = true;
+    };
+
+    const stopRotation = () => {
+      isRotatingLeft.value = false;
+      isRotatingRight.value = false;
+    };
+  
     </script>
     
     <style scoped>
