@@ -226,8 +226,6 @@ onMounted(() => {
             envMapIntensity: 1, // Make environment reflections more prominent
         });
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        // Create the black material for the heart
-        const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
         // Create the small black heart tattoo mesh
         const smallHeart = new THREE.Mesh(heartGeometry, leatherMaterialWithLV);
         smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
@@ -367,7 +365,6 @@ onMounted(() => {
         const storeCurrentRotation = () => {
             currentRotationY = bearGroup.rotation.y;
             currentRotationX = bearGroup.rotation.x;
-            console.log("Stored Rotation - Y:", currentRotationY, "X:", currentRotationX); // Debugging
         };
         // Start rotating to right or left when mouse stops
         const startRotateRight = () => {
@@ -471,16 +468,6 @@ onMounted(() => {
         });
     }
 });
-const rotateLeft = () => {
-    isRotatingLeft.value = true;
-};
-const rotateRight = () => {
-    isRotatingRight.value = true;
-};
-const stopRotation = () => {
-    isRotatingLeft.value = false;
-    isRotatingRight.value = false;
-};
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         background: {
