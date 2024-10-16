@@ -275,9 +275,6 @@
         
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
   
-        // Create the black material for the heart
-       const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  
         // Create the small black heart tattoo mesh
         const smallHeart = new THREE.Mesh(heartGeometry, leatherMaterialWithLV);
         smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
@@ -334,7 +331,6 @@
         handle2.rotation.z = Math.PI / 2; // Same vertical rotation for symmetry
         handle2.rotation.x = Math.PI / -8; // Same slight angle for a natural look
         handle2.rotation.y = Math.PI / 12; // Slight angle for natural look
-
 
         // Group bag and handles together
         const bagGroup = new THREE.Group();
@@ -448,7 +444,6 @@
       const storeCurrentRotation = () => {
         currentRotationY = bearGroup.rotation.y;
         currentRotationX = bearGroup.rotation.x;
-        console.log("Stored Rotation - Y:", currentRotationY, "X:", currentRotationX); // Debugging
       };
     
       // Start rotating to right or left when mouse stops
@@ -574,19 +569,6 @@
         });
       }
     });
-
-    const rotateLeft = () => {
-      isRotatingLeft.value = true;
-    };
-
-    const rotateRight = () => {
-      isRotatingRight.value = true;
-    };
-
-    const stopRotation = () => {
-      isRotatingLeft.value = false;
-      isRotatingRight.value = false;
-    };
   
     </script>
     
