@@ -57,8 +57,8 @@
         scene.add(pointLight);
 
         const textureLoader = new THREE.TextureLoader();
-        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/pop2.jpg');
-        const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop2.jpg');
+        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/pop1.jpg');
+        const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop1.jpg');
 
         // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
 
