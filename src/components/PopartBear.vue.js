@@ -46,41 +46,106 @@ onMounted(() => {
         pointLight.position.set(0, 2, 4); // Close to the object
         scene.add(pointLight);
         const textureLoader = new THREE.TextureLoader();
-        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/pop3.jpg');
-        const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop4.jpg');
+        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/pop1.jpg');
+        const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop1.jpg');
         // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
         popTexture1.wrapS = popTexture1.wrapT = THREE.RepeatWrapping;
-        popTexture1.repeat.set(4, 4); // Adjust this to scale the texture on the model
+        // popTexture1.repeat.set(4, 4); // Adjust this to scale the texture on the model
         popTexture2.wrapS = popTexture2.wrapT = THREE.RepeatWrapping;
-        popTexture2.repeat.set(4, 4); // Adjust this to scale the texture on the model
+        // popTexture2.repeat.set(4, 4); // Adjust this to scale the texture on the model
+        // Left arm: Neon orange (#FFA500) with hints of red.
+        // Right arm: Vibrant purple (#8A2BE2).
+        // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
+        // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
         const popArtMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFF1493, // Vibrant color (e.g., hot pink)
-            map: popTexture2, // Apply the halftone texture
-            metalness: 0.5, // Moderate metalness to give some shine
-            roughness: 0.4, // Keep some roughness to reduce reflections
-            clearcoat: 0.1, // Slight clearcoat for subtle gloss
-            clearcoatRoughness: 0.7,
+            color: 0xFF69B4, // Hot pink as the base
+            map: popTexture2, // Apply the abstract or halftone texture
+            metalness: 0.2, // Lower metalness for less reflective look
+            roughness: 0.7, // Increase roughness for a more matte finish
+            clearcoat: 0.05, // Lower clearcoat to reduce gloss
+            clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
         });
         const transparentPopArtMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFF1493, // Vibrant color (e.g., hot pink)
-            map: popTexture2, // Apply the halftone texture
+            color: 0xFFD700, // White base color
+            // map: popTexture2,  // Halftone or abstract texture
             metalness: 0.3, // Lower metalness for a plastic-like effect
             roughness: 0.1, // Make it smoother for a glossy look
             clearcoat: 1.0, // High clearcoat for strong glossiness
             clearcoatRoughness: 0.05, // Make the clearcoat glossy
             transparent: true, // Enable transparency
-            opacity: 0.4, // Set transparency level (more transparent)
-            transmission: 0.8, // Enable transmission to give a glass-like effect
+            opacity: 0.4, // Set transparency level
+            transmission: 0.8, // Enable transmission for glass-like effect
             ior: 1.45, // Index of refraction for glassy feel
             reflectivity: 0.9, // High reflectivity for a shiny surface
             envMapIntensity: 1.0, // Strong environment reflections
-            side: THREE.DoubleSide // Render both sides of the material
+            side: THREE.DoubleSide, // Render both sides of the material
         });
         const headPopArtMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFFD700, // Bright yellow
-            map: popTexture1,
-            metalness: 0.3,
-            roughness: 0.5,
+            color: 0xFFD700, // Bright yellow color for the head
+            map: popTexture1, // Apply a halftone or abstract texture
+            metalness: 0.3, // Slight metalness for a subtle shine
+            roughness: 0.5, // Some roughness to reduce reflections
+        });
+        const transparentHeadMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFF69B4, // White base color
+            // map: popTexture2,  // Halftone or abstract texture
+            metalness: 0.3, // Lower metalness for a plastic-like effect
+            roughness: 0.1, // Make it smoother for a glossy look
+            clearcoat: 1.0, // High clearcoat for strong glossiness
+            clearcoatRoughness: 0.05, // Make the clearcoat glossy
+            transparent: true, // Enable transparency
+            opacity: 0.4, // Set transparency level
+            transmission: 0.8, // Enable transmission for glass-like effect
+            ior: 1.45, // Index of refraction for glassy feel
+            reflectivity: 0.9, // High reflectivity for a shiny surface
+            envMapIntensity: 1.0, // Strong environment reflections
+            side: THREE.DoubleSide, // Render both sides of the material
+        });
+        const leftArmtMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x8A2BE2, // Hot pink as the base
+            map: popTexture2, // Apply the abstract or halftone texture
+            metalness: 0.2, // Lower metalness for less reflective look
+            roughness: 0.7, // Increase roughness for a more matte finish
+            clearcoat: 0.05, // Lower clearcoat to reduce gloss
+            clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
+        });
+        const transparentArmMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x8A2BE2, // White base color
+            // map: popTexture2,  // Halftone or abstract texture
+            metalness: 0.3, // Lower metalness for a plastic-like effect
+            roughness: 0.1, // Make it smoother for a glossy look
+            clearcoat: 1.0, // High clearcoat for strong glossiness
+            clearcoatRoughness: 0.05, // Make the clearcoat glossy
+            transparent: true, // Enable transparency
+            opacity: 0.4, // Set transparency level
+            transmission: 0.8, // Enable transmission for glass-like effect
+            ior: 1.45, // Index of refraction for glassy feel
+            reflectivity: 0.9, // High reflectivity for a shiny surface
+            envMapIntensity: 1.0, // Strong environment reflections
+            side: THREE.DoubleSide, // Render both sides of the material
+        });
+        const leftLegtMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x00FFFF, // Hot pink as the base
+            map: popTexture2, // Apply the abstract or halftone texture
+            metalness: 0.2, // Lower metalness for less reflective look
+            roughness: 0.7, // Increase roughness for a more matte finish
+            clearcoat: 0.05, // Lower clearcoat to reduce gloss
+            clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
+        });
+        const transparentLegMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x00FFFF, // White base color
+            // map: popTexture2,  // Halftone or abstract texture
+            metalness: 0.3, // Lower metalness for a plastic-like effect
+            roughness: 0.1, // Make it smoother for a glossy look
+            clearcoat: 1.0, // High clearcoat for strong glossiness
+            clearcoatRoughness: 0.05, // Make the clearcoat glossy
+            transparent: true, // Enable transparency
+            opacity: 0.4, // Set transparency level
+            transmission: 0.8, // Enable transmission for glass-like effect
+            ior: 1.45, // Index of refraction for glassy feel
+            reflectivity: 0.9, // High reflectivity for a shiny surface
+            envMapIntensity: 1.0, // Strong environment reflections
+            side: THREE.DoubleSide, // Render both sides of the material
         });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
@@ -125,13 +190,13 @@ onMounted(() => {
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentPopArtMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, transparentHeadMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, popArtMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, headPopArtMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
@@ -158,7 +223,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, popArtMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, headPopArtMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -175,7 +240,7 @@ onMounted(() => {
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, popArtMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, headPopArtMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -205,7 +270,7 @@ onMounted(() => {
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         // bearGroup.add(heart);
-        const heart3 = new THREE.Mesh(heartGeometry, headPopArtMaterial);
+        const heart3 = new THREE.Mesh(heartGeometry, popArtMaterial);
         heart3.scale.set(0.2, 0.2, 0.2);
         heart3.position.set(0.5, -0.1, 0.2); // Position it in front of the body
         heart3.rotation.y = Math.PI;
@@ -213,31 +278,31 @@ onMounted(() => {
         bearGroup.add(heart3);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, headPopArtMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, leftArmtMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, transparentPopArtMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, transparentLegMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, popArtMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, leftLegtMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, transparentPopArtMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, transparentHeadMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, popArtMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftLegtMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentPopArtMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentHeadMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
@@ -263,7 +328,7 @@ onMounted(() => {
                 depth: 0.05,
             });
             const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-            const xEye = new THREE.Mesh(xEyeGeometry, headPopArtMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, popArtMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
