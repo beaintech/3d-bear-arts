@@ -46,24 +46,16 @@ onMounted(() => {
         pointLight.position.set(0, 2, 4); // Close to the object
         scene.add(pointLight);
         const textureLoader = new THREE.TextureLoader();
-        // const halftoneTexture = textureLoader.load('/3d-bear-arts/assets/halftone_texture.jpg');
-        const leatherBumpMap = textureLoader.load('/3d-bear-arts/assets/lv2.jpg');
-        const halftoneTexture = textureLoader.load('/3d-bear-arts/assets/halftone.jpg', // Path to the texture
-        (texture) => {
-            // onLoad callback function
-            console.log('Texture loaded successfully');
-            // You can also apply the texture to your material here if needed
-        }, undefined, // onProgress callback (optional)
-        (error) => {
-            // onError callback function
-            console.error('An error occurred while loading the texture', error);
-        });
-        // Ensure the texture repeats across the object
-        halftoneTexture.wrapS = halftoneTexture.wrapT = THREE.RepeatWrapping;
-        halftoneTexture.repeat.set(4, 4); // Adjust this to scale the texture on the model
+        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/pop3.jpg');
+        const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop4.jpg');
+        // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
+        popTexture1.wrapS = popTexture1.wrapT = THREE.RepeatWrapping;
+        popTexture1.repeat.set(4, 4); // Adjust this to scale the texture on the model
+        popTexture2.wrapS = popTexture2.wrapT = THREE.RepeatWrapping;
+        popTexture2.repeat.set(4, 4); // Adjust this to scale the texture on the model
         const popArtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF1493, // Vibrant color (e.g., hot pink)
-            map: halftoneTexture, // Apply the halftone texture
+            map: popTexture2, // Apply the halftone texture
             metalness: 0.5, // Moderate metalness to give some shine
             roughness: 0.4, // Keep some roughness to reduce reflections
             clearcoat: 0.1, // Slight clearcoat for subtle gloss
@@ -71,7 +63,7 @@ onMounted(() => {
         });
         const transparentPopArtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF1493, // Vibrant color (e.g., hot pink)
-            map: halftoneTexture, // Apply the halftone texture
+            map: popTexture2, // Apply the halftone texture
             metalness: 0.3, // Lower metalness for a plastic-like effect
             roughness: 0.1, // Make it smoother for a glossy look
             clearcoat: 1.0, // High clearcoat for strong glossiness
@@ -86,7 +78,7 @@ onMounted(() => {
         });
         const headPopArtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFD700, // Bright yellow
-            map: halftoneTexture,
+            map: popTexture1,
             metalness: 0.3,
             roughness: 0.5,
         });
