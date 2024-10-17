@@ -124,7 +124,7 @@
 
         const leftArmtMaterial = new THREE.MeshPhysicalMaterial({
           color: 0x8A2BE2,  // Hot pink as the base
-          map: popTexture2,  // Apply the abstract or halftone texture
+          map: popTexture1,  // Apply the abstract or halftone texture
           metalness: 0.2,  // Lower metalness for less reflective look
           roughness: 0.7,  // Increase roughness for a more matte finish
           clearcoat: 0.05,  // Lower clearcoat to reduce gloss
@@ -149,7 +149,7 @@
 
         const leftLegtMaterial = new THREE.MeshPhysicalMaterial({
           color: 0x00FFFF,  // Hot pink as the base
-          map: popTexture2,  // Apply the abstract or halftone texture
+          map: popTexture1,  // Apply the abstract or halftone texture
           metalness: 0.2,  // Lower metalness for less reflective look
           roughness: 0.7,  // Increase roughness for a more matte finish
           clearcoat: 0.05,  // Lower clearcoat to reduce gloss
