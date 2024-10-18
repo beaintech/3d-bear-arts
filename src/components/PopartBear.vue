@@ -334,7 +334,7 @@
         bearGroup.add(heart1);
 
         const heart3 = new THREE.Mesh(heartGeometry, popArtMaterial);
-        heart3.scale.set(0.25, 0.25, 0.3);
+        heart3.scale.set(0.25, 0.25, 0.27);
         heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
@@ -572,7 +572,7 @@
       timeoutId = setTimeout(() => {
         shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
         handleMouseStop(event.clientX);
-      }, 500000); // 2 seconds delay before rotating
+      }, 100); // 2 seconds delay before rotating
     };
   
       // Add event listener for mouse movement
@@ -640,12 +640,12 @@
     height: 100vh;
     overflow: hidden;
     background: radial-gradient(circle, #f53844 20%, #f5a623 40%, #4a90e2 60%, #7ed321 80%); /* Vivid pop art colors */
+    /* background: black; */
     background-size: cover;
     background-repeat: no-repeat;
     border: 5px solid black; /* Strong, thick black lines for a pop art frame effect */
     background-position: center;
 }
-
 
     .no-bg {
          margin: 0;
