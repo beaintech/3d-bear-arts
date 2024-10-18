@@ -403,7 +403,7 @@
          });
         
         const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const xEye = new THREE.Mesh(xEyeGeometry,popArtMaterial);
+        const xEye = new THREE.Mesh(xEyeGeometry, popArtMaterial);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
         xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -417,7 +417,7 @@
         });
   
         const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const oEye = new THREE.Mesh(oEyeGeometry, popArtMaterial);
+        const oEye = new THREE.Mesh(oEyeGeometry, leftLegtMaterial);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -435,20 +435,37 @@
         bevelSegments: 5,   // Number of bevel segments
     });
 
-    // Create a vibrant material for the text (pop-art style)
-    const popArtTextMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xFF1493, // Use a bright pink color
-        metalness: 0.3,  // Some metalness for shine
-        roughness: 0.6,  // Slight roughness for a less reflective look
-        clearcoat: 0.2,  // A slight clearcoat for glossiness
-    });
+      // Create a vibrant material for the text (pop-art style)
+      const popArtTextMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xFF1493, // Use a bright pink color
+          metalness: 0.3,  // Some metalness for shine
+          roughness: 0.6,  // Slight roughness for a less reflective look
+          clearcoat: 0.2,  // A slight clearcoat for glossiness
+      });
 
-    // Create a mesh for the "POP" text
-    const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
-    popTextMesh.scale.set(0.15, .15, .15);  // Scale it up a bit
-    popTextMesh.position.set(0.03, 1.15, 0.2);   // Adjust position as need 1
-    // Add the text to the bear group or scene
-    bearGroup.add(popTextMesh);
+      const popArtTextMaterial2 = new THREE.MeshPhysicalMaterial({
+          color: 0xFFD700, // Use a bright pink color
+          metalness: 0.3,  // Some metalness for shine
+          roughness: 0.6,  // Slight roughness for a less reflective look
+          clearcoat: 0.2,  // A slight clearcoat for glossiness
+      });
+
+        // Create a mesh for the "POP" text
+        const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
+        popTextMesh.scale.set(0.15, .15, .15);  // Scale it up a bit
+        popTextMesh.position.set(0.03, 1.16, 0.1);   // Adjust position as need 1
+        popTextMesh.rotateZ(-25);  // Scale it up a bit
+
+        // Add the text to the bear group or scene
+        bearGroup.add(popTextMesh);
+
+        const popTextMesh2 = new THREE.Mesh(textGeometry, popArtTextMaterial2);
+        popTextMesh2.scale.set(0.14, .14, .14);  // Scale it up a bit
+        popTextMesh2.rotateZ(45);  // Scale it up a bit
+        popTextMesh2.rotateY(45);  // Scale it up a bit
+        popTextMesh2.position.set(0.3, 0.7, 0.3);   // Adjust position as need 1
+        // Add the text to the bear group or scene
+        bearGroup.add(popTextMesh2);
       });
   
       // Update heart renderOrder to ensure it's always drawn last

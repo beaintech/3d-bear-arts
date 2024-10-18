@@ -371,8 +371,8 @@ onMounted(() => {
             });
             // Create a mesh for the "POP" text
             const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
-            popTextMesh.scale.set(0.25, .25, .25); // Scale it up a bit
-            popTextMesh.position.set(0.25, 1, 0.25); // Adjust position as needed
+            popTextMesh.scale.set(0.15, .15, .15); // Scale it up a bit
+            popTextMesh.position.set(0.03, 1.15, 0.2); // Adjust position as need 1
             // Add the text to the bear group or scene
             bearGroup.add(popTextMesh);
         });
@@ -445,7 +445,7 @@ onMounted(() => {
             timeoutId = setTimeout(() => {
                 shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
                 handleMouseStop(event.clientX);
-            }, 500); // 2 seconds delay before rotating
+            }, 500000); // 2 seconds delay before rotating
         };
         // Add event listener for mouse movement
         window.addEventListener('mousemove', onMouseMove);
