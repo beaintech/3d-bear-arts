@@ -277,7 +277,7 @@ onMounted(() => {
         heart1.rotation.x = Math.PI;
         bearGroup.add(heart1);
         const heart3 = new THREE.Mesh(heartGeometry, popArtMaterial);
-        heart3.scale.set(0.25, 0.25, 0.3);
+        heart3.scale.set(0.25, 0.25, 0.27);
         heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
@@ -475,7 +475,7 @@ onMounted(() => {
             timeoutId = setTimeout(() => {
                 shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
                 handleMouseStop(event.clientX);
-            }, 500000); // 2 seconds delay before rotating
+            }, 100); // 2 seconds delay before rotating
         };
         // Add event listener for mouse movement
         window.addEventListener('mousemove', onMouseMove);

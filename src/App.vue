@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <nav>
+    <nav>
       <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">New</router-link>
       <router-link to="/3d-bear-arts/sliver">Sliver</router-link>
@@ -12,7 +12,7 @@
       <router-link to="/3d-bear-arts/pink">Pink</router-link>
       <router-link to="/3d-bear-arts/purple">Purple</router-link>
       <router-link to="/3d-bear-arts/glass">Glass</router-link>
-    </nav> -->
+    </nav>
     <router-view></router-view>
   </div>
 </template>
