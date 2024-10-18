@@ -85,7 +85,7 @@
 
         const transparentPopArtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFD700,  // White base color
-            // map: popTexture2,  // Halftone or abstract texture
+            // map: popTexture1,  // Halftone or abstract texture
             metalness: 0.3,  // Lower metalness for a plastic-like effect
             roughness: 0.1,  // Make it smoother for a glossy look
             clearcoat: 1.0,  // High clearcoat for strong glossiness
@@ -114,7 +114,7 @@
             clearcoat: 1.0,  // High clearcoat for strong glossiness
             clearcoatRoughness: 0.05,  // Make the clearcoat glossy
             transparent: true,  // Enable transparency
-            opacity: 0.4,  // Set transparency level
+            opacity: 0.5,  // Set transparency level
             transmission: 0.8,  // Enable transmission for glass-like effect
             ior: 1.45,  // Index of refraction for glassy feel
             reflectivity: 0.9,  // High reflectivity for a shiny surface
@@ -158,7 +158,7 @@
 
         const transparentLegMaterial = new THREE.MeshPhysicalMaterial({
             color: 0x00FFFF,  // White base color
-            // map: popTexture2,  // Halftone or abstract texture
+            // map: popTexture1,  // Halftone or abstract texture
             metalness: 0.3,  // Lower metalness for a plastic-like effect
             roughness: 0.1,  // Make it smoother for a glossy look
             clearcoat: 1.0,  // High clearcoat for strong glossiness
@@ -283,7 +283,7 @@
             Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
             Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentPopArtMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentHeadMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -320,22 +320,29 @@
         // Add the heart to the bear group
         // bearGroup.add(smallHeart);
         const heart = new THREE.Mesh(heartGeometry, headPopArtMaterial);
-        heart.scale.set(0.6, 0.5, 0.5);
+        heart.scale.set(0.5, 0.5, 0.5);
         heart.position.set(0.35, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
-        // bearGroup.add(heart);
+        bearGroup.add(heart);
+
+        const heart1 = new THREE.Mesh(heartGeometry, leftLegtMaterial);
+        heart1.scale.set(0.2, 0.2, 0.25);
+        heart1.position.set(0.5, -0.3, 0.4); // Position it in front of the body
+        heart1.rotation.y = Math.PI;
+        heart1.rotation.x = Math.PI;
+        bearGroup.add(heart1);
 
         const heart3 = new THREE.Mesh(heartGeometry, popArtMaterial);
-        heart3.scale.set(0.2, 0.2, 0.2);
-        heart3.position.set(0.5, -0.1, 0.2); // Position it in front of the body
+        heart3.scale.set(0.25, 0.25, 0.3);
+        heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
         bearGroup.add(heart3);
         
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, leftArmtMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, leftLegtMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
@@ -347,7 +354,7 @@
     
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, leftLegtMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, headPopArtMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
     
@@ -359,7 +366,7 @@
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
       
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftLegtMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, headPopArtMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
@@ -415,6 +422,34 @@
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
         bearGroup.add(oEye);
+
+        // Create 3D text for "POP" using TextGeometry
+    const textGeometry = new TextGeometry('POP', {
+        font: font,
+        size: 1,   // Size of the letters
+        height: 0.5,   // Depth of the letters
+        curveSegments: 12,   // Smooth curves
+        bevelEnabled: true,   // Enable bevel
+        bevelThickness: 0.1,  // Thickness of the bevel
+        bevelSize: 0.1,   // Bevel size
+        bevelSegments: 5,   // Number of bevel segments
+    });
+
+    // Create a vibrant material for the text (pop-art style)
+    const popArtTextMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0xFF1493, // Use a bright pink color
+        metalness: 0.3,  // Some metalness for shine
+        roughness: 0.6,  // Slight roughness for a less reflective look
+        clearcoat: 0.2,  // A slight clearcoat for glossiness
+    });
+
+    // Create a mesh for the "POP" text
+    const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
+    popTextMesh.scale.set(0.25, .25, .25);  // Scale it up a bit
+    popTextMesh.position.set(0.25, 1, 0.25);   // Adjust position as needed
+
+    // Add the text to the bear group or scene
+    bearGroup.add(popTextMesh);
       });
   
       // Update heart renderOrder to ensure it's always drawn last
@@ -565,14 +600,17 @@
     </script>
     
     <style scoped>
-    .three-canvas {
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        background: radial-gradient(circle at 50% 50%, #f5e1c0, #d2a679, #8b5e34, #5b3a1e); /* Creamy to brownie gradient */
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-    }
+.three-canvas {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle, #f53844 20%, #f5a623 40%, #4a90e2 60%, #7ed321 80%); /* Vivid pop art colors */
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 5px solid black; /* Strong, thick black lines for a pop art frame effect */
+    background-position: center;
+}
+
 
     .no-bg {
          margin: 0;
