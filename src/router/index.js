@@ -12,7 +12,6 @@ import MetalBear from '../components/MetalBear.vue';
 import PopArtBear from '../components/PopartBear.vue';
 import PopBear2 from '../components/PopBear2.vue';
 import PopBear3 from '../components/PopArtBear3.vue';
-
 const routes = [
     { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     { path: '/3d-bear-arts/half', name: 'Haltransparent', component: HalfBear },
