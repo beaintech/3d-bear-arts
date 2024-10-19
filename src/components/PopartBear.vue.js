@@ -376,11 +376,21 @@ onMounted(() => {
                 clearcoat: 0.2, // A slight clearcoat for glossiness
             });
             const popArtTextMaterial3 = new THREE.MeshPhysicalMaterial({
-                color: 0x8A2BE2, // Use a bright pink color
+                color: 0xFFD700, // Use a bright pink color
                 metalness: 0.3, // Some metalness for shine
                 roughness: 0.6, // Slight roughness for a less reflective look
                 clearcoat: 0.2, // A slight clearcoat for glossiness
             });
+            const popArtTextMaterial4 = new THREE.MeshPhysicalMaterial({
+                color: 0xFFA500, // Use a bright pink color
+                metalness: 0.3, // Some metalness for shine
+                roughness: 0.6, // Slight roughness for a less reflective look
+                clearcoat: 0.2, // A slight clearcoat for glossiness
+            });
+            // Left arm: Neon orange (#FFA500) with hints of red.
+            // Right arm: Vibrant purple (#8A2BE2).
+            // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
+            // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
             // Create a mesh for the "POP" text
             const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
             popTextMesh.scale.set(0.15, .15, .15); // Scale it up a bit
@@ -388,7 +398,7 @@ onMounted(() => {
             popTextMesh.rotateZ(-25); // Scale it up a bit
             // Add the text to the bear group or scene
             bearGroup.add(popTextMesh);
-            const popTextMesh2 = new THREE.Mesh(textGeometry, popArtTextMaterial2);
+            const popTextMesh2 = new THREE.Mesh(textGeometry, leftArmtMaterial);
             popTextMesh2.scale.set(0.14, .14, .14); // Scale it up a bit
             popTextMesh2.rotateZ(45); // Scale it up a bit
             popTextMesh2.position.set(0.2, -0.7, 0.3); // Adjust position as need 1
@@ -405,6 +415,12 @@ onMounted(() => {
             popTextMesh4.rotateY(45); // Scale it up a bit
             popTextMesh4.position.set(0.35, -1.5, 0.3); // Adjust position as need 1
             bearGroup.add(popTextMesh4);
+            const popTextMesh5 = new THREE.Mesh(textGeometry, popArtTextMaterial4);
+            popTextMesh5.scale.set(0.17, .17, .17); // Scale it up a bit
+            popTextMesh5.rotateZ(45); // Scale it up a bit
+            popTextMesh5.rotateY(15); // Scale it up a bit
+            popTextMesh5.position.set(0.35, 1, 0.3); // Adjust position as need 1
+            bearGroup.add(popTextMesh5);
         });
         // Update heart renderOrder to ensure it's always drawn last
         tail.renderOrder = 1;
@@ -475,7 +491,7 @@ onMounted(() => {
             timeoutId = setTimeout(() => {
                 shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
                 handleMouseStop(event.clientX);
-            }, 100); // 2 seconds delay before rotating
+            }, 100000); // 2 seconds delay before rotating
         };
         // Add event listener for mouse movement
         window.addEventListener('mousemove', onMouseMove);
