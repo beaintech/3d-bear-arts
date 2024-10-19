@@ -1,5 +1,14 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
+
+    <div class="pixel-controls">
+    <button class="pixel-btn up" @mousedown="onUpButtonDown" @mouseup="stopRotation">UP</button>
+    <div class="side-buttons">
+      <button class="pixel-btn left" @mousedown="onLeftButtonDown" @mouseup="stopRotation">LEFT</button>
+      <button class="pixel-btn right" @mousedown="onRightButtonDown" @mouseup="stopRotation">RIGHT</button>
+    </div>
+    <button class="pixel-btn down" @mousedown="onDownButtonDown" @mouseup="stopRotation">DOWN</button>
+  </div>
 </template>
     
     <script setup lang="ts">
@@ -7,6 +16,7 @@
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; 
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
+    import BearFaceWhite from './BearFaceWhite.vue';
   
     const props = defineProps({
     background: {
@@ -22,13 +32,11 @@
       default: () => ({ x: 0, y: 0, z: 0 })
     }
   });
-    const threeCanvas = ref<HTMLDivElement | null>(null);
-    let timeoutId: any = null;  // Timeout for detecting mouse stop
-    let currentRotationY = 0;   // Current rotation for Y-axis
-    let currentRotationX = 0;   // Current rotation for X-axis
-    let isRotatingRight = ref(false); // Is rotating to right
-    let isRotatingLeft = ref(false);  // Is rotating to left
-    let shouldFaceMouse = ref(false); // Should bear face the mouse?
+        const threeCanvas = ref<HTMLDivElement | null>(null);
+        let isRotatingRight = ref(false); // Flag for right rotation
+        let isRotatingLeft = ref(false);  // Flag for left rotation
+        let isRotatingUp = ref(false);    // Flag for up rotation
+        let isRotatingDown = ref(false);  // Flag for down rotation
 
     onMounted(() => {
       if (threeCanvas.value) {
@@ -66,7 +74,7 @@
         // popTexture1.repeat.set(2, 2); // Adjust this to scale the texture on the model
 
         popTexture2.wrapS = popTexture2.wrapT = THREE.RepeatWrapping;
-       // popTexture2.repeat.set(2, 2); // Adjust this to scale the texture on the model
+        popTexture2.repeat.set(2, 2); // Adjust this to scale the texture on the model
 
         // Left arm: Neon orange (#FFA500) with hints of red.
         // Right arm: Vibrant purple (#8A2BE2).
@@ -511,7 +519,7 @@
       tail.renderOrder = 1;
   
       // Add bear group to the scene
-      bearGroup.scale.set(1.35, 1.35, 1.35); 
+      bearGroup.scale.set(1.4, 1.4, 1.4); 
       scene.add(bearGroup);
   
       // Set initial positions for bearGroup and camera
@@ -521,126 +529,26 @@
   
       camera.position.z = 4;
 
-      // Store the current rotation of the bear when the mouse stops
-      const storeCurrentRotation = () => {
-        currentRotationY = bearGroup.rotation.y;
-        currentRotationX = bearGroup.rotation.x;
-      };
-    
-      // Start rotating to right or left when mouse stops
-      const startRotateRight = () => {
-        isRotatingRight.value = true;
-        isRotatingLeft.value = false;
-        shouldFaceMouse.value = false;
-      };
-
-      const startRotateLeft = () => {
-        isRotatingRight.value = false;
-        isRotatingLeft.value = true;
-        shouldFaceMouse.value = false;
-      };
-
-      // Stop all rotations
-      const stopRotation = () => {
-        isRotatingRight.value = false;
-        isRotatingLeft.value = false;
-        storeCurrentRotation();
-      };
-
-      // Update the logic to store the current rotation when the mouse stops
-      const handleMouseStop = (mouseX: number) => {
-      const centerX = window.innerWidth / 2;
-
-      // If mouse stops on the right side, rotate to right, otherwise to the left
-      if (mouseX > centerX) {
-        startRotateRight();
-      } else {
-        startRotateLeft();
-      }
-
-      // Capture the current rotation of the bear when the mouse stops
-      storeCurrentRotation();
-    };
-
-    // Logic to update bear rotation based on the mouse movement
-    const onMouseMove = (event: MouseEvent) => {
-      clearTimeout(timeoutId);
-      stopRotation(); // Stop any ongoing rotation when mouse moves
-
-      shouldFaceMouse.value = true; // Allow the bear to face the mouse
-
-      // Capture the mouse position
-      const mouse = {
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1
-      };
-
-      // Rotate the bear to face the mouse
-      if (shouldFaceMouse.value) {
-        const targetRotationY = mouse.x * Math.PI * 0.2;
-        const targetRotationX = mouse.y * Math.PI * 0.2;
-        bearGroup.rotation.y = targetRotationY;
-        bearGroup.rotation.x = targetRotationX;
-
-        // Store the current rotation
-        currentRotationY = targetRotationY;
-        currentRotationX = targetRotationX;
-      }
-
-      // Set a delay to trigger the stop logic again after no movement
-      timeoutId = setTimeout(() => {
-        shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
-        handleMouseStop(event.clientX);
-      }, 100000); // 2 seconds delay before rotating
-    };
-  
-      // Add event listener for mouse movement
-      window.addEventListener('mousemove', onMouseMove);
-
-      // Logic to trigger the bear facing the mouse (after 2 seconds of no movement)
-    const onMouseStopForFacing = (event: MouseEvent) => {
-      if (shouldFaceMouse.value) {
-        const mouse = {
-          x: (event.clientX / window.innerWidth) * 2 - 1,
-          y: -(event.clientY / window.innerHeight) * 2 + 1
-        };
-
-        const targetRotationY = mouse.x * Math.PI * 0.2;
-        const targetRotationX = mouse.y * Math.PI * 0.2;
-
-        bearGroup.rotation.y = targetRotationY;
-        bearGroup.rotation.x = targetRotationX;
-      }
-    };
-
-    window.addEventListener('mousemove', onMouseStopForFacing);
-
-    // Animation function
-    function animate() {
+      function animate() {
       requestAnimationFrame(animate);
-
-      // Rotate bear to right or left if necessary
-      if (isRotatingRight.value) {
-        bearGroup.rotation.y += 0.03; // Rotate to the right
-      } else if (isRotatingLeft.value) {
-        bearGroup.rotation.y -= 0.03; // Rotate to the left
-      }
-
+      if (isRotatingRight.value) bearGroup.rotation.y += 0.03;
+      if (isRotatingLeft.value) bearGroup.rotation.y -= 0.03;
+      if (isRotatingUp.value) bearGroup.rotation.x -= 0.03;
+      if (isRotatingDown.value) bearGroup.rotation.x += 0.03;
       renderer.render(scene, camera);
     }
-
-    animate();
+        animate();
 
       // Watch for changes in bodyPosition
-      watch(() => props.bodyPosition, (newPos) => {
-        bearGroup.position.set(newPos.x, newPos.y, newPos.z);
-      });
-  
+        watch(() => props.bodyPosition, (newPos) => {
+            bearGroup.position.set(newPos.x, newPos.y, newPos.z);
+        });
+    
       // Watch for changes in cameraPosition
-      watch(() => props.cameraPosition, (newPos) => {
-        camera.position.set(props.bodyPosition.x, 1, newPos);
-        camera.lookAt(props.bodyPosition.x, 0, 0);
-      });
+        watch(() => props.cameraPosition, (newPos) => {
+            camera.position.set(props.bodyPosition.x, 1, newPos);
+            camera.lookAt(props.bodyPosition.x, 0, 0);
+        });
     
         // Handle window resize
         window.addEventListener('resize', () => {
@@ -651,19 +559,41 @@
       }
     });
 
+    function onLeftButtonDown() {
+        isRotatingLeft.value = true;
+        }
+
+        function onRightButtonDown() {
+        isRotatingRight.value = true;
+        }
+
+        function onUpButtonDown() {
+        isRotatingUp.value = true;
+        }
+
+        function onDownButtonDown() {
+        isRotatingDown.value = true;
+        }
+
+        function stopRotation() {
+        isRotatingLeft.value = false;
+        isRotatingRight.value = false;
+        isRotatingUp.value = false;
+        isRotatingDown.value = false;
+        }
+
     </script>
     
     <style scoped>
-.three-canvas {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: radial-gradient(circle, #f53844 20%, #f5a623 40%, #4a90e2 60%, #7ed321 80%);
-    background-size: cover;
-    background-repeat: no-repeat;
-    border: 5px solid black; /* Strong, thick black lines for a pop art frame effect */
-    background-position: center;
-}
+    .three-canvas {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: black;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
     .no-bg {
          margin: 0;
@@ -672,6 +602,54 @@
           overflow: hidden;
         background: none;  
     }
-          
+
+    .pixel-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(170%) translateY(-170%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        }
+
+        .side-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        }
+
+        .pixel-btn {
+            font-family: 'Press Start 2P', sans-serif;
+            font-size: 14px;
+            background-color: #ff69b4;
+            color: white;
+            padding: 15px;
+            border: 4px solid white;
+            box-shadow: 3px 3px 0 #ffffff, 6px 6px 0 #000000;
+            text-transform: uppercase;
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+       }
+
+        .pixel-btn:hover {
+            background-color: #ffcc00;
+            color: black;
+            transform: translate(-3px, -3px);
+        }
+
+        .pixel-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 #ffffff, 2px 2px 0 #000000;
+        }
+
+        .bear-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            }
     </style>
     
