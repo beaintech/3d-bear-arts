@@ -525,8 +525,8 @@
         bearGroup.add(popTextMesh5);
 
         const popTextMeshBg = new THREE.Mesh(textBaoGeometry, popArtTextMaterial);
-        popTextMeshBg.scale.set(.8, .8, .8);  // Scale it up a bit
-        popTextMeshBg.position.set(-6.5, 0, -3);   // Adjust position as need 1
+        popTextMeshBg.scale.set(.7, .7, .7);  // Scale it up a bit
+        popTextMeshBg.position.set(-6, 0, -3);   // Adjust position as need 1
         textGroup.add(popTextMeshBg);
       });
   
