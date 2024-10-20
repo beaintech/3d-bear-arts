@@ -1,6 +1,6 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
-
+    <!-- <BearFace class="bear-background"/> -->
     <div class="pixel-controls">
     <button class="pixel-btn up" @mousedown="onUpButtonDown" @mouseup="stopRotation">UP</button>
     <div class="side-buttons">
@@ -16,7 +16,7 @@
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; 
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
-    import BearFaceWhite from './BearFaceWhite.vue';
+    import BearFace from './BearFaceWhite.vue';
   
     const props = defineProps({
     background: {
@@ -49,6 +49,8 @@
 
         // Create the bear group and all parts
         const bearGroup = new THREE.Group();
+        const textGroup = new THREE.Group();
+        scene.add(textGroup);
             
         // Ambient Light (provides soft overall illumination)
         const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Stronger ambient light
@@ -445,13 +447,13 @@
 
     const textBaoGeometry = new TextGeometry('BAO', {
         font: font,
-        size: 1,   // Size of the letters
+        size: 2,   // Size of the letters
         height: 0.5,   // Depth of the letters
         curveSegments: 12,   // Smooth curves
         bevelEnabled: true,   // Enable bevel
         bevelThickness: 0.1,  // Thickness of the bevel
         bevelSize: 0.1,   // Bevel size
-        bevelSegments: 5,   // Number of bevel segments
+        bevelSegments: 3,   // Number of bevel segments
     });
 
       // Create a vibrant material for the text (pop-art style)
@@ -522,10 +524,10 @@
         popTextMesh5.position.set(0.35, 1, 0.3);   // Adjust position as need 1
         bearGroup.add(popTextMesh5);
 
-        const popTextMeshBg = new THREE.Mesh(textBaoGeometry, popArtTextMaterial);
-        popTextMeshBg.scale.set(0.85, .85, .85);  // Scale it up a bit
-        popTextMeshBg.position.set(-0.2,0, -0.5);   // Adjust position as need 1
-        bearGroup.add(popTextMeshBg);
+        const popTextMeshBg = new THREE.Mesh(textBaoGeometry, headPopArtMaterial);
+        popTextMeshBg.scale.set(1.2, 1.2, 1.2);  // Scale it up a bit
+        popTextMeshBg.position.set(-4, 0, -3);   // Adjust position as need 1
+        textGroup.add(popTextMeshBg);
       });
   
       // Update heart renderOrder to ensure it's always drawn last

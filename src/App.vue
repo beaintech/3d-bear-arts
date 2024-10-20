@@ -1,13 +1,17 @@
 <template>
   <div id="app">
     <nav v-show="isNavVisible">
-      <router-link to="/3d-bear-arts">Home</router-link>
+      <router-link to="/3d-bear-arts/pop-art">Pop</router-link>
+      <router-link to="/3d-bear-arts/pop-art-bear">Pop-Bear</router-link>
+      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop-Bear-3</router-link>
+
+      <!-- <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>
       <router-link to="/3d-bear-arts/sliver">Mirror</router-link>
       <router-link to="/3d-bear-arts/metal">Leather</router-link>
       <router-link to="/3d-bear-arts/pop-art">Pop</router-link>
       <router-link to="/3d-bear-arts/pop-art-bear">Pop-Bear</router-link>
-      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop-Bear-3</router-link>
+      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop-Bear-3</router-link> -->
 
        <!-- <router-link to="/3d-bear-arts/halfTransparent">HalfTranparent</router-link>
       <router-link to="/3d-bear-arts/bluePink">BluePink</router-link>
