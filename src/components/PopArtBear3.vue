@@ -545,6 +545,28 @@
   
       camera.position.z = 4;
 
+    // New mouse tracking functionality
+    const mouse = { x: 0, y: 0 };
+
+    // Update bearGroup rotation based on mouse movement
+    const onMouseMove = (event: MouseEvent) => {
+      // Normalize mouse coordinates from -1 to 1
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      // Calculate rotation based on mouse position
+      const targetRotationY = mouse.x * Math.PI * 0.2; // Y-axis rotation (left-right)
+      const targetRotationX = mouse.y * Math.PI * 0.2; // X-axis rotation (up-down)
+
+      // Apply the calculated rotation to the bear group
+      bearGroup.rotation.y = targetRotationY;
+      bearGroup.rotation.x = targetRotationX;
+    };
+
+    // Add event listener for mouse movement
+    // window.addEventListener('mousemove', onMouseMove);
+
+
       function animate() {
       requestAnimationFrame(animate);
       if (isRotatingRight.value) bearGroup.rotation.y += 0.03;
