@@ -445,7 +445,7 @@
         bevelSegments: 5,   // Number of bevel segments
     });
 
-    const textBaoGeometry = new TextGeometry('BAO', {
+    const textBaoGeometry = new TextGeometry('BAO      BEAR', {
         font: font,
         size: 2,   // Size of the letters
         height: 0.5,   // Depth of the letters
@@ -524,9 +524,9 @@
         popTextMesh5.position.set(0.35, 1, 0.3);   // Adjust position as need 1
         bearGroup.add(popTextMesh5);
 
-        const popTextMeshBg = new THREE.Mesh(textBaoGeometry, headPopArtMaterial);
-        popTextMeshBg.scale.set(1.2, 1.2, 1.2);  // Scale it up a bit
-        popTextMeshBg.position.set(-4, 0, -3);   // Adjust position as need 1
+        const popTextMeshBg = new THREE.Mesh(textBaoGeometry, popArtTextMaterial);
+        popTextMeshBg.scale.set(.8, .8, .8);  // Scale it up a bit
+        popTextMeshBg.position.set(-6.5, 0, -3);   // Adjust position as need 1
         textGroup.add(popTextMeshBg);
       });
   
@@ -605,7 +605,7 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: black;
+        background: radial-gradient(circle, #000000 60%, #ff69b4 40%);
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -623,7 +623,7 @@
         position: absolute;
         bottom: 20px;
         left: 50%;
-        transform: translateX(170%) translateY(-170%);
+        transform: translateX(120%) translateY(-100%);
         display: flex;
         flex-direction: column;
         align-items: center;
