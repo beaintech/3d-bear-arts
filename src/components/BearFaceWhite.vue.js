@@ -10,24 +10,26 @@ onMounted(() => {
     const canvas = bearCanvas.value;
     if (canvas) {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight * 0.6;
+        canvas.height = window.innerHeight * 0.7;
         const ctx = canvas.getContext('2d');
         if (ctx) {
             const drawBearFace = () => {
                 const centerX = canvas.width / 2;
-                const centerY = canvas.height / 1.9;
-                const faceRadius = canvas.height / 2.5;
-                const strokeFaceRadius = canvas.height / 2.58;
+                const centerY = canvas.height / 1.8;
+                // Increased the face radius by 1.5 times
+                const faceRadius = canvas.height / 2; // Adjusted for a larger face
+                const strokeFaceRadius = canvas.height / 2.05;
+                // Updated other element sizes based on the new face size
                 const earRadius = faceRadius * 0.45;
                 const eyeRadius = faceRadius * 0.18;
                 const snoutRadius = faceRadius * 0.3;
                 const smallSnoutRadius = faceRadius * 0.275;
                 const noseRadius = snoutRadius * 0.35;
                 const smallNoseRadius = snoutRadius * 0.32;
-                // Draw half of the bear's face with stroke style
+                // Draw left half (Stroke style)
                 ctx.save();
                 ctx.beginPath();
-                ctx.rect(0, 0, canvas.width / 2, canvas.height); // Left half for stroke
+                ctx.rect(0, 0, canvas.width / 2, canvas.height); // Left half
                 ctx.clip(); // Clip left half
                 // Ears (Stroke)
                 ctx.lineWidth = 15;
@@ -63,13 +65,13 @@ onMounted(() => {
                 ctx.arc(centerX, centerY + faceRadius * 0.3, smallNoseRadius, 0, Math.PI * 2, true);
                 ctx.stroke();
                 ctx.restore();
-                // Draw half of the bear's face with fill (colored) style
+                // Draw right half (Fill style)
                 ctx.save();
                 ctx.beginPath();
-                ctx.rect(canvas.width / 2, 0, canvas.width / 2, canvas.height); // Right half for color
+                ctx.rect(canvas.width / 2, 0, canvas.width / 2, canvas.height); // Right half
                 ctx.clip(); // Clip right half
                 // Ears (Color)
-                ctx.fillStyle = '#FF69B4'; // Pink color
+                ctx.fillStyle = '#FFFFFF'; // Pink color
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
                 ctx.fill();
@@ -92,10 +94,10 @@ onMounted(() => {
                 ctx.lineTo(centerX + faceRadius * 0.5, centerY - faceRadius * 0.05);
                 ctx.moveTo(centerX + faceRadius * 0.5, centerY - faceRadius * 0.3);
                 ctx.lineTo(centerX + faceRadius * 0.2, centerY - faceRadius * 0.05);
-                ctx.strokeStyle = '#FFFFFF';
+                ctx.strokeStyle = '#000000';
                 ctx.stroke();
                 // Snout (Color)
-                ctx.fillStyle = '#F0E68C'; // Snout color
+                ctx.fillStyle = '#000000'; // Snout color
                 ctx.beginPath();
                 ctx.ellipse(centerX, centerY + faceRadius * 0.4, snoutRadius * 1.5, snoutRadius, 0, 0, Math.PI * 2);
                 ctx.fill();

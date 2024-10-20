@@ -32,6 +32,8 @@ onMounted(() => {
         threeCanvas.value.appendChild(renderer.domElement);
         // Create the bear group and all parts
         const bearGroup = new THREE.Group();
+        const textGroup = new THREE.Group();
+        scene.add(textGroup);
         // Ambient Light (provides soft overall illumination)
         const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Stronger ambient light
         scene.add(ambientLight);
@@ -362,13 +364,13 @@ onMounted(() => {
             });
             const textBaoGeometry = new TextGeometry('BAO', {
                 font: font,
-                size: 1, // Size of the letters
+                size: 2, // Size of the letters
                 height: 0.5, // Depth of the letters
                 curveSegments: 12, // Smooth curves
                 bevelEnabled: true, // Enable bevel
                 bevelThickness: 0.1, // Thickness of the bevel
                 bevelSize: 0.1, // Bevel size
-                bevelSegments: 5, // Number of bevel segments
+                bevelSegments: 3, // Number of bevel segments
             });
             // Create a vibrant material for the text (pop-art style)
             const popArtTextMaterial = new THREE.MeshPhysicalMaterial({
@@ -428,10 +430,10 @@ onMounted(() => {
             popTextMesh5.rotateY(15); // Scale it up a bit
             popTextMesh5.position.set(0.35, 1, 0.3); // Adjust position as need 1
             bearGroup.add(popTextMesh5);
-            const popTextMeshBg = new THREE.Mesh(textBaoGeometry, popArtTextMaterial);
-            popTextMeshBg.scale.set(0.85, .85, .85); // Scale it up a bit
-            popTextMeshBg.position.set(-0.2, 0, -0.5); // Adjust position as need 1
-            bearGroup.add(popTextMeshBg);
+            const popTextMeshBg = new THREE.Mesh(textBaoGeometry, headPopArtMaterial);
+            popTextMeshBg.scale.set(1.2, 1.2, 1.2); // Scale it up a bit
+            popTextMeshBg.position.set(-4, 0, -3); // Adjust position as need 1
+            textGroup.add(popTextMeshBg);
         });
         // Update heart renderOrder to ensure it's always drawn last
         tail.renderOrder = 1;
@@ -531,9 +533,6 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeCanvas"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-canvas')) }, });
     // @ts-ignore navigation for `const threeCanvas = ref()`
     __VLS_ctx.threeCanvas;
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("textCanvas"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-canvas')) }, });
-    // @ts-ignore navigation for `const textCanvas = ref()`
-    __VLS_ctx.textCanvas;
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("pixel-controls") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onUpButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn up") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("side-buttons") }, });
@@ -554,7 +553,6 @@ function __VLS_template() {
     var __VLS_inheritedAttrs;
     const __VLS_refs = {
         "threeCanvas": __VLS_nativeElements['div'],
-        "textCanvas": __VLS_nativeElements['div'],
     };
     var $refs;
     return {
