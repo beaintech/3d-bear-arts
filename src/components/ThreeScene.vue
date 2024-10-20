@@ -3,17 +3,18 @@
     <BearFace class="bear-background" />
 
     <!-- Other bear components on top of the background -->
-    <PopArtBear :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
-    <PopBear2 :background="true" :cameraPosition="isBigMobile? 10: isBigTablet? 6: 4" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
-    <PopBear3 :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
+    <PinkBear :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x:-15, y:0, z: 0 }" class="bear-page"/>
+    <PurpleBear :background="true" :cameraPosition="isBigMobile? 10: isBigTablet? 6: 4" :bodyPosition="{ x: -15,  y: 0, z: 0 }" class="bear-page"/>
+    <BlueBear :background="true" :cameraPosition="isBigMobile? 13: isBigTablet? 8: 6" :bodyPosition="{ x: -18,  y: 0, z: 0 }" class="bear-page"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import PopArtBear from '../components/PopartBear.vue';
-import PopBear2 from '../components/PopBear2.vue';
-import PopBear3 from '../components/PopArtBear3.vue';
+import PinkBear from './PinkBear.vue';
+import PurpleBear from './PurpleBear.vue';
+import BlueBear from './BlueBear.vue';
+import PinkBlueBear from './PinkBlueBear.vue';
 import BearFace from './BearFace.vue';
 import { isBigTablet, isBigMobile } from '../utils/window-size';
 

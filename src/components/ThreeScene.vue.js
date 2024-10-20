@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
-import PopArtBear from '../components/PopartBear.vue';
-import PopBear2 from '../components/PopBear2.vue';
-import PopBear3 from '../components/PopArtBear3.vue';
+import PinkBear from './PinkBear.vue';
+import PurpleBear from './PurpleBear.vue';
+import BlueBear from './BlueBear.vue';
 import BearFace from './BearFace.vue';
 import { isBigTablet, isBigMobile } from '../utils/window-size';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
@@ -48,19 +48,19 @@ function __VLS_template() {
     const __VLS_0 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-background") }, }));
     const __VLS_1 = __VLS_0({ ...{ class: ("bear-background") }, }, ...__VLS_functionalComponentArgsRest(__VLS_0));
     // @ts-ignore
-    [PopArtBear,];
+    [PinkBear,];
     // @ts-ignore
-    const __VLS_5 = __VLS_asFunctionalComponent(PopArtBear, new PopArtBear({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 13 : __VLS_ctx.isBigTablet ? 8 : 6)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
+    const __VLS_5 = __VLS_asFunctionalComponent(PinkBear, new PinkBear({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 13 : __VLS_ctx.isBigTablet ? 8 : 6)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
     const __VLS_6 = __VLS_5({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 13 : __VLS_ctx.isBigTablet ? 8 : 6)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_5));
     // @ts-ignore
-    [PopBear2,];
+    [PurpleBear,];
     // @ts-ignore
-    const __VLS_10 = __VLS_asFunctionalComponent(PopBear2, new PopBear2({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 10 : __VLS_ctx.isBigTablet ? 6 : 4)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
+    const __VLS_10 = __VLS_asFunctionalComponent(PurpleBear, new PurpleBear({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 10 : __VLS_ctx.isBigTablet ? 6 : 4)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
     const __VLS_11 = __VLS_10({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 10 : __VLS_ctx.isBigTablet ? 6 : 4)), bodyPosition: (({ x: -15, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_10));
     // @ts-ignore
-    [PopBear3,];
+    [BlueBear,];
     // @ts-ignore
-    const __VLS_15 = __VLS_asFunctionalComponent(PopBear3, new PopBear3({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 13 : __VLS_ctx.isBigTablet ? 8 : 6)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
+    const __VLS_15 = __VLS_asFunctionalComponent(BlueBear, new BlueBear({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 13 : __VLS_ctx.isBigTablet ? 8 : 6)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }));
     const __VLS_16 = __VLS_15({ background: ((true)), cameraPosition: ((__VLS_ctx.isBigMobile ? 13 : __VLS_ctx.isBigTablet ? 8 : 6)), bodyPosition: (({ x: -18, y: 0, z: 0 })), ...{ class: ("bear-page") }, }, ...__VLS_functionalComponentArgsRest(__VLS_15));
     __VLS_styleScopedClasses['flex'];
     __VLS_styleScopedClasses['bear-background'];
@@ -81,9 +81,9 @@ function __VLS_template() {
 const __VLS_self = (await import('vue')).defineComponent({
     setup() {
         return {
-            PopArtBear: PopArtBear,
-            PopBear2: PopBear2,
-            PopBear3: PopBear3,
+            PinkBear: PinkBear,
+            PurpleBear: PurpleBear,
+            BlueBear: BlueBear,
             BearFace: BearFace,
             isBigTablet: isBigTablet,
             isBigMobile: isBigMobile,
