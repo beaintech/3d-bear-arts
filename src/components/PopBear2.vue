@@ -16,7 +16,9 @@
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; 
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
-    import BearFaceWhite from './BearFaceWhite.vue';
+    import PinkBear from './PinkBear.vue';
+    import { isBigTablet, isBigMobile } from '../utils/window-size';
+  
   
     const props = defineProps({
     background: {

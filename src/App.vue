@@ -4,7 +4,9 @@
       <router-link to="/3d-bear-arts/metal">Leather</router-link>
       <router-link to="/3d-bear-arts/pop-art">Pop</router-link>
       <router-link to="/3d-bear-arts/pop-art-bear">Pop-Bear</router-link>
-      <router-link to="/3d-bear-arts">Pop-Bear-3</router-link>
+      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop-Bear-3</router-link>
+      <router-link to="/3d-bear-arts">Metal Bear</router-link>
+
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>

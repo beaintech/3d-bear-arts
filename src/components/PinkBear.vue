@@ -20,7 +20,11 @@
     bodyPosition: {
       type: Object,
       default: () => ({ x: 0, y: 0, z: 0 })
-    }
+    },
+    noAnimation: {
+    type: Boolean,
+    default: false, // Set default to `false`, meaning animation runs by default
+  },
   });
   const threeCanvas = ref<HTMLDivElement | null>(null);
   
@@ -238,11 +242,14 @@
   
       // Animation function
       function animate() {
-        requestAnimationFrame(animate);
-        bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
-        bigHeartMaterial.uniforms.time.value += 0.03; // Same animation speed
-        renderer.render(scene, camera);
-      }
+      if (!props.noAnimation) {
+      requestAnimationFrame(animate);
+      bearGroup.rotation.y += 0.03;
+      bigHeartMaterial.uniforms.time.value += 0.03;
+    }
+    renderer.render(scene, camera);
+
+  }
   
       // Start animation
       animate();
