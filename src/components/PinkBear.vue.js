@@ -15,7 +15,11 @@ const props = defineProps({
     bodyPosition: {
         type: Object,
         default: () => ({ x: 0, y: 0, z: 0 })
-    }
+    },
+    noAnimation: {
+        type: Boolean,
+        default: false, // Set default to `false`, meaning animation runs by default
+    },
 });
 const threeCanvas = ref(null);
 onMounted(() => {
@@ -199,9 +203,11 @@ onMounted(() => {
         scene.add(bearGroup);
         // Animation function
         function animate() {
-            requestAnimationFrame(animate);
-            bearGroup.rotation.y += 0.03; // Rotation speed fixed to match original
-            bigHeartMaterial.uniforms.time.value += 0.03; // Same animation speed
+            if (!props.noAnimation) {
+                requestAnimationFrame(animate);
+                bearGroup.rotation.y += 0.03;
+                bigHeartMaterial.uniforms.time.value += 0.03;
+            }
             renderer.render(scene, camera);
         }
         // Start animation
@@ -240,7 +246,11 @@ const __VLS_fnComponent = (await import('vue')).defineComponent({
         bodyPosition: {
             type: Object,
             default: () => ({ x: 0, y: 0, z: 0 })
-        }
+        },
+        noAnimation: {
+            type: Boolean,
+            default: false, // Set default to `false`, meaning animation runs by default
+        },
     },
 });
 ;
@@ -296,7 +306,11 @@ const __VLS_self = (await import('vue')).defineComponent({
         bodyPosition: {
             type: Object,
             default: () => ({ x: 0, y: 0, z: 0 })
-        }
+        },
+        noAnimation: {
+            type: Boolean,
+            default: false, // Set default to `false`, meaning animation runs by default
+        },
     },
 });
 export default (await import('vue')).defineComponent({
@@ -315,7 +329,11 @@ export default (await import('vue')).defineComponent({
         bodyPosition: {
             type: Object,
             default: () => ({ x: 0, y: 0, z: 0 })
-        }
+        },
+        noAnimation: {
+            type: Boolean,
+            default: false, // Set default to `false`, meaning animation runs by default
+        },
     },
 });
 ;

@@ -46,7 +46,7 @@ onMounted(() => {
         pointLight.position.set(0, 2, 4); // Close to the object
         scene.add(pointLight);
         const textureLoader = new THREE.TextureLoader();
-        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/pop6.jpg');
+        const popTexture1 = textureLoader.load('/3d-bear-arts/assets/metal.jpg');
         const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop7.jpg');
         // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
         popTexture1.wrapS = popTexture1.wrapT = THREE.RepeatWrapping;
@@ -57,6 +57,21 @@ onMounted(() => {
         // Right arm: Vibrant purple (#8A2BE2).
         // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
         // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
+        const silverMetalMaterial = new THREE.MeshStandardMaterial({
+            color: 0xd3d3d3, // Light grey color for the metal
+            metalness: 0.8, // High metalness to keep the metallic look
+            roughness: 0.2, // Adjust roughness to make it shinier
+            map: popTexture1, // Add the texture as a pattern on the material
+        });
+        const transparentSilverMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xC0C0C0, // Silver
+            metalness: 1.0,
+            roughness: 0.3,
+            clearcoat: 0.5,
+            clearcoatRoughness: 0.1,
+            transparent: true,
+            opacity: 0.35,
+        });
         const popArtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF69B4, // Hot pink as the base
             map: popTexture2, // Apply the abstract or halftone texture
@@ -154,8 +169,8 @@ onMounted(() => {
         0, // phiStart
         Math.PI // phiLength (half of the sphere)
         );
-        const rightBody = new THREE.Mesh(bodyGeometry, transparentPopArtMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, popArtMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, transparentSilverMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, silverMetalMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -164,7 +179,7 @@ onMounted(() => {
         leftBody.rotation.y = Math.PI * 1.5;
         // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, popArtMaterial);
+        const circle = new THREE.Mesh(circleGeometry, silverMetalMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         // Position the circle to cover the flat side
         circle.position.set(0, -0.2, 0); // Position should match the flat side of the half-sphere
@@ -185,18 +200,18 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, headPopArtMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, silverMetalMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentHeadMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, transparentSilverMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, headPopArtMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, silverMetalMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
@@ -210,10 +225,10 @@ onMounted(() => {
         bearGroup.add(halfHeadSphereGroup);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, popArtMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, silverMetalMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, transparentPopArtMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, transparentSilverMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -223,7 +238,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, headPopArtMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, silverMetalMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -234,13 +249,13 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentHeadMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentSilverMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, headPopArtMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, silverMetalMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -264,19 +279,19 @@ onMounted(() => {
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
         // Add the heart to the bear group
         // bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, headPopArtMaterial);
+        const heart = new THREE.Mesh(heartGeometry, silverMetalMaterial);
         heart.scale.set(0.5, 0.5, 0.5);
         heart.position.set(0.35, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
-        const heart1 = new THREE.Mesh(heartGeometry, leftLegtMaterial);
+        const heart1 = new THREE.Mesh(heartGeometry, silverMetalMaterial);
         heart1.scale.set(0.2, 0.2, 0.25);
         heart1.position.set(0.5, -0.3, 0.4); // Position it in front of the body
         heart1.rotation.y = Math.PI;
         heart1.rotation.x = Math.PI;
         bearGroup.add(heart1);
-        const heart3 = new THREE.Mesh(heartGeometry, popArtMaterial);
+        const heart3 = new THREE.Mesh(heartGeometry, silverMetalMaterial);
         heart3.scale.set(0.25, 0.25, 0.27);
         heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
         heart3.rotation.y = Math.PI;
@@ -284,45 +299,45 @@ onMounted(() => {
         bearGroup.add(heart3);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, leftLegtMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, silverMetalMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, transparentLegMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, transparentSilverMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, headPopArtMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, silverMetalMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, transparentHeadMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, transparentSilverMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, headPopArtMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, silverMetalMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentHeadMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentSilverMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
         // Create rounded buttocks
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-        const leftButtock = new THREE.Mesh(buttockGeometry, popArtMaterial);
+        const leftButtock = new THREE.Mesh(buttockGeometry, silverMetalMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, transparentPopArtMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, transparentSilverMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, popArtMaterial);
+        const tail = new THREE.Mesh(tailGeometry, silverMetalMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
@@ -334,7 +349,7 @@ onMounted(() => {
                 depth: 0.05,
             });
             const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-            const xEye = new THREE.Mesh(xEyeGeometry, popArtMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, silverMetalMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -346,7 +361,7 @@ onMounted(() => {
                 depth: 0.05, // Thickness of the O
             });
             const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-            const oEye = new THREE.Mesh(oEyeGeometry, leftLegtMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, silverMetalMaterial);
             oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);

@@ -16,10 +16,10 @@ import MetalMachineBear from '../components/MetalMachineBear.vue';
 
 const routes = [
 
-    { path: '/3d-bear-arts/metal', name: 'Leather', component: MetalBear },
+    { path: '/3d-bear-arts/leather', name: 'Leather', component: MetalBear },
     { path: '/3d-bear-arts/pop-art', name: 'Pop', component: PopArtBear },
     { path: '/3d-bear-arts/pop-art-bear', name: 'PopArtBear 2', component: PopBear2 },
-    { path: '/3d-bear-arts', name: 'PopArtBear 3', component: PopBear3 },
+    { path: '/3d-bear-arts/pop-art-bear-3', name: 'PopArtBear 3', component: PopBear3 },
     { path: '/3d-bear-arts', name: 'MetalMachineBear', component: MetalMachineBear },
 
 
