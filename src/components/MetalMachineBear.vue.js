@@ -59,7 +59,7 @@ onMounted(() => {
         // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
         const silverMetalMaterial = new THREE.MeshStandardMaterial({
             color: 0xd3d3d3, // Light grey color for the metal
-            metalness: 0.8, // High metalness to keep the metallic look
+            metalness: .9, // High metalness to keep the metallic look
             roughness: 0.2, // Adjust roughness to make it shinier
             map: popTexture1, // Add the texture as a pattern on the material
         });
@@ -69,8 +69,9 @@ onMounted(() => {
             roughness: 0.3,
             clearcoat: 0.5,
             clearcoatRoughness: 0.1,
+            map: popTexture1,
             transparent: true,
-            opacity: 0.35,
+            opacity: .4,
         });
         const popArtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFF69B4, // Hot pink as the base
@@ -427,38 +428,38 @@ onMounted(() => {
             // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
             // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
             // Create a mesh for the "POP" text
-            const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
-            popTextMesh.scale.set(0.15, .15, .15); // Scale it up a bit
-            popTextMesh.position.set(0.02, 1.16, 0.1); // Adjust position as need 1
-            popTextMesh.rotateZ(-25); // Scale it up a bit
-            bearGroup.add(popTextMesh);
-            const popTextMesh2 = new THREE.Mesh(textGeometry, leftArmtMaterial);
-            popTextMesh2.scale.set(0.14, .14, .14); // Scale it up a bit
-            popTextMesh2.rotateZ(45); // Scale it up a bit
-            popTextMesh2.position.set(0.2, -0.7, 0.3); // Adjust position as need 1
-            bearGroup.add(popTextMesh2);
-            const popTextMesh3 = new THREE.Mesh(textGeometry, popArtTextMaterial3);
-            popTextMesh3.scale.set(0.14, .14, .14); // Scale it up a bit
-            popTextMesh3.rotateZ(45); // Scale it up a bit
-            popTextMesh3.rotateY(45); // Scale it up a bit
-            popTextMesh3.position.set(0.3, 0.7, 0.3); // Adjust position as need 1
-            bearGroup.add(popTextMesh3);
-            const popTextMesh4 = new THREE.Mesh(textGeometry, popArtTextMaterial3);
-            popTextMesh4.scale.set(0.15, .15, .15); // Scale it up a bit
-            popTextMesh4.rotateZ(45); // Scale it up a bit
-            popTextMesh4.rotateY(45); // Scale it up a bit
-            popTextMesh4.position.set(0.35, -1.5, 0.3); // Adjust position as need 1
-            bearGroup.add(popTextMesh4);
-            const popTextMesh5 = new THREE.Mesh(textGeometry, popArtTextMaterial4);
-            popTextMesh5.scale.set(0.17, .17, .17); // Scale it up a bit
-            popTextMesh5.rotateZ(45); // Scale it up a bit
-            popTextMesh5.rotateY(15); // Scale it up a bit
-            popTextMesh5.position.set(0.35, 1, 0.3); // Adjust position as need 1
-            bearGroup.add(popTextMesh5);
-            const popTextMeshBg = new THREE.Mesh(textBaoGeometry, popArtTextMaterial);
-            popTextMeshBg.scale.set(.7, .7, .7); // Scale it up a bit
-            popTextMeshBg.position.set(-6, 0, -3); // Adjust position as need 1
-            textGroup.add(popTextMeshBg);
+            // const popTextMesh = new THREE.Mesh(textGeometry, popArtTextMaterial);
+            // popTextMesh.scale.set(0.15, .15, .15);  // Scale it up a bit
+            // popTextMesh.position.set(0.02, 1.16, 0.1);   // Adjust position as need 1
+            // popTextMesh.rotateZ(-25);  // Scale it up a bit
+            // bearGroup.add(popTextMesh);
+            // const popTextMesh2 = new THREE.Mesh(textGeometry, leftArmtMaterial);
+            // popTextMesh2.scale.set(0.14, .14, .14);  // Scale it up a bit
+            // popTextMesh2.rotateZ(45);  // Scale it up a bit
+            // popTextMesh2.position.set(0.2, -0.7, 0.3);   // Adjust position as need 1
+            // bearGroup.add(popTextMesh2);
+            // const popTextMesh3 = new THREE.Mesh(textGeometry, popArtTextMaterial3);
+            // popTextMesh3.scale.set(0.14, .14, .14);  // Scale it up a bit
+            // popTextMesh3.rotateZ(45);  // Scale it up a bit
+            // popTextMesh3.rotateY(45);  // Scale it up a bit
+            // popTextMesh3.position.set(0.3, 0.7, 0.3);   // Adjust position as need 1
+            // bearGroup.add(popTextMesh3);
+            // const popTextMesh4 = new THREE.Mesh(textGeometry, popArtTextMaterial3);
+            // popTextMesh4.scale.set(0.15, .15, .15);  // Scale it up a bit
+            // popTextMesh4.rotateZ(45);  // Scale it up a bit
+            // popTextMesh4.rotateY(45);  // Scale it up a bit
+            // popTextMesh4.position.set(0.35, -1.5, 0.3);   // Adjust position as need 1
+            // bearGroup.add(popTextMesh4);
+            // const popTextMesh5 = new THREE.Mesh(textGeometry, popArtTextMaterial4);
+            // popTextMesh5.scale.set(0.17, .17, .17);  // Scale it up a bit
+            // popTextMesh5.rotateZ(45);  // Scale it up a bit
+            // popTextMesh5.rotateY(15);  // Scale it up a bit
+            // popTextMesh5.position.set(0.35, 1, 0.3);   // Adjust position as need 1
+            // bearGroup.add(popTextMesh5);
+            // const popTextMeshBg = new THREE.Mesh(textBaoGeometry, silverMetalMaterial);
+            // popTextMeshBg.scale.set(.7, .7, .7);  // Scale it up a bit
+            // popTextMeshBg.position.set(-6, 0, -3);   // Adjust position as need 1
+            // textGroup.add(popTextMeshBg);
         });
         // Update heart renderOrder to ensure it's always drawn last
         tail.renderOrder = 1;
