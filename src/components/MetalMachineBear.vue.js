@@ -448,7 +448,7 @@ onMounted(() => {
             gear2.rotation.z += 0.03;
             gear3.rotation.z -= 0.02;
             gear4.rotation.z += 0.02;
-            gear5.rotation.z += 0.03;
+            gear5.rotation.z -= 0.03;
             heart.rotation.y += 0.04;
             renderer.render(scene, camera);
         }
