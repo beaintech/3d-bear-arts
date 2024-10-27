@@ -95,6 +95,18 @@
           map: popTexture1,  // Add the texture as a pattern on the material
         });
 
+        gearTexture.mapping = THREE.EquirectangularReflectionMapping;
+
+// Create a mirror-like silver material
+const mirrorSilverMaterial = new THREE.MeshPhysicalMaterial({
+    color: '#C0C0C0',  // Silver color
+    metalness: 1.0,    // Fully metallic for reflective surface
+    roughness: 0.2,    // Slightly rough to blur reflections
+    envMap: gearTexture, // Apply environment map for reflections
+    clearcoat: 0.7,    // Adds a layer of reflectiveness on top
+    clearcoatRoughness: 0.3,  // Roughness of the clear coat layer
+});
+
         const gearMaterialSliver = new THREE.MeshPhysicalMaterial({
           color: 0xFFFFF,
           metalness: .9, 
@@ -314,7 +326,7 @@
   
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, silverMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, mirrorSilverMaterial);
   
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
