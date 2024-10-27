@@ -49,7 +49,10 @@ onMounted(() => {
         const popTexture1 = textureLoader.load('/3d-bear-arts/assets/metal.jpg');
         const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop7.jpg');
         const gearTexture = textureLoader.load('/3d-bear-arts/assets/gear.jpg');
-        // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
+        const underwaterTexture = textureLoader.load('/3d-bear-arts/assets/underwater.jpg');
+        const beachTexture = textureLoader.load('/3d-bear-arts/assets/beach.jpg');
+        underwaterTexture.wrapS = underwaterTexture.wrapT = THREE.RepeatWrapping;
+        beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
         popTexture1.wrapS = popTexture1.wrapT = THREE.RepeatWrapping;
         // popTexture1.repeat.set(2, 2); // Adjust this to scale the texture on the model
         popTexture2.wrapS = popTexture2.wrapT = THREE.RepeatWrapping;
@@ -59,73 +62,34 @@ onMounted(() => {
         // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
         // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
         // color: 0xd3d3d3,   // Light grey color for the metal
-        const silverMetalMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xd3d3d3, // Light grey color for the metal
-            metalness: .9, // High metalness to keep the metallic look
-            roughness: 0.2, // Adjust roughness to make it shinier
-            clearcoat: 0.5,
-            clearcoatRoughness: 0.1,
-            map: popTexture1, // Add the texture as a pattern on the material
+        const bubbleMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x7FC8A9, // Softer mint green color
+            metalness: 0.05, // Lower metalness for less reflectivity
+            roughness: 0.4, // Increase roughness for a less shiny appearance
+            clearcoat: 0.9, // Slightly reduce the clearcoat for less gloss
+            clearcoatRoughness: 0.2, // Increase clearcoat roughness to soften reflections
+            reflectivity: 0.6, // Reduce reflectivity for a more subtle effect
+            map: beachTexture,
+            envMapIntensity: 0.8, // Lower environment map intensity
+            side: THREE.DoubleSide, // Keep double-sided rendering
+            transparent: true, // Maintain transparency
+            opacity: 0.99, // Reduce opacity for a more subtle translucent effect
         });
         gearTexture.mapping = THREE.EquirectangularReflectionMapping;
-        // Create a mirror-like silver material
-        const mirrorSilverMaterial = new THREE.MeshPhysicalMaterial({
-            color: '#d3d3d3', // Silver color
-            metalness: 1.0, // Fully metallic for reflective surface
-            roughness: 0.25, // Slightly rough to blur reflections
-            map: popTexture1,
-            envMap: gearTexture, // Apply environment map for reflections
-            clearcoat: 0.7, // Adds a layer of reflectiveness on top
-            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
-        });
         const mirrorRedMaterial = new THREE.MeshPhysicalMaterial({
-            color: '#D32F2F', // Silver color
+            color: '#00BFFF', // Silver color
             metalness: 1.0, // Fully metallic for reflective surface
             roughness: 0.25, // Slightly rough to blur reflections
             envMap: gearTexture, // Apply environment map for reflections
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
             clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
-        const transparentMirrorSilverMaterial = new THREE.MeshPhysicalMaterial({
-            color: '#C0C0C0', // Silver color
-            metalness: 1.0, // Fully metallic for reflective surface
+        const transparentbubbleMaterial = new THREE.MeshPhysicalMaterial({
+            color: '#EEE8AA', // Silver color
+            metalness: .2, // Fully metallic for reflective surface
             roughness: 0.25, // Slightly rough to blur reflections
-            map: popTexture1,
+            map: underwaterTexture,
             envMap: gearTexture, // Apply environment map for reflections
-            transparent: true, // Enable transparency
-            opacity: 0.8, // Adjust transparency level (0.0 to 1.0)
-            clearcoat: 0.7, // Adds a layer of reflectiveness on top
-            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
-            transmission: 0.8, // Enable transmission for a glass-like effect
-            ior: 1.45, // Index of refraction for a more glassy appearance
-        });
-        const transparentMirrorSilverBodyMaterial = new THREE.MeshPhysicalMaterial({
-            color: '#C0C0C0', // Silver color
-            metalness: 1.0, // Fully metallic for reflective surface
-            roughness: 0.5, // Slightly rough to blur reflections
-            map: popTexture1,
-            envMap: gearTexture, // Apply environment map for reflections
-            transparent: true, // Enable transparency
-            opacity: 0.23, // Adjust transparency level (0.0 to 1.0)
-            clearcoat: 0.7, // Adds a layer of reflectiveness on top
-            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
-            transmission: 0.8, // Enable transmission for a glass-like effect
-            ior: 1.45, // Index of refraction for a more glassy appearance
-        });
-        const mirrorPureMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xd3d3d3, // Silver color
-            metalness: 1, // Full metallic look
-            roughness: 0.25, // Low roughness for a reflective appearance
-            clearcoat: 1, // High clearcoat to enhance glossiness
-            clearcoatRoughness: 0.05, // Slight clearcoat roughness
-            reflectivity: 0.9, // High reflectivity for a mirror effect
-            envMapIntensity: 1.0, // Environment reflection intensity
-            side: THREE.DoubleSide, // Render both sides of the material
-        });
-        const transparentMirrorPureMaterial = new THREE.MeshPhysicalMaterial({
-            color: '#C0C0C0', // Silver color
-            metalness: 1.0, // Fully metallic for reflective surface
-            roughness: 0.2, // Slightly rough to blur reflections
             transparent: true, // Enable transparency
             opacity: 0.4, // Adjust transparency level (0.0 to 1.0)
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
@@ -142,24 +106,14 @@ onMounted(() => {
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
             clearcoatRoughness: 0.3, // Roughness of the clear co
         });
-        const silverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xC0C0C0,
-            metalness: .9,
-            roughness: 0.2,
-            clearcoat: 0.5,
-            clearcoatRoughness: 0.1,
-            map: gearTexture, // Add the texture as a pattern on the material
-        });
-        // color: 0xC0C0C0, // Silver
-        const transparentSilverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xC0C0C0, // Silver
-            metalness: 1.0,
-            roughness: 0.3,
-            clearcoat: 0.5,
-            clearcoatRoughness: 0.1,
-            map: popTexture1,
-            transparent: true,
-            opacity: .3,
+        const bubbleCircleMaterial = new THREE.MeshPhysicalMaterial({
+            color: '#EEE8AA', // Silver color
+            metalness: .2, // Fully metallic for reflective surface
+            roughness: 0.2, // Slightly rough to blur reflections
+            map: underwaterTexture,
+            envMap: gearTexture, // Apply environment map for reflections
+            clearcoat: 0.7, // Adds a layer of reflectiveness on top
+            clearcoatRoughness: 0.3, // Roughness of the clear co
         });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
@@ -168,8 +122,8 @@ onMounted(() => {
         0, // phiStart
         Math.PI // phiLength (half of the sphere)
         );
-        const rightBody = new THREE.Mesh(bodyGeometry, transparentMirrorSilverBodyMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, mirrorSilverMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, transparentbubbleMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, bubbleMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -178,7 +132,7 @@ onMounted(() => {
         leftBody.rotation.y = Math.PI * 1.5;
         // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, transparentMirrorSilverMaterial);
+        const circle = new THREE.Mesh(circleGeometry, bubbleCircleMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         // Position the circle to cover the flat side
         circle.position.set(0, -0.2, 0); // Position should match the flat side of the half-sphere
@@ -199,18 +153,18 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, mirrorSilverMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, bubbleMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentMirrorSilverBodyMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, transparentbubbleMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, transparentMirrorSilverMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, bubbleCircleMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
@@ -224,10 +178,10 @@ onMounted(() => {
         bearGroup.add(halfHeadSphereGroup);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, mirrorSilverMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, bubbleMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, transparentMirrorSilverMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, transparentbubbleMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -237,7 +191,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, mirrorSilverMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, bubbleMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -248,13 +202,13 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentMirrorSilverMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentbubbleMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, mirrorPureMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, bubbleCircleMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -278,45 +232,45 @@ onMounted(() => {
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, mirrorSilverMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, bubbleMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, transparentMirrorSilverMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, transparentbubbleMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, mirrorSilverMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, bubbleMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, transparentMirrorSilverMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, transparentbubbleMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, mirrorSilverMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, bubbleMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentMirrorSilverMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentbubbleMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
         // Create rounded buttocks
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-        const leftButtock = new THREE.Mesh(buttockGeometry, mirrorSilverMaterial);
+        const leftButtock = new THREE.Mesh(buttockGeometry, bubbleMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, transparentMirrorSilverBodyMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, transparentbubbleMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, mirrorSilverMaterial);
+        const tail = new THREE.Mesh(tailGeometry, bubbleMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
@@ -328,7 +282,7 @@ onMounted(() => {
                 depth: 0.05,
             });
             const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            const xEye = new THREE.Mesh(xEyeGeometry, silverMetalMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, bubbleMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -340,7 +294,7 @@ onMounted(() => {
                 depth: 0.05, // Thickness of the O
             });
             const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-            const oEye = new THREE.Mesh(oEyeGeometry, silverMetalMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, bubbleMaterial);
             oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -404,11 +358,11 @@ onMounted(() => {
         gear3.rotation.z = -Math.PI / 4;
         gear4.rotation.y = -Math.PI / 2;
         gear5.rotation.y = -Math.PI / 2;
-        bearGroup.add(gear1);
-        bearGroup.add(gear2);
-        bearGroup.add(gear3);
-        bearGroup.add(gear4);
-        bearGroup.add(gear5);
+        // bearGroup.add(gear1);
+        // bearGroup.add(gear2);
+        // bearGroup.add(gear3);
+        // bearGroup.add(gear4);
+        // bearGroup.add(gear5);
         bearGroup.rotation.x = 0.1; // Reset any upward tilt
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
