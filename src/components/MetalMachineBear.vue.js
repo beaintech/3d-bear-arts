@@ -78,6 +78,14 @@ onMounted(() => {
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
             clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
+        const mirrorRedMaterial = new THREE.MeshPhysicalMaterial({
+            color: '#D32F2F', // Silver color
+            metalness: 1.0, // Fully metallic for reflective surface
+            roughness: 0.25, // Slightly rough to blur reflections
+            envMap: gearTexture, // Apply environment map for reflections
+            clearcoat: 0.7, // Adds a layer of reflectiveness on top
+            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
+        });
         const transparentMirrorSilverMaterial = new THREE.MeshPhysicalMaterial({
             color: '#C0C0C0', // Silver color
             metalness: 1.0, // Fully metallic for reflective surface
@@ -341,11 +349,11 @@ onMounted(() => {
         tail.renderOrder = 1;
         // Gear Parameters
         const gearRadius = 1.2;
-        const gearDepth = 0.7;
+        const gearDepth = 0.8;
         const teethCount = 8;
         const toothWidth = 0.3;
         const toothHeight = 0.3;
-        const toothDepth = 0.6;
+        const toothDepth = 0.7;
         // Function to create a gear
         function createGear(material, position) {
             // Create gear body
@@ -375,9 +383,9 @@ onMounted(() => {
         const gear3 = createGear(gearMaterialSliver, { x: 2, y: 0, z: 0 });
         const gear4 = createGear(gearMaterialSliver, { x: 2, y: 0, z: 0 });
         const gear5 = createGear(gearMaterialSliver, { x: 2, y: -2, z: 0 });
-        const heart = new THREE.Mesh(heartGeometry, mirrorSilverMaterial);
-        heart.scale.set(0.25, 0.25, 0.25);
-        heart.position.set(0.3, 1.2, 0);
+        const heart = new THREE.Mesh(heartGeometry, mirrorRedMaterial);
+        heart.scale.set(0.3, 0.3, 0.3);
+        heart.position.set(0.25, 1.1, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
@@ -401,6 +409,7 @@ onMounted(() => {
         bearGroup.add(gear3);
         bearGroup.add(gear4);
         bearGroup.add(gear5);
+        bearGroup.rotation.x = 0.1; // Reset any upward tilt
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -440,7 +449,7 @@ onMounted(() => {
             gear3.rotation.z -= 0.02;
             gear4.rotation.z += 0.02;
             gear5.rotation.z += 0.03;
-            heart.rotation.y += 0.02;
+            heart.rotation.y += 0.04;
             renderer.render(scene, camera);
         }
         animate();

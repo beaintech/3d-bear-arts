@@ -266,19 +266,19 @@ onMounted(() => {
         // bearGroup.add(smallHeart);
         const heart = new THREE.Mesh(heartGeometry, headPopArtMaterial);
         heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.35, 0, 0); // Position it in front of the body
+        heart.position.set(0.3, 0, 0); // Position it in front of the body
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
         const heart1 = new THREE.Mesh(heartGeometry, leftLegtMaterial);
         heart1.scale.set(0.2, 0.2, 0.25);
-        heart1.position.set(0.5, -0.3, 0.4); // Position it in front of the body
+        heart1.position.set(0.35, -0.3, 0.4); // Position it in front of the body
         heart1.rotation.y = Math.PI;
         heart1.rotation.x = Math.PI;
         bearGroup.add(heart1);
         const heart3 = new THREE.Mesh(heartGeometry, popArtMaterial);
         heart3.scale.set(0.25, 0.25, 0.27);
-        heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
+        heart3.position.set(0.38, 0.3, -0.2); // Position it in front of the body
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
         bearGroup.add(heart3);
@@ -471,6 +471,10 @@ onMounted(() => {
         };
         // Add event listener for mouse movement
         // window.addEventListener('mousemove', onMouseMove);
+        bearGroup.rotation.x = 0.1; // Reset any upward tilt
+        const hearts = [heart, heart1, heart3]; // Array of hearts for easy animation
+        const clock = new THREE.Clock();
+        const phaseOffsets = [0, Math.PI / 2, Math.PI, 0, Math.PI / 3];
         function animate() {
             requestAnimationFrame(animate);
             if (isRotatingRight.value)
@@ -481,6 +485,12 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.03;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
+            const elapsedTime = clock.getElapsedTime();
+            // Update each heart's scale with individual phase offsets
+            hearts.forEach((h, index) => {
+                const scale = 0.2 + Math.sin(elapsedTime * 3 + phaseOffsets[index]) * 0.1; // Adjust the frequency and intensity
+                h.scale.set(scale, scale, scale);
+            });
             renderer.render(scene, camera);
         }
         animate();
