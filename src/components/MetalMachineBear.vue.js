@@ -349,11 +349,11 @@ onMounted(() => {
         tail.renderOrder = 1;
         // Gear Parameters
         const gearRadius = 1.2;
-        const gearDepth = 0.8;
+        const gearDepth = 0.5;
         const teethCount = 8;
-        const toothWidth = 0.3;
+        const toothWidth = 0.7;
         const toothHeight = 0.3;
-        const toothDepth = 0.7;
+        const toothDepth = 0.5;
         // Function to create a gear
         function createGear(material, position) {
             // Create gear body
@@ -366,7 +366,7 @@ onMounted(() => {
                 const angle = (i / teethCount) * Math.PI * 2;
                 const toothGeometry = new THREE.BoxGeometry(toothWidth, toothHeight, toothDepth);
                 const tooth = new THREE.Mesh(toothGeometry, material);
-                tooth.position.set((gearRadius + toothDepth / 2) * Math.cos(angle), (gearRadius + toothDepth / 2) * Math.sin(angle), 0);
+                tooth.position.set((gearRadius + toothDepth / 26) * Math.cos(angle), (gearRadius + toothDepth / 26) * Math.sin(angle), 0);
                 tooth.rotation.z = angle;
                 teethGroup.add(tooth);
             }
@@ -394,7 +394,7 @@ onMounted(() => {
         gear2.position.set(0.25, -0.3, 0.4);
         gear3.position.set(0.3, 0.3, -0.2);
         gear4.position.set(0.25, 0.17, 0.4);
-        gear5.position.set(0.5, -0.4, 0.35);
+        gear5.position.set(0.5, -0.3, 0.45);
         gear1.scale.set(0.2, 0.2, 0.2);
         gear2.scale.set(0.18, 0.18, 0.18);
         gear3.scale.set(0.15, 0.15, 0.15);
@@ -446,7 +446,7 @@ onMounted(() => {
                 bearGroup.rotation.x += 0.03;
             gear1.rotation.z -= 0.02;
             gear2.rotation.z += 0.03;
-            gear3.rotation.z -= 0.02;
+            gear3.rotation.z += 0.02;
             gear4.rotation.z += 0.02;
             gear5.rotation.z -= 0.03;
             heart.rotation.y += 0.04;
