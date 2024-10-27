@@ -98,7 +98,7 @@
             envMapIntensity: 0.8,  // Lower environment map intensity
             side: THREE.DoubleSide,  // Keep double-sided rendering
             transparent: true,  // Maintain transparency
-            opacity: 0.99,  // Reduce opacity for a more subtle translucent effect
+            opacity: 0.7,  // Reduce opacity for a more subtle translucent effect
         });
 
         gearTexture.mapping = THREE.EquirectangularReflectionMapping;
@@ -182,6 +182,31 @@
         halfSphereGroup.add(rightBody);
         halfSphereGroup.add(leftBody);
         halfSphereGroup.add(circle);
+
+        // Create water-like geometry inside the bear
+        const waterHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
+const waterMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0x69d2e7, // Light blue color for water
+    metalness: 0.1,
+    roughness: 0.2,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+    transparent: true,
+    opacity: 0.7,
+    transmission: 0.9, // High transmission for a glassy effect
+    ior: 1.33, // Index of refraction for water-like appearance
+    reflectivity: 0.8,
+    envMapIntensity: 1.0,
+});
+
+// Create the water mesh using the bottom-half sphere geometry
+const waterMesh = new THREE.Mesh(waterHalfSphereGeometry, waterMaterial);
+waterMesh.position.set(0, -0.2, 0); // Position the water inside the bear's body
+waterMesh.rotation.x = Math.PI; // Rotate to make it face upwards
+waterMesh.scale.set(1.25, 1.25,1.25);
+
+        // Add the water mesh to the halfSphereGroup
+        halfSphereGroup.add(waterMesh);
   
         // Add the combined geometry to the scene or parent group
         bearGroup.add(halfSphereGroup);
