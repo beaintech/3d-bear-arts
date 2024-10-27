@@ -69,6 +69,8 @@
         const textureLoader = new THREE.TextureLoader();
         const popTexture1 = textureLoader.load('/3d-bear-arts/assets/metal.jpg');
         const popTexture2 = textureLoader.load('/3d-bear-arts/assets/pop7.jpg');
+        const gearTexture = textureLoader.load('/3d-bear-arts/assets/gear.jpg');
+
 
         // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
 
@@ -83,14 +85,62 @@
         // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
         // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
 
-        const silverMetalMaterial = new THREE.MeshStandardMaterial({
-            color: 0xd3d3d3,   // Light grey color for the metal
-            metalness: .9,    // High metalness to keep the metallic look
-            roughness: 0.2,    // Adjust roughness to make it shinier
-            map: popTexture1,  // Add the texture as a pattern on the material
- 
+        // color: 0xd3d3d3,   // Light grey color for the metal
+        const silverMetalMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xd3d3d3,   // Light grey color for the metal
+          metalness: .9,    // High metalness to keep the metallic look
+          roughness: 0.2,    // Adjust roughness to make it shinier
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          map: popTexture1,  // Add the texture as a pattern on the material
         });
 
+        const gearMaterialSliver = new THREE.MeshPhysicalMaterial({
+          color: 0xFFFFF,
+          metalness: .9, 
+          roughness: 0.2,    
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          map: gearTexture,  // Add the texture as a pattern on the material
+        });
+
+        const gearMaterialRoseGold = new THREE.MeshPhysicalMaterial({
+          color: 0xFFFFF,
+          metalness: .9, 
+          roughness: 0.2,    
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          map: gearTexture,  // Add the texture as a pattern on the material
+        });
+
+        const gearMaterialGold = new THREE.MeshPhysicalMaterial({
+          color: 0xFFFFF,
+          metalness: .9, 
+          roughness: 0.2,    
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          map: popTexture1,  // Add the texture as a pattern on the material
+        });
+
+        const gearMaterialRed = new THREE.MeshPhysicalMaterial({
+          color: 0xFFFFF,
+          metalness: .9, 
+          roughness: 0.2,    
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          map: popTexture1,  // Add the texture as a pattern on the material
+        });
+
+        const silverMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xC0C0C0,
+          metalness: .9, 
+          roughness: 0.2,    
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.1,
+          map: gearTexture,  // Add the texture as a pattern on the material
+        });
+
+        // color: 0xC0C0C0, // Silver
         const transparentSilverMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xC0C0C0, // Silver
             metalness: 1.0,
@@ -99,7 +149,7 @@
             clearcoatRoughness: 0.1,
             map: popTexture1,  
           transparent: true,  
-          opacity: .4,  
+          opacity: .3,  
         });
 
         const popArtMaterial = new THREE.MeshPhysicalMaterial({
@@ -264,7 +314,7 @@
   
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, silverMetalMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, silverMaterial);
   
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
@@ -347,26 +397,26 @@
   
         // Add the heart to the bear group
         // bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, silverMetalMaterial);
-        heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.35, 0, 0); // Position it in front of the body
-        heart.rotation.y = Math.PI;
-        heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
+        // const heart = new THREE.Mesh(heartGeometry, silverMetalMaterial);
+        // heart.scale.set(0.5, 0.5, 0.5);
+        // heart.position.set(0.35, 0, 0); // Position it in front of the body
+        // heart.rotation.y = Math.PI;
+        // heart.rotation.x = Math.PI;
+        // bearGroup.add(heart);
 
-        const heart1 = new THREE.Mesh(heartGeometry, silverMetalMaterial);
-        heart1.scale.set(0.2, 0.2, 0.25);
-        heart1.position.set(0.5, -0.3, 0.4); // Position it in front of the body
-        heart1.rotation.y = Math.PI;
-        heart1.rotation.x = Math.PI;
-        bearGroup.add(heart1);
+        // const heart1 = new THREE.Mesh(heartGeometry, silverMetalMaterial);
+        // heart1.scale.set(0.2, 0.2, 0.25);
+        // heart1.position.set(0.5, -0.3, 0.4); // Position it in front of the body
+        // heart1.rotation.y = Math.PI;
+        // heart1.rotation.x = Math.PI;
+        // bearGroup.add(heart1);
 
-        const heart3 = new THREE.Mesh(heartGeometry, silverMetalMaterial);
-        heart3.scale.set(0.25, 0.25, 0.27);
-        heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
-        heart3.rotation.y = Math.PI;
-        heart3.rotation.x = Math.PI;
-        bearGroup.add(heart3);
+        // const heart3 = new THREE.Mesh(heartGeometry, silverMetalMaterial);
+        // heart3.scale.set(0.25, 0.25, 0.27);
+        // heart3.position.set(0.4, 0.3, -0.2); // Position it in front of the body
+        // heart3.rotation.y = Math.PI;
+        // heart3.rotation.x = Math.PI;
+        // bearGroup.add(heart3);
         
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -563,10 +613,94 @@
   
       tail.renderOrder = 1;
   
+// Gear Parameters
+const gearRadius = 1.2;
+const gearDepth = 0.5;
+const teethCount = 8;
+const toothWidth = 0.3;
+const toothHeight = 0.3;
+const toothDepth = 0.2;
+
+// Function to create a gear
+function createGear(material: any, position: any) {
+    // Create gear body
+    const gearBodyGeometry = new THREE.CylinderGeometry(gearRadius, gearRadius, gearDepth, 32);
+    gearBodyGeometry.rotateX(Math.PI / 2); // Rotate to face forward
+    const gearBody = new THREE.Mesh(gearBodyGeometry, material);
+
+    // Create teeth
+    const teethGroup = new THREE.Group();
+    for (let i = 0; i < teethCount; i++) {
+        const angle = (i / teethCount) * Math.PI * 2;
+        const toothGeometry = new THREE.BoxGeometry(toothWidth, toothHeight, toothDepth);
+        const tooth = new THREE.Mesh(toothGeometry, material);
+        tooth.position.set(
+            (gearRadius + toothDepth / 2) * Math.cos(angle),
+            (gearRadius + toothDepth / 2) * Math.sin(angle),
+            0
+        );
+        tooth.rotation.z = angle;
+        teethGroup.add(tooth);
+    }
+
+    // Combine gear body and teeth
+    const gearGroup = new THREE.Group();
+    gearGroup.add(gearBody);
+    gearGroup.add(teethGroup);
+
+    // Set the position of the gear
+    gearGroup.position.set(position.x, position.y, position.z);
+
+    return gearGroup;
+}
+
+// Create gears
+const gear1 = createGear(silverMaterial, { x: -2, y: 0, z: 0 });
+const gear2 = createGear(silverMaterial, { x: 0, y: 0, z: 0 });
+const gear3 = createGear(silverMaterial, { x: 2, y: 0, z: 0 });
+const gear4 = createGear(silverMaterial, { x: 2, y: 0, z: 0 });
+
+// Add gears to the bear group or scene
+bearGroup.add(gear1);
+bearGroup.add(gear2);
+bearGroup.add(gear3);
+bearGroup.add(gear4);
+
+const heart = new THREE.Mesh(heartGeometry, silverMaterial);
+    heart.scale.set(0.25, 0.25, 0.25);
+    heart.position.set(0.3, 1.2, 0); // Position it in front of the body
+    heart.rotation.y = Math.PI;
+    heart.rotation.x = Math.PI;
+    bearGroup.add(heart);
+
+// Position the gears
+gear1.position.set(0.35, 0, 0);
+gear2.position.set(0.25, -0.3, 0.4);
+gear3.position.set(0.3, 0.3, -0.2);
+gear4.position.set(0.35, -0.3, -0.4);
+ 
+
+gear1.scale.set(0.25, 0.25, 0.25);
+gear2.scale.set(0.2, 0.2, 0.25);
+gear3.scale.set(0.15, 0.15, 0.17);
+gear4.scale.set(0.25, 0.25, 0.3);
+
+// Rotate the gears to align differently
+gear2.rotation.z = Math.PI / 4;
+gear3.rotation.z = -Math.PI / 4;
+gear4.rotation.y = -Math.PI / 2;
+
+
+// Add the gears to the bearGroup
+bearGroup.add(gear1);
+bearGroup.add(gear2);
+bearGroup.add(gear3);
+
+  
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4); 
       scene.add(bearGroup);
-  
+
       // Set initial positions for bearGroup and camera
       bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
       camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
@@ -602,6 +736,10 @@
       if (isRotatingLeft.value) bearGroup.rotation.y -= 0.03;
       if (isRotatingUp.value) bearGroup.rotation.x -= 0.03;
       if (isRotatingDown.value) bearGroup.rotation.x += 0.03;
+      gear1.rotation.z -= 0.03;
+      gear2.rotation.z += 0.05;
+      gear3.rotation.z -= 0.02;
+      gear4.rotation.z += 0.04;
       renderer.render(scene, camera);
     }
         animate();
