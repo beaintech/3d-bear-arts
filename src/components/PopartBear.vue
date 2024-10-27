@@ -591,7 +591,7 @@
       timeoutId = setTimeout(() => {
         shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
         handleMouseStop(event.clientX);
-      }, 100000); // 2 seconds delay before rotating
+      }, 500); // 2 seconds delay before rotating
     };
   
       // Add event listener for mouse movement
