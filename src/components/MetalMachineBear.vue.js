@@ -79,7 +79,7 @@ onMounted(() => {
             clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
         const mirrorRedMaterial = new THREE.MeshPhysicalMaterial({
-            color: '#D32F2F', // Silver color
+            color: '#C0C0C0', // Silver color #D32F2F
             metalness: 1.0, // Fully metallic for reflective surface
             roughness: 0.25, // Slightly rough to blur reflections
             envMap: gearTexture, // Apply environment map for reflections
