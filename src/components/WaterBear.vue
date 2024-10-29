@@ -111,7 +111,7 @@
             envMapIntensity: 0.8,  // Lower environment map intensity
             side: THREE.DoubleSide,  // Keep double-sided rendering
             transparent: true,  // Maintain transparency
-            opacity: .7,  // Reduce opacity for a more subtle translucent effect
+            opacity: .9,  // Reduce opacity for a more subtle translucent effect
         });
 
         const bubbleMaterial = new THREE.MeshPhysicalMaterial({
@@ -125,7 +125,7 @@
           envMapIntensity: 0.6, // Lower environment intensity for a softer effect
           side: THREE.DoubleSide, // Render both sides for fuller effect
           transparent: true,
-          opacity: 1, // Reduced opacity for a softer translucency
+          opacity: .9, // Reduced opacity for a softer translucency
           transmission: 0.5, // Light transmission for subtle transparency
           ior: 1.33, // Close to water for refractive effect
           depthWrite: false, // Prevents overwriting depth information
@@ -586,10 +586,21 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle, #87CEEB 60%, #00BFFF 40%); /* Sky blue to ocean blue gradient */
+    background: radial-gradient(circle at center, #004F6D 40%, #002B40 70%, #001F30 100%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    position: relative;
+    animation: subtleGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes subtleGlow {
+    0% {
+        filter: brightness(1);
+    }
+    100% {
+        filter: brightness(1.1);
+    }
 }
 
 .no-bg {
