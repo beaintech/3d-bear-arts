@@ -83,7 +83,6 @@
         // Legs: One in bright cyan (#00FFFF), the other in vivid pink (#FF69B4).
         // Tail: Gradient from blue to green (#00FA9A to #1E90FF).
 
-
         const popArtMaterial = new THREE.MeshPhysicalMaterial({
           color: 0xFF69B4,  // Hot pink as the base
           map: popTexture2,  // Apply the abstract or halftone texture
@@ -139,22 +138,6 @@
           roughness: 0.7,  // Increase roughness for a more matte finish
           clearcoat: 0.05,  // Lower clearcoat to reduce gloss
           clearcoatRoughness: 0.9,  // Increase clearcoat roughness for less shine
-        });
-
-        const transparentArmMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x8A2BE2,  // White base color
-            // map: popTexture2,  // Halftone or abstract texture
-            metalness: 0.3,  // Lower metalness for a plastic-like effect
-            roughness: 0.1,  // Make it smoother for a glossy look
-            clearcoat: 1.0,  // High clearcoat for strong glossiness
-            clearcoatRoughness: 0.05,  // Make the clearcoat glossy
-            transparent: true,  // Enable transparency
-            opacity: 0.4,  // Set transparency level
-            transmission: 0.8,  // Enable transmission for glass-like effect
-            ior: 1.45,  // Index of refraction for glassy feel
-            reflectivity: 0.9,  // High reflectivity for a shiny surface
-            envMapIntensity: 1.0,  // Strong environment reflections
-            side: THREE.DoubleSide,  // Render both sides of the material
         });
 
         const leftLegtMaterial = new THREE.MeshPhysicalMaterial({
@@ -412,7 +395,6 @@
             depth: 0.05,
          });
         
-        const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
         const xEye = new THREE.Mesh(xEyeGeometry, popArtMaterial);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -426,7 +408,6 @@
         depth: 0.05, // Thickness of the O
         });
   
-        const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
         const oEye = new THREE.Mesh(oEyeGeometry, leftLegtMaterial);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
@@ -621,7 +602,7 @@
       }
     });
 
-    function onLeftButtonDown() {
+        function onLeftButtonDown() {
         isRotatingLeft.value = true;
         }
 
