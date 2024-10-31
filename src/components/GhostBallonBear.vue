@@ -315,9 +315,9 @@ onMounted(() => {
             depthTest: true,
             uniforms: {
                 u_time: { value: 0.0 },
-                u_waveFrequency: { value: 8.0 }, 
+                u_waveFrequency: { value: 4.0 }, 
                 u_waveAmplitude: { value: 0.5 }, 
-                u_waveSpeed: { value: 1.8 },
+                u_waveSpeed: { value: 0.3 },
             },
             vertexShader: `
                 precision mediump float;
@@ -340,7 +340,7 @@ onMounted(() => {
                     float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
                     float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
 
-                    vec3 baseColor = vec3(0.0, 0.0, 0.0);
+                    vec3 baseColor = vec3(0.3, 0.0, 0.0);
                     vec3 waveColor = vec3(1.0, 0.1, 0.1);
 
                     vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
@@ -408,7 +408,7 @@ onMounted(() => {
         };
 
         let floatSpeed = 0.04; 
-        let floatHeartSpeed = 0.1; 
+        let floatHeartSpeed = 0.06; 
 
         let floatHeartAmplitude = 0.2; 
         let floatAmplitude = 0.4; 
