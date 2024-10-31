@@ -79,12 +79,11 @@ onMounted(() => {
         });
         const heartTransparentMaterial = new THREE.MeshPhysicalMaterial({
             color: 0x8B0000, // Silver color
-            metalness: 1.0, // Fully metallic for reflective surface
+            metalness: 0.9, // Fully metallic for reflective surface
             roughness: 0.25, // Slightly rough to blur reflections
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
             clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
-        const pumpkinGroup = new THREE.Group();
         const ghostlyBalloonMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,
             metalness: 0.1,
@@ -103,7 +102,7 @@ onMounted(() => {
         });
         const transparentPumpkinMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,
-            metalness: 0.1,
+            metalness: 0.3,
             roughness: 0.1,
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
@@ -330,7 +329,7 @@ onMounted(() => {
         let floatSpeed = 0.04;
         let floatHeartSpeed = 0.06;
         let floatHeartAmplitude = 0.2;
-        let floatAmplitude = 0.4;
+        let floatAmplitude = 0.2;
         let time = 0;
         let heartTime = 0;
         function animate() {

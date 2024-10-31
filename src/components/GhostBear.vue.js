@@ -45,20 +45,6 @@ onMounted(() => {
             clearcoat: 0.05,
             clearcoatRoughness: 0.9
         });
-        const transparentMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xff8c00,
-            metalness: 0.1,
-            roughness: 0.1,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.05,
-            transparent: true,
-            opacity: 0.4,
-            transmission: 0.8,
-            ior: 1.45,
-            reflectivity: 0.9,
-            envMapIntensity: 1.0,
-            side: THREE.DoubleSide
-        });
         const pumpkinGroup = new THREE.Group();
         const pumpkinBodyMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xff8c00,
@@ -232,6 +218,7 @@ onMounted(() => {
         const tail = new THREE.Mesh(tailGeometry, pumpkinMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
+        tail.renderOrder = 1;
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             const xEyeGeometry = new TextGeometry('X', { font: font, size: 0.2, depth: 0.05 });
@@ -247,7 +234,6 @@ onMounted(() => {
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
-        tail.renderOrder = 1;
         const heart = new THREE.Mesh(heartGeometry, heartMaterial);
         heart.scale.set(0.3, 0.3, 0.3);
         heart.position.set(0.25, 1.1, 0);
@@ -292,6 +278,31 @@ onMounted(() => {
         bearGroup.add(pumpkin3);
         bearGroup.add(pumpkin4);
         // bearGroup.add(pumpkin5);
+        const batShape = new THREE.Shape();
+        batShape.moveTo(-0.5, 0);
+        batShape.bezierCurveTo(-0.75, 0.25, -1.0, 0.6, -0.5, 0.8);
+        batShape.bezierCurveTo(-0.25, 0.85, -0.25, 0.5, -0.15, 0.4);
+        batShape.bezierCurveTo(-0.05, 0.6, 0.05, 0.6, 0.15, 0.4);
+        batShape.bezierCurveTo(0.25, 0.5, 0.25, 0.85, 0.5, 0.8);
+        batShape.bezierCurveTo(1.0, 0.6, 0.75, 0.25, 0.5, 0);
+        batShape.bezierCurveTo(0.3, -0.25, -0.3, -0.25, -0.5, 0);
+        const extrudeBatSettings = { depth: 0.1, bevelEnabled: false };
+        const batGeometry = new THREE.ExtrudeGeometry(batShape, extrudeBatSettings);
+        const batMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const batMesh = new THREE.Mesh(batGeometry, batMaterial);
+        batMesh.scale.set(0.3, 0.3, 0.3);
+        batMesh.rotation.x = 0;
+        batMesh.rotation.z = 0;
+        batMesh.position.set(0.3, 0.2, 0.65);
+        bearGroup.add(batMesh);
+        const bat1 = new THREE.Mesh(batGeometry, batMaterial);
+        bat1.scale.set(0.5, 0.5, 0.5);
+        bat1.position.set(0.3, -0.1, 0.65);
+        bearGroup.add(bat1);
+        const bat2 = new THREE.Mesh(batGeometry, batMaterial);
+        bat2.scale.set(0.5, 0.5, 0.5);
+        bat2.position.set(0.4, -0.35, 0.65);
+        bearGroup.add(bat2);
         bearGroup.rotation.x = 0.1;
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -308,6 +319,9 @@ onMounted(() => {
             bearGroup.rotation.y = targetRotationY;
             bearGroup.rotation.x = targetRotationX;
         };
+        const bats = [batMesh, bat1, bat2];
+        const clock = new THREE.Clock();
+        const phaseOffsets = [0, Math.PI / 2, Math.PI, 0, Math.PI / 3];
         let floatSpeed = 0.05;
         let floatAmplitude = 0.5;
         let time = 0;
@@ -330,7 +344,12 @@ onMounted(() => {
             heart.rotation.y += 0.04;
             time += floatSpeed;
             bearGroup.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude;
-            bearGroup.rotation.y -= rotationSpeed;
+            // bearGroup.rotation.y -= rotationSpeed; 
+            const elapsedTime = clock.getElapsedTime();
+            bats.forEach((h, index) => {
+                const scale = 0.2 + Math.sin(elapsedTime * 3 + phaseOffsets[index]) * 0.1; // Adjust the frequency and intensity
+                h.scale.set(scale, scale, scale);
+            });
             renderer.render(scene, camera);
         }
         animate();
