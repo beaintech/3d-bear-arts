@@ -6,8 +6,9 @@
       <!-- <router-link to="/3d-bear-arts/pop-art-bear">Pop-Bear</router-link> -->
       <router-link to="/3d-bear-arts/pop-art-bear-3">Pop-Bear-3</router-link>
       <router-link to="/3d-bear-arts/machine">machine Bear</router-link>
-      <router-link to="/3d-bear-arts/water">Water Bear</router-link>
+      <!-- <router-link to="/3d-bear-arts/water">Water Bear</router-link> -->
       <router-link to="/3d-bear-arts/">Water Bear2</router-link>
+      <router-link to="/3d-bear-arts/ghost-bear">ghost Bear</router-link>
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>

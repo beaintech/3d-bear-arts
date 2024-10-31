@@ -14,6 +14,7 @@
     import { ref, onMounted, watch } from 'vue';
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+    import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader.js';
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
     const props = defineProps({
@@ -483,7 +484,7 @@
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
 
-        const rightLeg = new THREE.Mesh(legGeometry, bodyTransparentBeachMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, leftBeachMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
 
@@ -497,7 +498,7 @@
         bearGroup.add(leftBootFront);
 
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, bodyTransparentBeachMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, leftBeachMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
@@ -547,8 +548,9 @@
         bearGroup.add(oEye);
       });
 
+
       // Update heart renderOrder to ensure it's always drawn last
-      tail.renderOrder = 1;
+      // tail.renderOrder = 1;
 
       // the end of the bear body
 

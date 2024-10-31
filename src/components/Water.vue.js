@@ -52,6 +52,7 @@ onMounted(() => {
         const sunTexture = textureLoader.load('/3d-bear-arts/assets/sun.jpg');
         // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
         beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
+        beachTexture.repeat.set(0.8, 1);
         // beachTexture.repeat.set(2, 2); // Adjust this to scale the texture on the model
         sunTexture.wrapS = sunTexture.wrapT = THREE.RepeatWrapping;
         // sunTexture.repeat.set(2, 2); // Adjust this to scale the texture on the mode
@@ -274,42 +275,43 @@ onMounted(() => {
         bearGroup.add(halfSphereGroup);
         const waterSurfaceMaterial = new THREE.ShaderMaterial({
             transparent: true,
-            opacity: 0.7,
+            depthWrite: false,
+            depthTest: true,
             uniforms: {
                 u_time: { value: 0.0 },
-                u_waveFrequency: { value: 4.0 }, // Higher frequency for subtle, fine waves
-                u_waveAmplitude: { value: 0.04 }, // Small amplitude for light wave effect
-                u_waveSpeed: { value: 1.0 },
+                u_waveFrequency: { value: 8.0 },
+                u_waveAmplitude: { value: 0.05 },
+                u_waveSpeed: { value: 1.2 },
             },
             vertexShader: `
-        precision mediump float;
-        varying vec2 vUv;
-        void main() {
-            vUv = uv;
-            vec3 pos = position;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-        }
-    `,
+                precision mediump float;
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
             fragmentShader: `
-        precision mediump float;
-        uniform float u_time;
-        uniform float u_waveFrequency;
-        uniform float u_waveAmplitude;
-        uniform float u_waveSpeed;
-        varying vec2 vUv;
+                precision mediump float;
+                uniform float u_time;
+                uniform float u_waveFrequency;
+                uniform float u_waveAmplitude;
+                uniform float u_waveSpeed;
+                varying vec2 vUv;
 
-        void main() {
-            float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
-            float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+                void main() {
+                    float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+                    float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
 
-            // Color adjustment for subtle, water-like wave effect
-            vec3 baseColor = vec3(0.69, 0.89, 1.0); // Color close to #B0E2FF
-            vec3 waveColor = vec3(0.0, 0.75, 1.0);  // Color close to #00BFFF
-            vec3 color = mix(baseColor, waveColor, waveX + waveY); // Blend colors based on waves
+                    // Adjusted colors for higher contrast
+                    vec3 baseColor = vec3(0.3, 0.4, 0.5); // Dark base
+                    vec3 waveColor = vec3(0.7, 0.9, 1.0);  // Brighter aqua
 
-            gl_FragColor = vec4(color, 0.6); // Reduced opacity for softer water effect
-        }
-    `,
+                    vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
+                    gl_FragColor = vec4(color, 0.85); // Adjust opacity for visibility
+                }
+            `,
         });
         // Water Surface Mesh
         const waterSurface = new THREE.Mesh(circleGeometry, waterSurfaceMaterial);
@@ -363,6 +365,14 @@ onMounted(() => {
         halfSnoutGroup.add(snoutCircle);
         // Add the snout group to the bear group
         bearGroup.add(halfSnoutGroup);
+        const heartMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x7FC8A9, // Silver color
+            metalness: 1.0, // Fully metallic for reflective surface
+            roughness: 0.25, // Slightly rough to blur reflections
+            envMap: sunTexture, // Apply environment map for reflections
+            clearcoat: 0.7, // Adds a layer of reflectiveness on top
+            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
+        });
         // Heart shape
         const heartShape = new THREE.Shape();
         heartShape.moveTo(0, 0);
@@ -373,14 +383,12 @@ onMounted(() => {
         // Extrude the heart shape into 3D
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        // Add the heart to the bear group
-        // bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, bodyTransparentBeachMaterial);
-        heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.3, 0, 0); // Position it in front of the body
+        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
+        heart.scale.set(0.3, 0.3, 0.3);
+        heart.position.set(0.25, 1.1, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
-        // bearGroup.add(heart);
+        bearGroup.add(heart);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
         const leftArm = new THREE.Mesh(armGeometry, bodyTransparentBeachMaterial);
@@ -451,6 +459,7 @@ onMounted(() => {
         });
         // Update heart renderOrder to ensure it's always drawn last
         tail.renderOrder = 1;
+        // the end of the bear body
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -487,6 +496,7 @@ onMounted(() => {
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
             waterSurfaceMaterial.uniforms.u_time.value += 0.25;
+            heart.rotation.y += 0.04;
             renderer.render(scene, camera);
         }
         animate();

@@ -5,6 +5,8 @@ import PopBear3 from '../components/PopArtBear3.vue';
 import MetalMachineBear from '../components/MetalMachineBear.vue';
 import WaterBear from '../components/WaterBear.vue';
 import Water from '../components/Water.vue';
+import GhostBear from '../components/GhostBear.vue';
+
 const routes = [
     { path: '/3d-bear-arts/leather', name: 'Leather', component: MetalBear },
     { path: '/3d-bear-arts/pop-art', name: 'Pop', component: PopArtBear },
@@ -13,6 +15,8 @@ const routes = [
     { path: '/3d-bear-arts/machine', name: 'MetalMachineBear', component: MetalMachineBear },
     { path: '/3d-bear-arts/water', name: 'Water Bear', component: WaterBear },
     { path: '/3d-bear-arts/', name: 'Water', component: Water },
+    { path: '/3d-bear-arts/ghost-bear', name: 'GhostBear', component: GhostBear },
+
     // { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     // { path: '/3d-bear-arts/half', name: 'Haltransparent', component: HalfBear },
     // { path: '/3d-bear-arts/halfTransparent', name: 'Transparent', component: Transparent },
