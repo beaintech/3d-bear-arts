@@ -2,14 +2,14 @@
   <div id="app">
     <nav v-show="isNavVisible">
       <router-link to="/3d-bear-arts/leather">Leather</router-link>
-      <router-link to="/3d-bear-arts/pop-art">Pop Mouse Move</router-link>
+      <router-link to="/3d-bear-arts/pop-art">Pop MouseMove</router-link>
       <!-- <router-link to="/3d-bear-arts/pop-art-bear">Pop-Bear</router-link> -->
-      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop-Bear-3</router-link>
-      <router-link to="/3d-bear-arts/machine">machine Bear</router-link>
+      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop3</router-link>
+      <router-link to="/3d-bear-arts/machine">machine</router-link>
       <!-- <router-link to="/3d-bear-arts/water">Water Bear</router-link> -->
-      <router-link to="/3d-bear-arts/">Water Bear2</router-link>
-      <router-link to="/3d-bear-arts/ghost-bear">ghost Bear</router-link>
-      <router-link to="/3d-bear-arts/white-ghost-bear">white ghost Bear</router-link>
+      <router-link to="/3d-bear-arts/">Water</router-link>
+      <router-link to="/3d-bear-arts/ghost-bear">ghost</router-link>
+      <router-link to="/3d-bear-arts/white-ghost-bear">white ghost</router-link>
 
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>

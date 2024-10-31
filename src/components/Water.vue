@@ -369,7 +369,7 @@
                     vec3 baseColor = vec3(0.3, 0.4, 0.5); // Dark base
                     vec3 waveColor = vec3(0.7, 0.9, 1.0);  // Brighter aqua
 
-                    vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
+                    vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 1.5); 
                     gl_FragColor = vec4(color, 0.85); // Adjust opacity for visibility
                 }
             `,

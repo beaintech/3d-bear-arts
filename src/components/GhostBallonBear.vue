@@ -84,7 +84,7 @@ onMounted(() => {
             side: THREE.DoubleSide
         });
 
-        const heartTransparentMaterial = new THREE.MeshPhysicalMaterial({
+        const heartTransparentMaterial1 = new THREE.MeshPhysicalMaterial({
             color: 0x8B0000,
             metalness: 0.0,
             roughness: 0.8,
@@ -99,6 +99,14 @@ onMounted(() => {
             depthTest: true,
             depthWrite: false,
             side: THREE.DoubleSide
+        });
+
+        const heartTransparentMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x8B0000,  // Silver color
+            metalness: 1.0,    // Fully metallic for reflective surface
+            roughness: 0.25,    // Slightly rough to blur reflections
+            clearcoat: 0.7,    // Adds a layer of reflectiveness on top
+            clearcoatRoughness: 0.3,  // Roughness of the clear coat layer
         });
 
         const pumpkinGroup = new THREE.Group();
@@ -280,77 +288,75 @@ onMounted(() => {
         bearGroup.add(tail);
 
         const bloodHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
-const bloodMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0x8B0000,
-    metalness: 0.3,
-    roughness: 0.1,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.05,
-    transparent: true,
-    opacity: 0.8,
-    transmission: 0.85,
-    ior: 1.4,
-    reflectivity: 0.9,
-    envMapIntensity: 1.2
-});
+        const bloodMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x8B0000,
+            metalness: 0.3,
+            roughness: 0.1,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            transparent: true,
+            opacity: 0.8,
+            transmission: 0.85,
+            ior: 1.4,
+            reflectivity: 0.9,
+            envMapIntensity: 1.2
+        });
 
-const bloodMesh = new THREE.Mesh(bloodHalfSphereGeometry, bloodMaterial);
-bloodMesh.position.set(0, -0.2, 0);
-bloodMesh.rotation.x = Math.PI;
-bloodMesh.scale.set(1.25, 1.25, 1.25);
+        const bloodMesh = new THREE.Mesh(bloodHalfSphereGeometry, bloodMaterial);
+        bloodMesh.position.set(0, -0.2, 0);
+        bloodMesh.rotation.x = Math.PI;
+        bloodMesh.scale.set(1.25, 1.25, 1.25);
 
-halfSphereGroup.add(bloodMesh);
+        halfSphereGroup.add(bloodMesh);
 
-const bloodSurfaceMaterial = new THREE.ShaderMaterial({
-    transparent: true,
-    depthWrite: false,
-    depthTest: true,
-    uniforms: {
-        u_time: { value: 0.0 },
-        u_waveFrequency: { value: 8.0 }, 
-        u_waveAmplitude: { value: 0.05 }, 
-        u_waveSpeed: { value: 1.2 },
-    },
-    vertexShader: `
-        precision mediump float;
-        varying vec2 vUv;
-        void main() {
-            vUv = uv;
-            vec3 pos = position;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-        }
-    `,
-    fragmentShader: `
-        precision mediump float;
-        uniform float u_time;
-        uniform float u_waveFrequency;
-        uniform float u_waveAmplitude;
-        uniform float u_waveSpeed;
-        varying vec2 vUv;
+        const bloodSurfaceMaterial = new THREE.ShaderMaterial({
+            transparent: true,
+            depthWrite: false,
+            depthTest: true,
+            uniforms: {
+                u_time: { value: 0.0 },
+                u_waveFrequency: { value: 8.0 }, 
+                u_waveAmplitude: { value: 0.5 }, 
+                u_waveSpeed: { value: 1.8 },
+            },
+            vertexShader: `
+                precision mediump float;
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
+            fragmentShader: `
+                precision mediump float;
+                uniform float u_time;
+                uniform float u_waveFrequency;
+                uniform float u_waveAmplitude;
+                uniform float u_waveSpeed;
+                varying vec2 vUv;
 
-        void main() {
-            float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
-            float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+                void main() {
+                    float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+                    float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
 
-            vec3 baseColor = vec3(0.5, 0.0, 0.0); // Dark red for base color
-            vec3 waveColor = vec3(0.8, 0.1, 0.1);  // Lighter red for wave color
+                    vec3 baseColor = vec3(0.0, 0.0, 0.0);
+                    vec3 waveColor = vec3(1.0, 0.1, 0.1);
 
-            vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
-            gl_FragColor = vec4(color, 0.75); // Adjust opacity for visibility
-        }
-    `,
-});
+                    vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
+                    gl_FragColor = vec4(color, 0.75); // Adjust opacity for visibility
+                }
+            `,
+        });
 
-const bloodSurface = new THREE.Mesh(circleGeometry, bloodSurfaceMaterial);
-bloodSurface.position.set(0, -0.3, 0);
-bloodSurface.scale.set(0.7, 0.7, 0.7);
-bloodSurface.rotation.x = -Math.PI / 2;
-bloodSurface.renderOrder = 1;
+        const bloodSurface = new THREE.Mesh(circleGeometry, bloodSurfaceMaterial);
+        bloodSurface.position.set(0, -0.26, 0);
+        bloodSurface.scale.set(0.7, 0.7, 0.7);
+        bloodSurface.rotation.x = -Math.PI / 2;
+        bloodSurface.renderOrder = 1;
 
-halfSphereGroup.add(bloodSurface);
+        halfSphereGroup.add(bloodSurface);
 
-
-    
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             const xEyeGeometry = new TextGeometry('X', { font: font, size: 0.2, depth: 0.05 });
@@ -361,7 +367,7 @@ halfSphereGroup.add(bloodSurface);
             bearGroup.add(xEye);
   
             const oEyeGeometry = new TextGeometry('O', { font: font, size: 0.2, depth: 0.05 });
-            const oEye = new THREE.Mesh(oEyeGeometry, ghostlyTransparentMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, ghostlyBalloonMaterial);
             oEye.position.set(0.14, 0.99, 0.53);
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -370,58 +376,12 @@ halfSphereGroup.add(bloodSurface);
 
         tail.renderOrder = 1;
         const heart = new THREE.Mesh(heartGeometry, heartTransparentMaterial);
-        heart.scale.set(0.3, 0.3, 0.3);
-        heart.position.set(0.25, 1.1, 0); 
+        heart.scale.set(0.5, 0.5, 0.5);
+        heart.position.set(0, -0.05, 0); 
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
-        
-        function createPumpkin(material: any, position: any) {
-            const pumpkinGroup = new THREE.Group();
-            const pumpkinGeometry = new THREE.SphereGeometry(1, 32, 32);
-            const pumpkin = new THREE.Mesh(pumpkinGeometry, ghostlyBalloonMaterial);
-            pumpkin.scale.set(1, 0.8, 1);
-            pumpkinGroup.add(pumpkin);
-
-            const stemGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 16);
-            const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 });
-            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-            stem.position.set(0, 0.9, 0);
-            pumpkinGroup.add(stem);
-
-            return pumpkinGroup;
-        }
-
-        bearGroup.add(pumpkinGroup);
-
-        const pumpkin1 = createPumpkin(ghostlyBalloonMaterial, { x: -2, y: 0, z: 0 });
-        const pumpkin2 = createPumpkin(ghostlyBalloonMaterial, { x: 0, y: 0, z: 0 });
-        const pumpkin3 = createPumpkin(ghostlyBalloonMaterial, { x: 2, y: 0, z: 0 });
-        const pumpkin4 = createPumpkin(ghostlyBalloonMaterial, { x: 2, y: 0, z: 0 });
-        const pumpkin5 = createPumpkin(ghostlyBalloonMaterial, { x: 2, y: -2, z: 0 });
-
-        pumpkin1.position.set(0.35, -0.35, -0.3);
-        pumpkin2.position.set(0.25, -0.45, 0.3);
-        pumpkin3.position.set(0.3, 0.1, -0.2);
-        pumpkin4.position.set(0.25, 0.18, 0.4);
-        pumpkin5.position.set(0.5, -0.3, -0.45);
-
-        pumpkin1.scale.set(0.3, 0.3, 0.3);
-        pumpkin2.scale.set(0.28, 0.28, 0.28);
-        pumpkin3.scale.set(0.25, 0.25, 0.25);
-        pumpkin4.scale.set(0.23, 0.23, 0.23);
-        pumpkin5.scale.set(0.25, 0.2, 0.25);
-
-        pumpkin2.rotation.z = Math.PI / 4;
-        pumpkin3.rotation.z = -Math.PI / 4;
-        pumpkin4.rotation.y = -Math.PI / 2;
-        pumpkin5.rotation.y = -Math.PI / 2;
-
-        // bearGroup.add(pumpkin1);
-        // bearGroup.add(pumpkin2);
-        // bearGroup.add(pumpkin3);
-        // bearGroup.add(pumpkin4);
-        // bearGroup.add(pumpkin5);
+    
 
         bearGroup.rotation.x = 0.1;
 
@@ -447,9 +407,13 @@ halfSphereGroup.add(bloodSurface);
             bearGroup.rotation.x = targetRotationX;
         };
 
-        let floatSpeed = 0.05; 
-        let floatAmplitude = 0.5; 
+        let floatSpeed = 0.04; 
+        let floatHeartSpeed = 0.1; 
+
+        let floatHeartAmplitude = 0.2; 
+        let floatAmplitude = 0.4; 
         let time = 0;
+        let heartTime = 0;
 
         function animate() {
             requestAnimationFrame(animate);
@@ -459,15 +423,14 @@ halfSphereGroup.add(bloodSurface);
             if (isRotatingUp.value) bearGroup.rotation.x -= 0.03;
             if (isRotatingDown.value) bearGroup.rotation.x += 0.03;
 
-            pumpkin1.rotation.z -= 0.04;
-            pumpkin2.rotation.z += 0.04;
-            pumpkin3.rotation.z += 0.03;
-            pumpkin4.rotation.z += 0.03;
-            pumpkin5.rotation.z -= 0.04;
-            heart.rotation.y += 0.04;
 
+            heart.rotation.y += 0.03;
+            
             time += floatSpeed;
-            bearGroup.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude;            
+            heartTime += floatHeartSpeed;
+            bearGroup.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude;     
+            heart.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude;        
+            bloodSurfaceMaterial.uniforms.u_time.value += 0.25;
 
             renderer.render(scene, camera);
         }
@@ -507,7 +470,7 @@ function stopRotation() {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle, #2A0038 50%, #3D003D 30%, #FF4500 10%);
+    background: radial-gradient(circle, #0A0000 60%, #3D0000 30%, #8B0000 10%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -516,7 +479,7 @@ function stopRotation() {
 .no-bg {
     margin: 0;
     height: 100vh;
-    width: 100vw;              
+    width: 100vw;
     overflow: hidden;
     background: none;
 }
@@ -541,11 +504,11 @@ function stopRotation() {
 .pixel-btn {
     font-family: 'Press Start 2P', sans-serif;
     font-size: 14px;
-    background-color: #9E2A2B;
+    background-color: #660000;
     color: #FFD700;
     padding: 15px;
-    border: 4px solid #4B0082;
-    box-shadow: 3px 3px 0 #4B0082, 6px 6px 0 #1C1C1C;
+    border: 4px solid #8B0000;
+    box-shadow: 3px 3px 0 #3D0000, 6px 6px 0 #1C1C1C;
     text-transform: uppercase;
     transition: transform 0.2s ease-in-out;
     cursor: pointer;
@@ -553,13 +516,17 @@ function stopRotation() {
 }
 
 .pixel-btn:hover {
-    background-color: #FF4500;
-    color: #2A0038;
+    background-color: #FF0000;
+    color: #0A0000;
     transform: translate(-3px, -3px);
 }
 
 .pixel-btn:active {
     transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #4B0082, 2px 2px 0 #1C1C1C;
+    box-shadow: 1px 1px 0 #3D0000, 2px 2px 0 #1C1C1C;
 }
+
+
+/* transform: translateX(120%) translateY(-100%); */
+
 </style>
