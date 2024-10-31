@@ -61,7 +61,7 @@ onMounted(() => {
             depthWrite: false,
             side: THREE.DoubleSide
         });
-        const heartTransparentMaterial = new THREE.MeshPhysicalMaterial({
+        const heartTransparentMaterial1 = new THREE.MeshPhysicalMaterial({
             color: 0x8B0000,
             metalness: 0.0,
             roughness: 0.8,
@@ -76,6 +76,13 @@ onMounted(() => {
             depthTest: true,
             depthWrite: false,
             side: THREE.DoubleSide
+        });
+        const heartTransparentMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x8B0000, // Silver color
+            metalness: 1.0, // Fully metallic for reflective surface
+            roughness: 0.25, // Slightly rough to blur reflections
+            clearcoat: 0.7, // Adds a layer of reflectiveness on top
+            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
         const pumpkinGroup = new THREE.Group();
         const ghostlyBalloonMaterial = new THREE.MeshPhysicalMaterial({
@@ -243,41 +250,41 @@ onMounted(() => {
             depthTest: true,
             uniforms: {
                 u_time: { value: 0.0 },
-                u_waveFrequency: { value: 8.0 },
-                u_waveAmplitude: { value: 0.05 },
-                u_waveSpeed: { value: 1.2 },
+                u_waveFrequency: { value: 4.0 },
+                u_waveAmplitude: { value: 0.5 },
+                u_waveSpeed: { value: 0.3 },
             },
             vertexShader: `
-        precision mediump float;
-        varying vec2 vUv;
-        void main() {
-            vUv = uv;
-            vec3 pos = position;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-        }
-    `,
+                precision mediump float;
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    vec3 pos = position;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
             fragmentShader: `
-        precision mediump float;
-        uniform float u_time;
-        uniform float u_waveFrequency;
-        uniform float u_waveAmplitude;
-        uniform float u_waveSpeed;
-        varying vec2 vUv;
+                precision mediump float;
+                uniform float u_time;
+                uniform float u_waveFrequency;
+                uniform float u_waveAmplitude;
+                uniform float u_waveSpeed;
+                varying vec2 vUv;
 
-        void main() {
-            float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
-            float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+                void main() {
+                    float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+                    float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
 
-             vec3 baseColor = vec3(0.3, 0.0, 0.0);
-            vec3 waveColor = vec3(1.0, 0.1, 0.1);
+                    vec3 baseColor = vec3(0.3, 0.0, 0.0);
+                    vec3 waveColor = vec3(1.0, 0.1, 0.1);
 
-            vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
-            gl_FragColor = vec4(color, 0.75); // Adjust opacity for visibility
-        }
-    `,
+                    vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 0.5); 
+                    gl_FragColor = vec4(color, 0.75); // Adjust opacity for visibility
+                }
+            `,
         });
         const bloodSurface = new THREE.Mesh(circleGeometry, bloodSurfaceMaterial);
-        bloodSurface.position.set(0, -0.3, 0);
+        bloodSurface.position.set(0, -0.26, 0);
         bloodSurface.scale.set(0.7, 0.7, 0.7);
         bloodSurface.rotation.x = -Math.PI / 2;
         bloodSurface.renderOrder = 1;
@@ -291,7 +298,7 @@ onMounted(() => {
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
             bearGroup.add(xEye);
             const oEyeGeometry = new TextGeometry('O', { font: font, size: 0.2, depth: 0.05 });
-            const oEye = new THREE.Mesh(oEyeGeometry, ghostlyTransparentMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, ghostlyBalloonMaterial);
             oEye.position.set(0.14, 0.99, 0.53);
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -299,49 +306,11 @@ onMounted(() => {
         });
         tail.renderOrder = 1;
         const heart = new THREE.Mesh(heartGeometry, heartTransparentMaterial);
-        heart.scale.set(0.3, 0.3, 0.3);
-        heart.position.set(0.25, 1.1, 0);
+        heart.scale.set(0.5, 0.5, 0.5);
+        heart.position.set(0, -0.05, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
-        function createPumpkin(material, position) {
-            const pumpkinGroup = new THREE.Group();
-            const pumpkinGeometry = new THREE.SphereGeometry(1, 32, 32);
-            const pumpkin = new THREE.Mesh(pumpkinGeometry, ghostlyBalloonMaterial);
-            pumpkin.scale.set(1, 0.8, 1);
-            pumpkinGroup.add(pumpkin);
-            const stemGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 16);
-            const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 });
-            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-            stem.position.set(0, 0.9, 0);
-            pumpkinGroup.add(stem);
-            return pumpkinGroup;
-        }
-        bearGroup.add(pumpkinGroup);
-        const pumpkin1 = createPumpkin(ghostlyBalloonMaterial, { x: -2, y: 0, z: 0 });
-        const pumpkin2 = createPumpkin(ghostlyBalloonMaterial, { x: 0, y: 0, z: 0 });
-        const pumpkin3 = createPumpkin(ghostlyBalloonMaterial, { x: 2, y: 0, z: 0 });
-        const pumpkin4 = createPumpkin(ghostlyBalloonMaterial, { x: 2, y: 0, z: 0 });
-        const pumpkin5 = createPumpkin(ghostlyBalloonMaterial, { x: 2, y: -2, z: 0 });
-        pumpkin1.position.set(0.35, -0.35, -0.3);
-        pumpkin2.position.set(0.25, -0.45, 0.3);
-        pumpkin3.position.set(0.3, 0.1, -0.2);
-        pumpkin4.position.set(0.25, 0.18, 0.4);
-        pumpkin5.position.set(0.5, -0.3, -0.45);
-        pumpkin1.scale.set(0.3, 0.3, 0.3);
-        pumpkin2.scale.set(0.28, 0.28, 0.28);
-        pumpkin3.scale.set(0.25, 0.25, 0.25);
-        pumpkin4.scale.set(0.23, 0.23, 0.23);
-        pumpkin5.scale.set(0.25, 0.2, 0.25);
-        pumpkin2.rotation.z = Math.PI / 4;
-        pumpkin3.rotation.z = -Math.PI / 4;
-        pumpkin4.rotation.y = -Math.PI / 2;
-        pumpkin5.rotation.y = -Math.PI / 2;
-        // bearGroup.add(pumpkin1);
-        // bearGroup.add(pumpkin2);
-        // bearGroup.add(pumpkin3);
-        // bearGroup.add(pumpkin4);
-        // bearGroup.add(pumpkin5);
         bearGroup.rotation.x = 0.1;
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -358,9 +327,12 @@ onMounted(() => {
             bearGroup.rotation.y = targetRotationY;
             bearGroup.rotation.x = targetRotationX;
         };
-        let floatSpeed = 0.05;
-        let floatAmplitude = 0.5;
+        let floatSpeed = 0.04;
+        let floatHeartSpeed = 0.06;
+        let floatHeartAmplitude = 0.2;
+        let floatAmplitude = 0.4;
         let time = 0;
+        let heartTime = 0;
         function animate() {
             requestAnimationFrame(animate);
             if (isRotatingRight.value)
@@ -371,14 +343,12 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.03;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
-            pumpkin1.rotation.z -= 0.04;
-            pumpkin2.rotation.z += 0.04;
-            pumpkin3.rotation.z += 0.03;
-            pumpkin4.rotation.z += 0.03;
-            pumpkin5.rotation.z -= 0.04;
-            heart.rotation.y += 0.04;
+            heart.rotation.y += 0.03;
             time += floatSpeed;
+            heartTime += floatHeartSpeed;
             bearGroup.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude;
+            heart.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude;
+            bloodSurfaceMaterial.uniforms.u_time.value += 0.25;
             renderer.render(scene, camera);
         }
         animate();
