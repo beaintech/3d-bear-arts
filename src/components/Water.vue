@@ -341,7 +341,7 @@
                 u_time: { value: 0.0 },
                 u_waveFrequency: { value: 8.0 }, 
                 u_waveAmplitude: { value: 0.05 }, 
-                u_waveSpeed: { value: 1.2 },
+                u_waveSpeed: { value: 0.2 },
             },
             vertexShader: `
                 precision mediump float;
@@ -723,8 +723,7 @@ bearGroup.add(humanWithPantsAndSwimCap);
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: radial-gradient(circle, #FFA07A 60%, #FFD700 40%);
-
+        background: radial-gradient(circle, #FFD700 40%, #87CEFA 80%);
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;

@@ -128,10 +128,9 @@ onMounted(() => {
             metalness: 0.1, // Low metalness to avoid a metallic shine
             roughness: 0.6, // Higher roughness for softer reflections
             transparent: true,
-            opacity: 0.85, // Slight opacity for a glassy effect
+            opacity: 0.6, // Slight opacity for a glassy effect
             clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
             clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
-            transmission: 0.7, // Moderate transmission for subtle transparency
             ior: 1.2, // Slightly lower than water to reduce refraction intensity
             depthWrite: false,
             depthTest: true, // Enables depth testing for consistent layering
@@ -460,6 +459,58 @@ onMounted(() => {
         // Update heart renderOrder to ensure it's always drawn last
         // tail.renderOrder = 1;
         // the end of the bear body
+        function createHumanWithSwimmingPantsAndSwimCap() {
+            const humanGroup = new THREE.Group();
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac }); // Skin tone
+            const headMesh = new THREE.Mesh(headGeometry, headMaterial);
+            headMesh.position.set(0, 1.5, 0);
+            humanGroup.add(headMesh);
+            // Swimming Cap
+            const capGeometry = new THREE.SphereGeometry(0.21, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2); // Only the top half
+            const capMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red color for swim cap
+            const capMesh = new THREE.Mesh(capGeometry, capMaterial);
+            capMesh.position.set(0, 1.58, 0); // Position it slightly above the head
+            humanGroup.add(capMesh);
+            // Torso
+            const torsoGeometry = new THREE.CylinderGeometry(0.25, 0.25, 0.6, 32);
+            const torsoMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+            const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
+            torsoMesh.position.set(0, 1.0, 0);
+            humanGroup.add(torsoMesh);
+            // Swimming Pants
+            const pantsGeometry = new THREE.CylinderGeometry(0.26, 0.26, 0.3, 32);
+            const pantsMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff }); // Blue color for pants
+            const pantsMesh = new THREE.Mesh(pantsGeometry, pantsMaterial);
+            pantsMesh.position.set(0, 0.65, 0);
+            humanGroup.add(pantsMesh);
+            // Legs
+            const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
+            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+            const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+            leftLeg.position.set(-0.15, 0.25, 0);
+            humanGroup.add(leftLeg);
+            const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+            rightLeg.position.set(0.15, 0.25, 0);
+            humanGroup.add(rightLeg);
+            // Arms
+            const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.5, 32);
+            const leftArm = new THREE.Mesh(armGeometry, legMaterial);
+            leftArm.position.set(-0.35, 1.3, 0);
+            leftArm.rotation.z = Math.PI / 4;
+            humanGroup.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeometry, legMaterial);
+            rightArm.position.set(0.35, 1.3, 0);
+            rightArm.rotation.z = -Math.PI / 4;
+            humanGroup.add(rightArm);
+            humanGroup.scale.set(0.27, 0.27, 0.27);
+            humanGroup.position.set(-0.2, -0.06, -0.2);
+            return humanGroup;
+        }
+        // Usage
+        const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
+        bearGroup.add(humanWithPantsAndSwimCap);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
