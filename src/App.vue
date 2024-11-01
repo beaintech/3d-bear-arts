@@ -36,7 +36,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 
 const isNavVisible = ref(false);
   function handleMouseMove(event: MouseEvent) {
-  if (event.clientY < 50) {
+  if (event.clientY < 100) {
     isNavVisible.value = true;
   } else {
     isNavVisible.value = false;
