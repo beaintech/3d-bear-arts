@@ -92,7 +92,7 @@ onMounted(() => {
 
         const transparentPumpkinMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xff8c00,
-            map: pumpkinTexture,
+            map: pumpkinTexture3,
             metalness: 0.3,
             roughness: 0.1,
             clearcoat: 1.0,
