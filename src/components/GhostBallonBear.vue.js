@@ -327,10 +327,10 @@ onMounted(() => {
             bearGroup.rotation.y = targetRotationY;
             bearGroup.rotation.x = targetRotationX;
         };
-        let floatSpeed = 0.04;
+        let floatSpeed = 0.05;
         let floatHeartSpeed = 0.06;
         let floatHeartAmplitude = 0.2;
-        let floatAmplitude = 0.2;
+        let floatAmplitude = 0.25;
         let time = 0;
         let heartTime = 0;
         function animate() {
