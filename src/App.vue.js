@@ -2,7 +2,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const isNavVisible = ref(false);
 function handleMouseMove(event) {
-    if (event.clientY < 50) {
+    if (event.clientY < 100) {
         isNavVisible.value = true;
     }
     else {

@@ -284,11 +284,11 @@ onMounted(() => {
         batShape.bezierCurveTo(0.25, 0.5, 0.25, 0.85, 0.5, 0.8);
         batShape.bezierCurveTo(1.0, 0.6, 0.75, 0.25, 0.5, 0);
         batShape.bezierCurveTo(0.3, -0.25, -0.3, -0.25, -0.5, 0);
-        const extrudeBatSettings = { depth: 0.1, bevelEnabled: false };
+        const extrudeBatSettings = { depth: 0.3, bevelEnabled: false };
         const batGeometry = new THREE.ExtrudeGeometry(batShape, extrudeBatSettings);
         const batMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
         const batMesh = new THREE.Mesh(batGeometry, batMaterial);
-        batMesh.scale.set(0.3, 0.3, 0.3);
+        batMesh.scale.set(0.3, 0.3, 0.6);
         batMesh.rotation.x = 0;
         batMesh.rotation.z = 0;
         batMesh.position.set(0.26, 0.35, 0.25);
