@@ -38,14 +38,7 @@ onMounted(() => {
         const pumpkinTexture2 = textureLoader.load('/3d-bear-arts/assets/pumpkin.jpg');
         pumpkinTexture2.wrapS = pumpkinTexture2.wrapT = THREE.RepeatWrapping;
         pumpkinTexture2.repeat.set(1, 1);
-        const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xff8c00,
-            metalness: 0.2,
-            roughness: 0.7,
-            clearcoat: 0.05,
-            clearcoatRoughness: 0.9
-        });
-        const ghostlyTransparentMaterial = new THREE.MeshPhysicalMaterial({
+        const ballonTransparentBodyMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,
             metalness: 0.0,
             roughness: 0.8,
@@ -61,21 +54,15 @@ onMounted(() => {
             depthWrite: false,
             side: THREE.DoubleSide
         });
-        const heartTransparentMaterial1 = new THREE.MeshPhysicalMaterial({
-            color: 0x8B0000,
+        const ghostlyOtherPartMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF,
             metalness: 0.0,
             roughness: 0.8,
             clearcoat: 0.3,
             clearcoatRoughness: 0.9,
             transparent: true,
-            opacity: 0.99,
-            transmission: 0.95,
-            ior: 1.1,
-            reflectivity: 0.2,
+            opacity: 0.15,
             envMapIntensity: 0.3,
-            depthTest: true,
-            depthWrite: false,
-            side: THREE.DoubleSide
         });
         const heartTransparentMaterial = new THREE.MeshPhysicalMaterial({
             color: 0x8B0000, // Silver color
@@ -100,14 +87,14 @@ onMounted(() => {
             depthWrite: false,
             side: THREE.DoubleSide
         });
-        const transparentPumpkinMaterial = new THREE.MeshPhysicalMaterial({
+        const ghostlyMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,
             metalness: 0.3,
             roughness: 0.1,
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
             transparent: true,
-            opacity: 0.3,
+            opacity: 0.45,
             transmission: 0.8,
             reflectivity: 0.9,
             envMapIntensity: 1.0,
@@ -115,9 +102,22 @@ onMounted(() => {
             depthWrite: false,
             side: THREE.DoubleSide
         });
+        const ghostlyLeftMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF,
+            metalness: 0.3,
+            roughness: 0.1,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            transparent: true,
+            opacity: 0.45,
+            transmission: 0.8,
+            reflectivity: 0.9,
+            envMapIntensity: 1.0,
+            side: THREE.DoubleSide
+        });
         const bodyGeometry = new THREE.SphereGeometry(1, 32, 32, 0, Math.PI);
-        const rightBody = new THREE.Mesh(bodyGeometry, ghostlyTransparentMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, transparentPumpkinMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, ballonTransparentBodyMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, ghostlyMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -125,7 +125,7 @@ onMounted(() => {
         rightBody.rotation.y = Math.PI / 2;
         leftBody.rotation.y = Math.PI * 1.5;
         const circleGeometry = new THREE.CircleGeometry(1, 32);
-        const circle = new THREE.Mesh(circleGeometry, transparentPumpkinMaterial);
+        const circle = new THREE.Mesh(circleGeometry, ghostlyMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         circle.position.set(0, -0.2, 0);
         circle.rotation.y = Math.PI / 2;
@@ -135,16 +135,16 @@ onMounted(() => {
         halfSphereGroup.add(circle);
         bearGroup.add(halfSphereGroup);
         const headGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI);
-        const leftHead = new THREE.Mesh(headGeometry, transparentPumpkinMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, ghostlyLeftMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5;
-        const rightHead = new THREE.Mesh(headGeometry, ghostlyTransparentMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, ghostlyOtherPartMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2;
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32);
-        const headCircle = new THREE.Mesh(headCircleGeometry, transparentPumpkinMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, ghostlyMaterial);
         headCircle.position.set(0, 1, 0);
         headCircle.rotation.y = Math.PI / 2;
         headCircle.scale.set(1, 0.95, 0.95);
@@ -154,24 +154,24 @@ onMounted(() => {
         halfHeadSphereGroup.add(headCircle);
         bearGroup.add(halfHeadSphereGroup);
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, transparentPumpkinMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, ghostlyLeftMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, ghostlyTransparentMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, ghostlyOtherPartMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         const leftSnoutGeometry = new THREE.SphereGeometry(0.25, 32, 32, Math.PI / 2, Math.PI);
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, transparentPumpkinMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, ghostlyLeftMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8);
         leftSnout.position.set(0, 0.84, 0.5);
         leftSnout.rotation.y = Math.PI;
         const rightSnoutGeometry = new THREE.SphereGeometry(0.25, 32, 32, Math.PI / 2, Math.PI);
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, ghostlyTransparentMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, ghostlyOtherPartMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8);
         rightSnout.position.set(0, 0.84, 0.5);
         rightSnout.rotation.y = 0;
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, transparentPumpkinMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, ghostlyBalloonMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         snoutCircle.position.set(0, 0.84, 0.5);
         snoutCircle.rotation.y = Math.PI / 2;
@@ -188,8 +188,14 @@ onMounted(() => {
         heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
+        const heart = new THREE.Mesh(heartGeometry, heartTransparentMaterial);
+        heart.scale.set(0.35, 0.35, 0.35);
+        heart.position.set(0, -0.05, 0);
+        heart.rotation.y = Math.PI;
+        heart.rotation.x = Math.PI;
+        bearGroup.add(heart);
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, transparentPumpkinMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, ghostlyMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
@@ -198,18 +204,18 @@ onMounted(() => {
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, transparentPumpkinMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, ghostlyMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, ghostlyTransparentMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, ghostlyBalloonMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32);
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, transparentPumpkinMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, ghostlyMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5);
         leftBootFront.position.set(-0.4, -1.45, 0.17);
         bearGroup.add(leftBootFront);
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, ghostlyTransparentMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, ghostlyBalloonMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5);
         rightBootFront.position.set(0.4, -1.45, 0.17);
         bearGroup.add(rightBootFront);
@@ -221,7 +227,7 @@ onMounted(() => {
         rightButtock.position.set(0.15, -0.45, -0.4);
         bearGroup.add(rightButtock);
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, transparentPumpkinMaterial);
+        const tail = new THREE.Mesh(tailGeometry, ghostlyMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         const bloodHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -291,25 +297,19 @@ onMounted(() => {
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
             const xEyeGeometry = new TextGeometry('X', { font: font, size: 0.2, depth: 0.05 });
-            const xEye = new THREE.Mesh(xEyeGeometry, ghostlyTransparentMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, ghostlyMaterial);
             xEye.position.set(-0.3, 0.99, 0.53);
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
             bearGroup.add(xEye);
             const oEyeGeometry = new TextGeometry('O', { font: font, size: 0.2, depth: 0.05 });
-            const oEye = new THREE.Mesh(oEyeGeometry, ghostlyBalloonMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, ghostlyMaterial);
             oEye.position.set(0.14, 0.99, 0.53);
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
         tail.renderOrder = 1;
-        const heart = new THREE.Mesh(heartGeometry, heartTransparentMaterial);
-        heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0, -0.05, 0);
-        heart.rotation.y = Math.PI;
-        heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
         bearGroup.rotation.x = 0.1;
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
