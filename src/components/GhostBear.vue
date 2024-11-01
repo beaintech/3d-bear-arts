@@ -196,7 +196,7 @@ onMounted(() => {
         bearGroup.add(halfHeadSphereGroup);
     
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, pumpkinMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, smallPumpkinMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
     
@@ -267,7 +267,7 @@ onMounted(() => {
     
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32);
       
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, pumpkinBodyMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, smallPumpkinMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5);
         leftBootFront.position.set(-0.4, -1.45, 0.17);
         bearGroup.add(leftBootFront);
@@ -287,7 +287,7 @@ onMounted(() => {
         bearGroup.add(rightButtock);
     
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, pumpkinMaterial);
+        const tail = new THREE.Mesh(tailGeometry, smallPumpkinMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
 
