@@ -34,10 +34,13 @@ onMounted(() => {
         const textureLoader = new THREE.TextureLoader();
         const pumpkinTexture = textureLoader.load('/3d-bear-arts/assets/pumpkin.jpg');
         pumpkinTexture.wrapS = pumpkinTexture.wrapT = THREE.RepeatWrapping;
-        pumpkinTexture.repeat.set(0.8, 0.8);
+        pumpkinTexture.repeat.set(0.8, .85);
         const pumpkinTexture2 = textureLoader.load('/3d-bear-arts/assets/pumpkin.jpg');
         pumpkinTexture2.wrapS = pumpkinTexture2.wrapT = THREE.RepeatWrapping;
         pumpkinTexture2.repeat.set(1, 1);
+        const pumpkinTexture3 = textureLoader.load('/3d-bear-arts/assets/pumpkin.jpg');
+        pumpkinTexture3.wrapS = pumpkinTexture2.wrapT = THREE.RepeatWrapping;
+        pumpkinTexture3.repeat.set(2, .8);
         const heartMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xff8c00,
             metalness: 0.2,
@@ -70,16 +73,16 @@ onMounted(() => {
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.6,
             transmission: 0.8,
             ior: 1.45,
             reflectivity: 0.9,
             envMapIntensity: 1.0,
             side: THREE.DoubleSide
         });
-        const pumpkinGreenyMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x556B2F,
-            map: pumpkinTexture,
+        const smallPumpkinMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xff8c00,
+            map: pumpkinTexture3,
             metalness: 0.2,
             roughness: 0.7,
             clearcoat: 0.05,
@@ -182,8 +185,14 @@ onMounted(() => {
         heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
+        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
+        heart.scale.set(0.3, 0.3, 0.3);
+        heart.position.set(0.25, 1.1, 0);
+        heart.rotation.y = Math.PI;
+        heart.rotation.x = Math.PI;
+        bearGroup.add(heart);
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, pumpkinBodyMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, pumpkinMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
@@ -192,7 +201,7 @@ onMounted(() => {
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, pumpkinBodyMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, pumpkinMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
         const rightLeg = new THREE.Mesh(legGeometry, transparentPumpkinMaterial);
@@ -234,16 +243,10 @@ onMounted(() => {
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
-        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
-        heart.scale.set(0.3, 0.3, 0.3);
-        heart.position.set(0.25, 1.1, 0);
-        heart.rotation.y = Math.PI;
-        heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
         function createPumpkin(material, position) {
             const pumpkinGroup = new THREE.Group();
             const pumpkinGeometry = new THREE.SphereGeometry(1, 32, 32);
-            const pumpkin = new THREE.Mesh(pumpkinGeometry, pumpkinGoldMaterial);
+            const pumpkin = new THREE.Mesh(pumpkinGeometry, smallPumpkinMaterial);
             pumpkin.scale.set(1, 0.8, 1);
             pumpkinGroup.add(pumpkin);
             const stemGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 16);
@@ -254,30 +257,25 @@ onMounted(() => {
             return pumpkinGroup;
         }
         bearGroup.add(pumpkinGroup);
-        const pumpkin1 = createPumpkin(pumpkinGreenyMaterial, { x: -2, y: 0, z: 0 });
-        const pumpkin2 = createPumpkin(pumpkinGoldMaterial, { x: 0, y: 0, z: 0 });
-        const pumpkin3 = createPumpkin(pumpkinRedMaterial, { x: 2, y: 0, z: 0 });
-        const pumpkin4 = createPumpkin(pumpkinPurpleMaterial, { x: 2, y: 0, z: 0 });
-        const pumpkin5 = createPumpkin(pumpkinBodyMaterial, { x: 2, y: -2, z: 0 });
+        const pumpkin1 = createPumpkin(smallPumpkinMaterial, { x: -2, y: 0, z: 0 });
+        const pumpkin2 = createPumpkin(smallPumpkinMaterial, { x: 0, y: 0, z: 0 });
+        const pumpkin3 = createPumpkin(smallPumpkinMaterial, { x: 2, y: 0, z: 0 });
+        const pumpkin4 = createPumpkin(smallPumpkinMaterial, { x: 2, y: 0, z: 0 });
         pumpkin1.position.set(0.35, -0.35, -0.3);
         pumpkin2.position.set(0.25, -0.45, 0.3);
         pumpkin3.position.set(0.3, 0.1, -0.2);
         pumpkin4.position.set(0.25, 0.18, 0.4);
-        pumpkin5.position.set(0.5, -0.3, -0.45);
         pumpkin1.scale.set(0.3, 0.3, 0.3);
         pumpkin2.scale.set(0.28, 0.28, 0.28);
         pumpkin3.scale.set(0.25, 0.25, 0.25);
         pumpkin4.scale.set(0.23, 0.23, 0.23);
-        pumpkin5.scale.set(0.25, 0.2, 0.25);
         pumpkin2.rotation.z = Math.PI / 4;
         pumpkin3.rotation.z = -Math.PI / 4;
         pumpkin4.rotation.y = -Math.PI / 2;
-        pumpkin5.rotation.y = -Math.PI / 2;
         bearGroup.add(pumpkin1);
         bearGroup.add(pumpkin2);
         bearGroup.add(pumpkin3);
         bearGroup.add(pumpkin4);
-        // bearGroup.add(pumpkin5);
         const batShape = new THREE.Shape();
         batShape.moveTo(-0.5, 0);
         batShape.bezierCurveTo(-0.75, 0.25, -1.0, 0.6, -0.5, 0.8);
@@ -293,15 +291,15 @@ onMounted(() => {
         batMesh.scale.set(0.3, 0.3, 0.3);
         batMesh.rotation.x = 0;
         batMesh.rotation.z = 0;
-        batMesh.position.set(0.3, 0.2, 0.65);
+        batMesh.position.set(0.26, 0.35, 0.25);
         bearGroup.add(batMesh);
         const bat1 = new THREE.Mesh(batGeometry, batMaterial);
         bat1.scale.set(0.5, 0.5, 0.5);
-        bat1.position.set(0.3, -0.1, 0.65);
+        bat1.position.set(0.4, -0.1, 0.54);
         bearGroup.add(bat1);
         const bat2 = new THREE.Mesh(batGeometry, batMaterial);
         bat2.scale.set(0.5, 0.5, 0.5);
-        bat2.position.set(0.4, -0.35, 0.65);
+        bat2.position.set(0.32, -0.35, 0.65);
         bearGroup.add(bat2);
         bearGroup.rotation.x = 0.1;
         bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -323,7 +321,7 @@ onMounted(() => {
         const clock = new THREE.Clock();
         const phaseOffsets = [0, Math.PI / 2, Math.PI, 0, Math.PI / 3];
         let floatSpeed = 0.05;
-        let floatAmplitude = 0.5;
+        let floatAmplitude = 0.25;
         let time = 0;
         let rotationSpeed = 0.02;
         function animate() {
@@ -340,14 +338,13 @@ onMounted(() => {
             pumpkin2.rotation.z += 0.04;
             pumpkin3.rotation.z += 0.03;
             pumpkin4.rotation.z += 0.03;
-            pumpkin5.rotation.z -= 0.04;
             heart.rotation.y += 0.04;
             time += floatSpeed;
             bearGroup.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude;
             // bearGroup.rotation.y -= rotationSpeed; 
             const elapsedTime = clock.getElapsedTime();
             bats.forEach((h, index) => {
-                const scale = 0.2 + Math.sin(elapsedTime * 3 + phaseOffsets[index]) * 0.1; // Adjust the frequency and intensity
+                const scale = 0.1 + Math.sin(elapsedTime * 3 + phaseOffsets[index]) * 0.1;
                 h.scale.set(scale, scale, scale);
             });
             renderer.render(scene, camera);
