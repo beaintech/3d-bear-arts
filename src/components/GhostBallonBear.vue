@@ -467,7 +467,7 @@ function stopRotation() {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle, #0A0000 60%, #3D0000 30%, #8B0000 10%);
+    background: radial-gradient(circle, #0A0000 50%, #3D0000 30%, #8B0000 10%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

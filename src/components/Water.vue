@@ -670,7 +670,7 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        background: radial-gradient(circle, #FFD700 40%, #87CEFA 80%);
+        background: radial-gradient(circle, #FFD700 50%, #FF6347 40%, #87CEFA 10%);
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -704,11 +704,11 @@
         .pixel-btn {
         font-family: 'Press Start 2P', sans-serif;
         font-size: 14px;
-        background-color: #FF6347; /* Coral color */
+        background-color: #4682B4; /* Steel Blue */
         color: white;
         padding: 15px;
-        border: 4px solid #FFD700; /* Gold color */
-        box-shadow: 3px 3px 0 #FFD700, 6px 6px 0 #FFA07A; /* Light salmon shadow */
+        border: 4px solid #FF6347; /* Coral border */
+        box-shadow: 3px 3px 0 #FF6347, 6px 6px 0 #4682B4; /* Steel blue shadow */
         text-transform: uppercase;
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
@@ -716,21 +716,14 @@
     }
 
     .pixel-btn:hover {
-        background-color: #FFD700; /* Gold on hover */
-        color: #000080; /* Navy text color */
+        background-color: #FF6347; /* Coral on hover */
+        color: #FFFFFF; /* White text color */
         transform: translate(-3px, -3px);
     }
 
     .pixel-btn:active {
         transform: translate(2px, 2px);
-        box-shadow: 1px 1px 0 #FFD700, 2px 2px 0 #FFA07A;
+        box-shadow: 1px 1px 0 #FF6347, 2px 2px 0 #4682B4;
     }
 
-        .bear-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            }
     </style>
