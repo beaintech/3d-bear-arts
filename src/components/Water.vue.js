@@ -64,23 +64,6 @@ onMounted(() => {
             clearcoat: 0.05, // Lower clearcoat to reduce gloss
             clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
         });
-        const transparentBodyTransparentBeachMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // White base color
-            map: beachTexture,
-            metalness: 0.3, // Lower metalness for a plastic-like effect
-            roughness: 0.1, // Make it smoother for a glossy look
-            clearcoat: 1.0, // High clearcoat for strong glossiness
-            clearcoatRoughness: 0.05, // Make the clearcoat glossy
-            transparent: true, // Enable transparency
-            opacity: 0.4, // Set transparency level
-            transmission: 0.8, // Enable transmission for glass-like effect
-            ior: 1.45, // Index of refraction for glassy feel
-            reflectivity: 0.9, // High reflectivity for a shiny surface
-            envMapIntensity: 1.0, // Strong environment reflections
-            side: THREE.DoubleSide, // Render both sides of the material
-            depthWrite: false, // Prevents overwriting depth information
-            depthTest: true, // Allows depth testing for consistent layering
-        });
         const bodyTransparentBeachMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xB0E2FF,
             map: beachTexture,
@@ -93,21 +76,6 @@ onMounted(() => {
             depthWrite: false, // Prevents overwriting depth information
             depthTest: true, // Allows depth testing for consistent layering
         });
-        // const bodyTransparentBeachMaterial = new THREE.MeshPhysicalMaterial({
-        //   color: 0xB0E2FF, // Soft blue tint
-        //   map: beachTexture, // Beach texture for subtle depth
-        //   metalness: 0.1,  // Low metalness to avoid a metallic shine
-        //   roughness: 0.6,  // Higher roughness for softer reflections
-        //   transparent: true,
-        //   opacity: 0.85, // Slight opacity for a glassy effect
-        //   clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
-        //   clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
-        //   transmission: 0.7, // Moderate transmission for subtle transparency
-        //   ior: 1.2, // Slightly lower than water to reduce refraction intensity
-        //   depthWrite: false, // Prevents overwriting depth information
-        //   depthTest: true, // Enables depth testing for consistent layering
-        //   envMapIntensity: 0.8, // Reduced environment map intensity for softer look
-        // });
         const rightBeachMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xB0E2FF, // Soft blue tint
             map: beachTexture, // Beach texture for subtle depth
@@ -146,20 +114,6 @@ onMounted(() => {
             opacity: 0.8,
             side: THREE.DoubleSide,
             ior: 1.33, // Close to water for refractive effect
-        });
-        const transparentHeadMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // White base color
-            map: beachTexture, // Halftone or abstract texture
-            metalness: 0.3, // Lower metalness for a plastic-like effect
-            roughness: 0.1, // Make it smoother for a glossy look
-            clearcoat: 1.0, // High clearcoat for strong glossiness
-            clearcoatRoughness: 0.05, // Make the clearcoat glossy
-            transparent: true, // Enable transparency
-            opacity: 0.7, // Set transparency level
-            transmission: 0.8, // Enable transmission for glass-like effect
-            ior: 1.45, // Index of refraction for glassy feel
-            reflectivity: 0.9, // High reflectivity for a shiny surface
-            envMapIntensity: 1.0, // Strong environment reflections
         });
         const leftLegtMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xB0E2FF, // Hot pink as the base
@@ -456,8 +410,6 @@ onMounted(() => {
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
-        // Update heart renderOrder to ensure it's always drawn last
-        // tail.renderOrder = 1;
         // the end of the bear body
         function createHumanWithSwimmingPantsAndSwimCap() {
             const humanGroup = new THREE.Group();
@@ -505,7 +457,7 @@ onMounted(() => {
             rightArm.rotation.z = -Math.PI / 4;
             humanGroup.add(rightArm);
             humanGroup.scale.set(0.27, 0.27, 0.27);
-            humanGroup.position.set(-0.2, -0.06, -0.2);
+            humanGroup.position.set(-0.2, -0.1, -0.15);
             return humanGroup;
         }
         // Usage
