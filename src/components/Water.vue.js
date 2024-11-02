@@ -82,7 +82,7 @@ onMounted(() => {
             metalness: 0.1, // Low metalness to avoid a metallic shine
             roughness: 0.6, // Higher roughness for softer reflections
             transparent: true,
-            opacity: 0.85, // Slight opacity for a glassy effect
+            opacity: 0.6, // Slight opacity for a glassy effect
             clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
             clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
             transmission: 0.7, // Moderate transmission for subtle transparency
@@ -96,7 +96,7 @@ onMounted(() => {
             metalness: 0.1, // Low metalness to avoid a metallic shine
             roughness: 0.6, // Higher roughness for softer reflections
             transparent: true,
-            opacity: 0.2, // Slight opacity for a glassy effect
+            opacity: 0.3, // Slight opacity for a glassy effect
             clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
             clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
             ior: 1.2, // Slightly lower than water to reduce refraction intensity
@@ -300,7 +300,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, bodyTransparentBeachMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, rightBeachMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -348,7 +348,7 @@ onMounted(() => {
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, bodyTransparentBeachMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, rightBodyTransparentBeachMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
@@ -357,7 +357,7 @@ onMounted(() => {
         const leftLeg = new THREE.Mesh(legGeometry, leftBeachMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, leftBeachMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, rightBeachMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
@@ -368,7 +368,7 @@ onMounted(() => {
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, leftBeachMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, rightBeachMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
