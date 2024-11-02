@@ -97,7 +97,7 @@
             metalness: 0.3,  // Slight metalness for a subtle shine
             roughness: 0.5,  // Some roughness to reduce reflection
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.5,
             side: THREE.DoubleSide,
             ior: 1.33, // Close to water for refractive effect
              depthWrite: false, // Prevents overwriting depth information
@@ -125,7 +125,7 @@
           metalness: 0.1,  // Low metalness to avoid a metallic shine
           roughness: 0.6,  // Higher roughness for softer reflections
           transparent: true,
-          opacity: 0.6, // Slight opacity for a glassy effect
+          opacity: 0.3, // Slight opacity for a glassy effect
           clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
           clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
           ior: 1.2, // Slightly lower than water to reduce refraction intensity
@@ -567,7 +567,7 @@
       bearGroup.add(humanWithPantsAndSwimCap);
 
 
-      function createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini() {
+  function createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini() {
     const humanGroup = new THREE.Group();
 
     // Head
@@ -633,18 +633,18 @@
     const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.35, 32);
 
     const leftArm = new THREE.Mesh(armGeometry, legMaterial);
-    leftArm.position.set(-0.2, 0.85, 0); // Positioned closer to torso, horizontal
+    leftArm.position.set(-0.24, 0.95, 0.18); // Positioned closer to torso, horizontal
     leftArm.rotation.x = Math.PI / 2; // Horizontal position
     humanGroup.add(leftArm);
 
     const rightArm = new THREE.Mesh(armGeometry, legMaterial);
-    rightArm.position.set(0.15, 0.7, -0.05); // Positioned closer to torso, vertical down
+    rightArm.position.set(0.2, 0.85, 0); // Positioned closer to torso, vertical down
     rightArm.rotation.z = Math.PI / 20; // Slight angle to look relaxed
     humanGroup.add(rightArm);
 
     // Scale and Position the Entire Group
-    humanGroup.scale.set(0.87, 0.87, 0.87);
-    humanGroup.position.set(1, -0.1, -0.15);
+    humanGroup.scale.set(0.27, 0.27, 0.27);
+    humanGroup.position.set(0.2, -0.1, -0.15);
 
     return humanGroup;
 }
@@ -653,6 +653,77 @@
 const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
 bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
 
+function createChildSwimmingInSea() {
+    const humanGroup = new THREE.Group();
+
+    // Head
+    const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+    const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac }); // Skin tone
+    const headMesh = new THREE.Mesh(headGeometry, headMaterial);
+    headMesh.position.set(0, 1.5, 0);
+    humanGroup.add(headMesh);
+
+    // Swimming Cap (Green)
+    const capGeometry = new THREE.SphereGeometry(0.21, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2); // Only the top half
+    const capMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Green color for swim cap
+    const capMesh = new THREE.Mesh(capGeometry, capMaterial);
+    capMesh.position.set(0, 1.58, 0); // Position it slightly above the head
+    humanGroup.add(capMesh);
+
+    // Torso (Horizontal for swimming)
+    const torsoGeometry = new THREE.CylinderGeometry(0.22, 0.22, 0.5, 32);
+    const torsoMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+    const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
+    torsoMesh.position.set(0, 1.0, 0);
+    torsoMesh.rotation.z = Math.PI / 2; // Rotate for horizontal position
+    humanGroup.add(torsoMesh);
+
+    // Swimming Pants (Yellow)
+    const pantsGeometry = new THREE.CylinderGeometry(0.23, 0.23, 0.3, 32);
+    const pantsMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 }); // Yellow color for pants
+    const pantsMesh = new THREE.Mesh(pantsGeometry, pantsMaterial);
+    pantsMesh.position.set(0, 0.65, 0);
+    pantsMesh.rotation.z = Math.PI / 2; // Rotate to match torso orientation
+    humanGroup.add(pantsMesh);
+
+    // Legs (Bent for swimming kick)
+    const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.4, 32);
+    const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+
+    const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+    leftLeg.position.set(-0.2, 0.25, 0.2);
+    leftLeg.rotation.z = Math.PI / 4; // Bent position
+    humanGroup.add(leftLeg);
+
+    const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+    rightLeg.position.set(0.2, 0.25, -0.2);
+    rightLeg.rotation.z = -Math.PI / 4; // Bent position
+    humanGroup.add(rightLeg);
+
+    // Arms (Extended forward for swimming)
+    const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.5, 32);
+
+    const leftArm = new THREE.Mesh(armGeometry, legMaterial);
+    leftArm.position.set(-0.35, 1.3, 0.15);
+    leftArm.rotation.z = Math.PI / 2.5;
+    humanGroup.add(leftArm);
+
+    const rightArm = new THREE.Mesh(armGeometry, legMaterial);
+    rightArm.position.set(0.35, 1.3, -0.15);
+    rightArm.rotation.z = -Math.PI / 2.5;
+    humanGroup.add(rightArm);
+
+    // Scale and Position the Entire Group for Swimming Pose
+    humanGroup.scale.set(0.27, 0.27, 0.27);
+    humanGroup.rotation.x = Math.PI / 2; // Rotate entire figure to appear horizontal
+    humanGroup.position.set(0, -0.1, -0.15);
+
+    return humanGroup;
+}
+
+// Usage
+const childSwimmingInSea = createChildSwimmingInSea();
+bearGroup.add(childSwimmingInSea);
 
 
       // Add bear group to the scene
@@ -699,7 +770,7 @@ bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
           waterSurfaceMaterial.uniforms.u_time.value += 0.25;
 
           heart.rotation.y += 0.04;
-          humanWithPantsAndSwimCap.rotation.y += 0.03
+          humanWithPantsAndSwimCap.rotation.y += 0.07
 
           renderer.render(scene, camera);
     }
