@@ -410,8 +410,8 @@
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
 
         const heart = new THREE.Mesh(heartGeometry, heartMaterial);
-        heart.scale.set(0.3, 0.3, 0.3);
-        heart.position.set(0.25, 1.1, 0);
+        heart.scale.set(0.2, 0.2, 0.2);
+        heart.position.set(0.25, 1.2, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
@@ -459,7 +459,7 @@
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
 
-        const rightButtock = new THREE.Mesh(buttockGeometry, rightBeachMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, leftBeachMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
 
@@ -566,6 +566,95 @@
       const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
       bearGroup.add(humanWithPantsAndSwimCap);
 
+
+      function createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini() {
+    const humanGroup = new THREE.Group();
+
+    // Head
+    const headGeometry = new THREE.SphereGeometry(0.18, 32, 32);
+    const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac }); // Skin tone
+    const headMesh = new THREE.Mesh(headGeometry, headMaterial);
+    headMesh.position.set(0, 1.2, 0.04);
+    humanGroup.add(headMesh);
+
+    // Hair (Covering top and closer to the back)
+    const hairTopGeometry = new THREE.SphereGeometry(0.19, 32, 32, 0.4, Math.PI * 2, 0, Math.PI / 2);
+    const hairBackGeometry = new THREE.CylinderGeometry(0.18, 0.18, 0.4, 32);
+    const hairMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown color for hair
+
+    const hairTopMesh = new THREE.Mesh(hairTopGeometry, hairMaterial);
+    hairTopMesh.position.set(0, 1.28, 0); // Positioned to cover the top of the head
+    humanGroup.add(hairTopMesh);
+
+    const hairBackMesh = new THREE.Mesh(hairBackGeometry, hairMaterial);
+    hairBackMesh.position.set(0, 1.1, -0.01); // Positioned closer to the head
+    humanGroup.add(hairBackMesh);
+
+    // Fuller Torso
+    const torsoGeometry = new THREE.CylinderGeometry(0.18, 0.2, 0.5, 32);
+    const torsoMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+    const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
+    torsoMesh.position.set(0, 0.85, 0);
+    humanGroup.add(torsoMesh);
+
+    // Bikini Top (Positioned slightly lower)
+    const bikiniTopGeometry = new THREE.SphereGeometry(0.08, 32, 32, 0, Math.PI);
+    const bikiniTopMaterial = new THREE.MeshStandardMaterial({ color: 0xff69b4 }); // Pink color for bikini
+    const leftBikiniTop = new THREE.Mesh(bikiniTopGeometry, bikiniTopMaterial);
+    leftBikiniTop.position.set(-0.09, 0.98, 0.15); // Lowered position
+    humanGroup.add(leftBikiniTop);
+
+    const rightBikiniTop = new THREE.Mesh(bikiniTopGeometry, bikiniTopMaterial);
+    rightBikiniTop.position.set(0.09, 0.98, 0.15); // Lowered position
+    humanGroup.add(rightBikiniTop);
+
+    // Bikini Bottom (Back to previous swimming pants shape)
+    const bottomsGeometry = new THREE.CylinderGeometry(0.22, 0.22, 0.25, 32);
+    const bottomsMaterial = new THREE.MeshStandardMaterial({ color: 0xff69b4 }); // Pink color for bottoms
+    const bottomsMesh = new THREE.Mesh(bottomsGeometry, bottomsMaterial);
+    bottomsMesh.position.set(0, 0.6, 0);
+    humanGroup.add(bottomsMesh);
+
+    // Legs in Horizontal Sitting Position, Positioned Closer to Body
+    const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.6, 32);
+    const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+
+    const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+    leftLeg.position.set(-0.09, 0.5, 0.2); // Positioned horizontally forward, closer to the body
+    leftLeg.rotation.x = Math.PI / 2; // Fully horizontal
+    humanGroup.add(leftLeg);
+
+    const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+    rightLeg.position.set(0.09, 0.5, 0.2); // Positioned horizontally forward, closer to the body
+    rightLeg.rotation.x = Math.PI / 2; // Fully horizontal
+    humanGroup.add(rightLeg);
+
+    // Arms Positioned: One Horizontal, One Vertical Down
+    const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.35, 32);
+
+    const leftArm = new THREE.Mesh(armGeometry, legMaterial);
+    leftArm.position.set(-0.2, 0.85, 0); // Positioned closer to torso, horizontal
+    leftArm.rotation.x = Math.PI / 2; // Horizontal position
+    humanGroup.add(leftArm);
+
+    const rightArm = new THREE.Mesh(armGeometry, legMaterial);
+    rightArm.position.set(0.15, 0.7, -0.05); // Positioned closer to torso, vertical down
+    rightArm.rotation.z = Math.PI / 20; // Slight angle to look relaxed
+    humanGroup.add(rightArm);
+
+    // Scale and Position the Entire Group
+    humanGroup.scale.set(0.87, 0.87, 0.87);
+    humanGroup.position.set(1, -0.1, -0.15);
+
+    return humanGroup;
+}
+
+// Usage
+const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
+bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
+
+
+
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
       scene.add(bearGroup);
@@ -610,6 +699,7 @@
           waterSurfaceMaterial.uniforms.u_time.value += 0.25;
 
           heart.rotation.y += 0.04;
+          humanWithPantsAndSwimCap.rotation.y += 0.03
 
           renderer.render(scene, camera);
     }
@@ -660,70 +750,58 @@
 
     </script>
 
-    <style scoped>
-    .three-canvas {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        background: radial-gradient(circle, #FFD700 50%, #FF6347 40%, #87CEFA 10%);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
+<style scoped>
+.three-canvas {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle, #FFD700 50%, #87CEFA 30%, #87CEFA 10%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 
-    .no-bg {
-         margin: 0;
-          height: 100vh;
-          width: 100vw;
-          overflow: hidden;
-        background: none;
-    }
+.pixel-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(120%) translateY(-100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
 
-    .pixel-controls {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(120%) translateY(-100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        }
+.side-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
 
-        .side-buttons {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        }
+.pixel-btn {
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 14px;
+    background-color: #4682B4; /* Steel Blue */
+    color: white;
+    padding: 15px;
+    border: 4px solid #20B2AA; /* Light Sea Green for border */
+    box-shadow: 3px 3px 0 #20B2AA, 6px 6px 0 #4682B4; /* Light Sea Green shadow */
+    text-transform: uppercase;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+    border-radius: 10px; /* Rounded corners */
+}
 
-        .pixel-btn {
-        font-family: 'Press Start 2P', sans-serif;
-        font-size: 14px;
-        background-color: #4682B4; /* Steel Blue */
-        color: white;
-        padding: 15px;
-        border: 4px solid #FF6347; /* Coral border */
-        box-shadow: 3px 3px 0 #FF6347, 6px 6px 0 #4682B4; /* Steel blue shadow */
-        text-transform: uppercase;
-        transition: transform 0.2s ease-in-out;
-        cursor: pointer;
-        border-radius: 10px; /* Rounded corners */
-    }
+.pixel-btn:hover {
+    background-color: #20B2AA; /* Light Sea Green on hover */
+    color: #FFFFFF; /* White text color */
+    transform: translate(-3px, -3px);
+}
 
-    .pixel-btn:hover {
-        background-color: #FF6347; /* Coral on hover */
-        color: #FFFFFF; /* White text color */
-        transform: translate(-3px, -3px);
-    }
+.pixel-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 #20B2AA, 2px 2px 0 #4682B4;
+}
 
-    .pixel-btn:active {
-        transform: translate(2px, 2px);
-        box-shadow: 1px 1px 0 #FF6347, 2px 2px 0 #4682B4;
-    }
 
-    </style>
+</style>
