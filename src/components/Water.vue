@@ -8,10 +8,20 @@
         </div>
        <button class="pixel-btn down" @mousedown="onDownButtonDown" @mouseup="stopRotation">DOWN</button>
     </div>
+    <div class="directional-buttons">
+      <button id="move-north" class="directional-btn north-btn" @mousedown="startWalkingNorth" @mouseup="stopWalking">UP</button>
+      
+      <div class="horizontal-buttons">
+        <button id="move-west" class="directional-btn west-btn" @mousedown="startWalkingWest" @mouseup="stopWalking">LEFT</button>
+        <button id="move-east" class="directional-btn east-btn" @mousedown="startWalkingEast" @mouseup="stopWalking">RIGHT</button>
+      </div>
+      
+      <button id="move-south" class="directional-btn south-btn" @mousedown="startWalkingSouth" @mouseup="stopWalking">DOWN</button>
+  </div>
 </template>
 
     <script setup lang="ts">
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted, watch, shallowRef } from 'vue';
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
     import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader.js';
@@ -36,6 +46,23 @@
         let isRotatingLeft = ref(false);  // Flag for left rotation
         let isRotatingUp = ref(false);    // Flag for up rotation
         let isRotatingDown = ref(false);  // Flag for down rotation
+
+        const humanWithPantsAndSwimCap = shallowRef<THREE.Group | null>(null);
+        const bearGroup = new THREE.Group();
+        const walkingNorth = ref(false);
+        const walkingSouth = ref(false);
+        const walkingWest = ref(false);
+        const walkingEast = ref(false);
+        const walkSpeed = 0.05;
+
+        // Initialize renderer and scene
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
 
     onMounted(() => {
       if (threeCanvas.value) {
@@ -97,7 +124,7 @@
             metalness: 0.3,  // Slight metalness for a subtle shine
             roughness: 0.5,  // Some roughness to reduce reflection
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.6,
             side: THREE.DoubleSide,
             ior: 1.33, // Close to water for refractive effect
              depthWrite: false, // Prevents overwriting depth information
@@ -557,8 +584,12 @@
           return humanGroup;
       }
 
-      const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
-      bearGroup.add(humanWithPantsAndSwimCap);
+      // const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
+      // bearGroup.add(humanWithPantsAndSwimCap);
+
+      humanWithPantsAndSwimCap.value = createHumanWithSwimmingPantsAndSwimCap();
+      bearGroup.add(humanWithPantsAndSwimCap.value);
+      scene.add(bearGroup);
 
 
   function createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini() {
@@ -786,7 +817,7 @@ animateSwimmingChild(swimmingChildWithAdjustedPose);
           waterSurfaceMaterial.uniforms.u_time.value += 0.25;
 
           heart.rotation.y += 0.04;
-          humanWithPantsAndSwimCap.rotation.y += 0.07
+          // humanWithPantsAndSwimCap.rotation.y += 0.07
 
           renderer.render(scene, camera);
     }
@@ -834,7 +865,54 @@ animateSwimmingChild(swimmingChildWithAdjustedPose);
           isRotatingUp.value = false;
           isRotatingDown.value = false;
         }
+            // Movement control methods
+    const startWalkingNorth = () => {
+      walkingNorth.value = true;
+      console.log(walkingNorth.value)
+      if (humanWithPantsAndSwimCap.value) humanWithPantsAndSwimCap.value.rotation.y = 0;
+      console.log(humanWithPantsAndSwimCap.value)
 
+    };
+
+    const startWalkingSouth = () => {
+      walkingSouth.value = true;
+      if (humanWithPantsAndSwimCap.value) humanWithPantsAndSwimCap.value.rotation.y = Math.PI;
+      console.log(humanWithPantsAndSwimCap.value)
+
+    };
+
+    const startWalkingWest = () => {
+      walkingWest.value = true;
+      if (humanWithPantsAndSwimCap.value) humanWithPantsAndSwimCap.value.rotation.y = Math.PI / 2;
+    };
+
+    const startWalkingEast = () => {
+      walkingEast.value = true;
+      if (humanWithPantsAndSwimCap.value) humanWithPantsAndSwimCap.value.rotation.y = -Math.PI / 2;
+    };
+
+    const stopWalking = () => {
+      walkingNorth.value = false;
+      walkingSouth.value = false;
+      walkingWest.value = false;
+      walkingEast.value = false;
+    };
+
+    // Animation loop for continuous movement
+    const animateCharacter = () => {
+      requestAnimationFrame(animateCharacter);
+
+      if (humanWithPantsAndSwimCap.value) {
+        if (walkingNorth.value) humanWithPantsAndSwimCap.value.position.z -= walkSpeed;
+        if (walkingSouth.value) humanWithPantsAndSwimCap.value.position.z += walkSpeed;
+        if (walkingWest.value) humanWithPantsAndSwimCap.value.position.x -= walkSpeed;
+        if (walkingEast.value) humanWithPantsAndSwimCap.value.position.x += walkSpeed;
+      }
+
+      renderer.render(scene, camera);
+    };
+
+    animateCharacter();
     </script>
 
 <style scoped>
@@ -890,5 +968,52 @@ animateSwimmingChild(swimmingChildWithAdjustedPose);
     box-shadow: 1px 1px 0 #20B2AA, 2px 2px 0 #4682B4;
 }
 
+/* panel to control the man */
+.directional-buttons {
+  position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-220%) translateY(-100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.directional-buttons .horizontal-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.directional-btn {
+  font-family: 'Roboto', sans-serif; /* Clean and modern font */
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #4682B4; /* Steel Blue */
+    color: white;
+    padding: 12px 18px;
+    border: 3px solid #20B2AA; /* Light Sea Green for border */
+    box-shadow: 2px 2px 0 #20B2AA, 4px 4px 0 #4682B4; /* Subtle shadow for depth */
+    text-transform: uppercase;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border-radius: 8px; /* Softer rounded corners */
+}
+
+.north-btn {
+  background-color: #ffa07a; /* Light Salmon */
+}
+
+.south-btn {
+  background-color: #20b2aa; /* Light Sea Green */
+}
+
+.west-btn {
+  background-color: #9370db; /* Medium Purple */
+}
+
+.east-btn {
+  background-color: #ff6347; /* Tomato */
+}
 
 </style>
