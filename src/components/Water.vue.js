@@ -1,4 +1,4 @@
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, shallowRef } from 'vue';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
@@ -22,6 +22,20 @@ let isRotatingRight = ref(false); // Flag for right rotation
 let isRotatingLeft = ref(false); // Flag for left rotation
 let isRotatingUp = ref(false); // Flag for up rotation
 let isRotatingDown = ref(false); // Flag for down rotation
+const humanWithPantsAndSwimCap = shallowRef(null);
+const bearGroup = new THREE.Group();
+const walkingNorth = ref(false);
+const walkingSouth = ref(false);
+const walkingWest = ref(false);
+const walkingEast = ref(false);
+const walkSpeed = 0.05;
+// Initialize renderer and scene
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
 onMounted(() => {
     if (threeCanvas.value) {
         // Initialize the Three.js scene
@@ -70,7 +84,7 @@ onMounted(() => {
             metalness: 0.3, // Slight metalness for a subtle shine
             roughness: 0.5, // Some roughness to reduce reflection
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.6,
             side: THREE.DoubleSide,
             ior: 1.33, // Close to water for refractive effect
             depthWrite: false, // Prevents overwriting depth information
@@ -455,8 +469,11 @@ onMounted(() => {
             // humanGroup.position.set(0.2, -0.05, -0.47);
             return humanGroup;
         }
-        const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
-        bearGroup.add(humanWithPantsAndSwimCap);
+        // const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
+        // bearGroup.add(humanWithPantsAndSwimCap);
+        humanWithPantsAndSwimCap.value = createHumanWithSwimmingPantsAndSwimCap();
+        bearGroup.add(humanWithPantsAndSwimCap.value);
+        scene.add(bearGroup);
         function createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini() {
             const humanGroup = new THREE.Group();
             const headGeometry = new THREE.SphereGeometry(0.18, 32, 32);
@@ -635,7 +652,7 @@ onMounted(() => {
                 bearGroup.rotation.x += 0.03;
             waterSurfaceMaterial.uniforms.u_time.value += 0.25;
             heart.rotation.y += 0.04;
-            humanWithPantsAndSwimCap.rotation.y += 0.07;
+            // humanWithPantsAndSwimCap.rotation.y += 0.07
             renderer.render(scene, camera);
         }
         animate();
@@ -674,6 +691,52 @@ function stopRotation() {
     isRotatingUp.value = false;
     isRotatingDown.value = false;
 }
+// Movement control methods
+const startWalkingNorth = () => {
+    walkingNorth.value = true;
+    console.log(walkingNorth.value);
+    if (humanWithPantsAndSwimCap.value)
+        humanWithPantsAndSwimCap.value.rotation.y = 0;
+    console.log(humanWithPantsAndSwimCap.value);
+};
+const startWalkingSouth = () => {
+    walkingSouth.value = true;
+    if (humanWithPantsAndSwimCap.value)
+        humanWithPantsAndSwimCap.value.rotation.y = Math.PI;
+    console.log(humanWithPantsAndSwimCap.value);
+};
+const startWalkingWest = () => {
+    walkingWest.value = true;
+    if (humanWithPantsAndSwimCap.value)
+        humanWithPantsAndSwimCap.value.rotation.y = Math.PI / 2;
+};
+const startWalkingEast = () => {
+    walkingEast.value = true;
+    if (humanWithPantsAndSwimCap.value)
+        humanWithPantsAndSwimCap.value.rotation.y = -Math.PI / 2;
+};
+const stopWalking = () => {
+    walkingNorth.value = false;
+    walkingSouth.value = false;
+    walkingWest.value = false;
+    walkingEast.value = false;
+};
+// Animation loop for continuous movement
+const animateCharacter = () => {
+    requestAnimationFrame(animateCharacter);
+    if (humanWithPantsAndSwimCap.value) {
+        if (walkingNorth.value)
+            humanWithPantsAndSwimCap.value.position.z -= walkSpeed;
+        if (walkingSouth.value)
+            humanWithPantsAndSwimCap.value.position.z += walkSpeed;
+        if (walkingWest.value)
+            humanWithPantsAndSwimCap.value.position.x -= walkSpeed;
+        if (walkingEast.value)
+            humanWithPantsAndSwimCap.value.position.x += walkSpeed;
+    }
+    renderer.render(scene, camera);
+};
+animateCharacter();
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         background: {
@@ -708,6 +771,7 @@ function __VLS_template() {
     let __VLS_styleScopedClasses;
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
+    __VLS_styleScopedClasses['directional-buttons'];
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
@@ -720,6 +784,12 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onLeftButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn left") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onRightButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn right") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onDownButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn down") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingNorth) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-north"), ...{ class: ("directional-btn north-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingWest) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-west"), ...{ class: ("directional-btn west-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingEast) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-east"), ...{ class: ("directional-btn east-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingSouth) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-south"), ...{ class: ("directional-btn south-btn") }, });
     __VLS_styleScopedClasses['pixel-controls'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['up'];
@@ -730,6 +800,16 @@ function __VLS_template() {
     __VLS_styleScopedClasses['right'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['down'];
+    __VLS_styleScopedClasses['directional-buttons'];
+    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['north-btn'];
+    __VLS_styleScopedClasses['horizontal-buttons'];
+    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['west-btn'];
+    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['east-btn'];
+    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['south-btn'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
     const __VLS_refs = {
@@ -752,6 +832,11 @@ const __VLS_self = (await import('vue')).defineComponent({
             onUpButtonDown: onUpButtonDown,
             onDownButtonDown: onDownButtonDown,
             stopRotation: stopRotation,
+            startWalkingNorth: startWalkingNorth,
+            startWalkingSouth: startWalkingSouth,
+            startWalkingWest: startWalkingWest,
+            startWalkingEast: startWalkingEast,
+            stopWalking: stopWalking,
         };
     },
     props: {
