@@ -23,12 +23,23 @@ let isRotatingLeft = ref(false); // Flag for left rotation
 let isRotatingUp = ref(false); // Flag for up rotation
 let isRotatingDown = ref(false); // Flag for down rotation
 const humanWithPantsAndSwimCap = shallowRef(null);
-const bearGroup = new THREE.Group();
 const walkingNorth = ref(false);
 const walkingSouth = ref(false);
 const walkingWest = ref(false);
 const walkingEast = ref(false);
 const walkSpeed = 0.05;
+const womenSittingOnBeach = shallowRef(null);
+const swimmingChildWithAdjustedPose = shallowRef(null);
+const movingNorth = ref(false);
+const movingSouth = ref(false);
+const movingWest = ref(false);
+const movingEast = ref(false);
+const moveSpeed = 0.02;
+const movingNorthKid = ref(false);
+const movingSouthKid = ref(false);
+const movingWestKid = ref(false);
+const movingEastKid = ref(false);
+const moveSpeedKid = 0.08;
 // Initialize renderer and scene
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -540,8 +551,10 @@ onMounted(() => {
             // humanGroup.rotation.y = Math.PI;
             return humanGroup;
         }
-        const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
-        bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
+        // const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
+        // bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
+        womenSittingOnBeach.value = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
+        bearGroup.add(womenSittingOnBeach.value);
         function createSwimmingChildWithAdjustedPose() {
             const humanGroup = new THREE.Group();
             const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
@@ -612,9 +625,13 @@ onMounted(() => {
             }
             animate();
         }
-        const swimmingChildWithAdjustedPose = createSwimmingChildWithAdjustedPose();
-        bearGroup.add(swimmingChildWithAdjustedPose);
-        animateSwimmingChild(swimmingChildWithAdjustedPose);
+        // const swimmingChildWithAdjustedPose = createSwimmingChildWithAdjustedPose();
+        // bearGroup.add(swimmingChildWithAdjustedPose);
+        // animateSwimmingChild(swimmingChildWithAdjustedPose);
+        swimmingChildWithAdjustedPose.value = createSwimmingChildWithAdjustedPose();
+        bearGroup.add(swimmingChildWithAdjustedPose.value);
+        // Start the animation for floating movement
+        animateSwimmingChild(swimmingChildWithAdjustedPose.value);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -721,6 +738,32 @@ const stopWalking = () => {
     walkingWest.value = false;
     walkingEast.value = false;
 };
+const startMovingWomanNorth = () => {
+    movingNorth.value = true;
+    if (womenSittingOnBeach.value)
+        womenSittingOnBeach.value.rotation.y = Math.PI;
+};
+const startMovingWomanSouth = () => {
+    movingSouth.value = true;
+    if (womenSittingOnBeach.value)
+        womenSittingOnBeach.value.rotation.y = 0;
+};
+const startMovingWomanWest = () => {
+    movingWest.value = true;
+    if (womenSittingOnBeach.value)
+        womenSittingOnBeach.value.rotation.y = -Math.PI / 2;
+};
+const startMovingWomanEast = () => {
+    movingEast.value = true;
+    if (womenSittingOnBeach.value)
+        womenSittingOnBeach.value.rotation.y = Math.PI / 2;
+};
+const stopMovingWoman = () => {
+    movingNorth.value = false;
+    movingSouth.value = false;
+    movingWest.value = false;
+    movingEast.value = false;
+};
 // Animation loop for continuous movement
 const animateCharacter = () => {
     requestAnimationFrame(animateCharacter);
@@ -736,7 +779,62 @@ const animateCharacter = () => {
     }
     renderer.render(scene, camera);
 };
+const animateWoman = () => {
+    requestAnimationFrame(animateWoman);
+    if (womenSittingOnBeach.value) {
+        if (movingNorth.value)
+            womenSittingOnBeach.value.position.z -= moveSpeed;
+        if (movingSouth.value)
+            womenSittingOnBeach.value.position.z += moveSpeed;
+        if (movingWest.value)
+            womenSittingOnBeach.value.position.x -= moveSpeed;
+        if (movingEast.value)
+            womenSittingOnBeach.value.position.x += moveSpeed;
+    }
+};
+animateWoman();
 animateCharacter();
+const startMovingKidNorth = () => {
+    movingNorthKid.value = true;
+    if (swimmingChildWithAdjustedPose.value)
+        swimmingChildWithAdjustedPose.value.rotation.y = 0;
+};
+const startMovingKidSouth = () => {
+    movingSouthKid.value = true;
+    if (swimmingChildWithAdjustedPose.value)
+        swimmingChildWithAdjustedPose.value.rotation.y = Math.PI;
+};
+const startMovingKidWest = () => {
+    movingWestKid.value = true;
+    if (swimmingChildWithAdjustedPose.value)
+        swimmingChildWithAdjustedPose.value.rotation.y = Math.PI / 2;
+};
+const startMovingKidEast = () => {
+    movingEastKid.value = true;
+    if (swimmingChildWithAdjustedPose.value)
+        swimmingChildWithAdjustedPose.value.rotation.y = -Math.PI / 2;
+};
+const stopMovingKid = () => {
+    movingNorthKid.value = false;
+    movingSouthKid.value = false;
+    movingWestKid.value = false;
+    movingEastKid.value = false;
+};
+// Animation loop for continuous movement
+const animateSwimmingKid = () => {
+    requestAnimationFrame(animateSwimmingKid);
+    if (swimmingChildWithAdjustedPose.value) {
+        if (movingNorthKid.value)
+            swimmingChildWithAdjustedPose.value.position.z -= moveSpeedKid;
+        if (movingSouthKid.value)
+            swimmingChildWithAdjustedPose.value.position.z += moveSpeedKid;
+        if (movingWestKid.value)
+            swimmingChildWithAdjustedPose.value.position.x -= moveSpeedKid;
+        if (movingEastKid.value)
+            swimmingChildWithAdjustedPose.value.position.x += moveSpeedKid;
+    }
+};
+animateSwimmingKid();
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         background: {
@@ -772,6 +870,10 @@ function __VLS_template() {
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['directional-buttons'];
+    __VLS_styleScopedClasses['directional-btn-woman'];
+    __VLS_styleScopedClasses['directional-btn-woman'];
+    __VLS_styleScopedClasses['directional-btn-kid'];
+    __VLS_styleScopedClasses['directional-btn-kid'];
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
@@ -790,6 +892,18 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingWest) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-west"), ...{ class: ("directional-btn west-btn") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingEast) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-east"), ...{ class: ("directional-btn east-btn") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingSouth) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-south"), ...{ class: ("directional-btn south-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons-woman") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanNorth) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman north-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons-woman") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanWest) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman west-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanEast) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman east-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanSouth) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman south-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons-kid") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidNorth) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid north-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons-kid") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidWest) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid west-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidEast) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid east-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidSouth) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid south-btn") }, });
     __VLS_styleScopedClasses['pixel-controls'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['up'];
@@ -809,6 +923,26 @@ function __VLS_template() {
     __VLS_styleScopedClasses['directional-btn'];
     __VLS_styleScopedClasses['east-btn'];
     __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['south-btn'];
+    __VLS_styleScopedClasses['directional-buttons-woman'];
+    __VLS_styleScopedClasses['directional-btn-woman'];
+    __VLS_styleScopedClasses['north-btn'];
+    __VLS_styleScopedClasses['horizontal-buttons-woman'];
+    __VLS_styleScopedClasses['directional-btn-woman'];
+    __VLS_styleScopedClasses['west-btn'];
+    __VLS_styleScopedClasses['directional-btn-woman'];
+    __VLS_styleScopedClasses['east-btn'];
+    __VLS_styleScopedClasses['directional-btn-woman'];
+    __VLS_styleScopedClasses['south-btn'];
+    __VLS_styleScopedClasses['directional-buttons-kid'];
+    __VLS_styleScopedClasses['directional-btn-kid'];
+    __VLS_styleScopedClasses['north-btn'];
+    __VLS_styleScopedClasses['horizontal-buttons-kid'];
+    __VLS_styleScopedClasses['directional-btn-kid'];
+    __VLS_styleScopedClasses['west-btn'];
+    __VLS_styleScopedClasses['directional-btn-kid'];
+    __VLS_styleScopedClasses['east-btn'];
+    __VLS_styleScopedClasses['directional-btn-kid'];
     __VLS_styleScopedClasses['south-btn'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
@@ -837,6 +971,16 @@ const __VLS_self = (await import('vue')).defineComponent({
             startWalkingWest: startWalkingWest,
             startWalkingEast: startWalkingEast,
             stopWalking: stopWalking,
+            startMovingWomanNorth: startMovingWomanNorth,
+            startMovingWomanSouth: startMovingWomanSouth,
+            startMovingWomanWest: startMovingWomanWest,
+            startMovingWomanEast: startMovingWomanEast,
+            stopMovingWoman: stopMovingWoman,
+            startMovingKidNorth: startMovingKidNorth,
+            startMovingKidSouth: startMovingKidSouth,
+            startMovingKidWest: startMovingKidWest,
+            startMovingKidEast: startMovingKidEast,
+            stopMovingKid: stopMovingKid,
         };
     },
     props: {
