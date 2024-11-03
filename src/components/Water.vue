@@ -10,21 +10,34 @@
     </div>
     <div class="directional-buttons">
       <button id="move-north" class="directional-btn north-btn" @mousedown="startWalkingNorth" @mouseup="stopWalking">UP</button>
-      
       <div class="horizontal-buttons">
         <button id="move-west" class="directional-btn west-btn" @mousedown="startWalkingWest" @mouseup="stopWalking">LEFT</button>
         <button id="move-east" class="directional-btn east-btn" @mousedown="startWalkingEast" @mouseup="stopWalking">RIGHT</button>
       </div>
-      
       <button id="move-south" class="directional-btn south-btn" @mousedown="startWalkingSouth" @mouseup="stopWalking">DOWN</button>
   </div>
+  <div class="directional-buttons-woman">
+    <button class="directional-btn-woman north-btn" @mousedown="startMovingWomanNorth" @mouseup="stopMovingWoman">UP</button>
+    <div class="horizontal-buttons-woman">
+        <button class="directional-btn-woman west-btn" @mousedown="startMovingWomanWest" @mouseup="stopMovingWoman">LEFT</button>
+        <button class="directional-btn-woman east-btn" @mousedown="startMovingWomanEast" @mouseup="stopMovingWoman">RIGHT</button>
+    </div>
+    <button class="directional-btn-woman south-btn" @mousedown="startMovingWomanSouth" @mouseup="stopMovingWoman">DOWN</button>
+</div>
+<div class="directional-buttons-kid">
+    <button class="directional-btn-kid north-btn" @mousedown="startMovingKidNorth" @mouseup="stopMovingKid">UP</button>
+    <div class="horizontal-buttons-kid">
+        <button class="directional-btn-kid west-btn" @mousedown="startMovingKidWest" @mouseup="stopMovingKid">LEFT</button>
+        <button class="directional-btn-kid east-btn" @mousedown="startMovingKidEast" @mouseup="stopMovingKid">RIGHT</button>
+    </div>
+    <button class="directional-btn-kid south-btn" @mousedown="startMovingKidSouth" @mouseup="stopMovingKid">DOWN</button>
+</div>
 </template>
 
     <script setup lang="ts">
     import { ref, onMounted, watch, shallowRef } from 'vue';
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-    import { TTFLoader } from 'three/examples/jsm/loaders/TTFLoader.js';
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
     const props = defineProps({
@@ -48,12 +61,26 @@
         let isRotatingDown = ref(false);  // Flag for down rotation
 
         const humanWithPantsAndSwimCap = shallowRef<THREE.Group | null>(null);
-        const bearGroup = new THREE.Group();
         const walkingNorth = ref(false);
         const walkingSouth = ref(false);
         const walkingWest = ref(false);
         const walkingEast = ref(false);
         const walkSpeed = 0.05;
+
+        const womenSittingOnBeach = shallowRef<THREE.Group | null>(null);
+        const swimmingChildWithAdjustedPose = shallowRef<THREE.Group | null>(null);
+
+        const movingNorth = ref(false);
+        const movingSouth = ref(false);
+        const movingWest = ref(false);
+        const movingEast = ref(false);
+        const moveSpeed = 0.02;
+
+        const movingNorthKid = ref(false);
+        const movingSouthKid = ref(false);
+        const movingWestKid = ref(false);
+        const movingEastKid = ref(false);
+        const moveSpeedKid = 0.08;
 
         // Initialize renderer and scene
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -676,8 +703,12 @@
     return humanGroup;
 }
 
-const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
-bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
+// const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
+// bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
+
+womenSittingOnBeach.value = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
+bearGroup.add(womenSittingOnBeach.value);
+
 
 function createSwimmingChildWithAdjustedPose() {
     const humanGroup = new THREE.Group();
@@ -767,11 +798,15 @@ function animateSwimmingChild(swimmingChildWithAdjustedPose: any) {
     animate();
 }
 
-const swimmingChildWithAdjustedPose = createSwimmingChildWithAdjustedPose();
-bearGroup.add(swimmingChildWithAdjustedPose);
+// const swimmingChildWithAdjustedPose = createSwimmingChildWithAdjustedPose();
+// bearGroup.add(swimmingChildWithAdjustedPose);
+// animateSwimmingChild(swimmingChildWithAdjustedPose);
 
-animateSwimmingChild(swimmingChildWithAdjustedPose);
+swimmingChildWithAdjustedPose.value = createSwimmingChildWithAdjustedPose();
+bearGroup.add(swimmingChildWithAdjustedPose.value);
 
+// Start the animation for floating movement
+animateSwimmingChild(swimmingChildWithAdjustedPose.value);
 
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -898,6 +933,33 @@ animateSwimmingChild(swimmingChildWithAdjustedPose);
       walkingEast.value = false;
     };
 
+    const startMovingWomanNorth = () => {
+      movingNorth.value = true;
+      if (womenSittingOnBeach.value) womenSittingOnBeach.value.rotation.y = Math.PI;
+    };
+
+    const startMovingWomanSouth = () => {
+      movingSouth.value = true;
+      if (womenSittingOnBeach.value) womenSittingOnBeach.value.rotation.y = 0;
+    };
+
+    const startMovingWomanWest = () => {
+      movingWest.value = true;
+      if (womenSittingOnBeach.value) womenSittingOnBeach.value.rotation.y = - Math.PI / 2;
+    };
+
+    const startMovingWomanEast = () => {
+      movingEast.value = true;
+      if (womenSittingOnBeach.value) womenSittingOnBeach.value.rotation.y = Math.PI / 2;
+    };
+
+    const stopMovingWoman = () => {
+      movingNorth.value = false;
+      movingSouth.value = false;
+      movingWest.value = false;
+      movingEast.value = false;
+    };
+
     // Animation loop for continuous movement
     const animateCharacter = () => {
       requestAnimationFrame(animateCharacter);
@@ -912,7 +974,62 @@ animateSwimmingChild(swimmingChildWithAdjustedPose);
       renderer.render(scene, camera);
     };
 
+    const animateWoman = () => {
+      requestAnimationFrame(animateWoman);
+
+      if (womenSittingOnBeach.value) {
+        if (movingNorth.value) womenSittingOnBeach.value.position.z -= moveSpeed;
+        if (movingSouth.value) womenSittingOnBeach.value.position.z += moveSpeed;
+        if (movingWest.value) womenSittingOnBeach.value.position.x -= moveSpeed;
+        if (movingEast.value) womenSittingOnBeach.value.position.x += moveSpeed;
+      }
+    };
+
+    animateWoman(); 
+
     animateCharacter();
+
+    const startMovingKidNorth = () => {
+      movingNorthKid.value = true;
+      if (swimmingChildWithAdjustedPose.value) swimmingChildWithAdjustedPose.value.rotation.y = 0;
+    };
+
+    const startMovingKidSouth = () => {
+      movingSouthKid.value = true;
+      if (swimmingChildWithAdjustedPose.value) swimmingChildWithAdjustedPose.value.rotation.y = Math.PI;
+    };
+
+    const startMovingKidWest = () => {
+      movingWestKid.value = true;
+      if (swimmingChildWithAdjustedPose.value) swimmingChildWithAdjustedPose.value.rotation.y = Math.PI / 2;
+    };
+
+    const startMovingKidEast = () => {
+      movingEastKid.value = true;
+      if (swimmingChildWithAdjustedPose.value) swimmingChildWithAdjustedPose.value.rotation.y = -Math.PI / 2;
+    };
+
+    const stopMovingKid = () => {
+      movingNorthKid.value = false;
+      movingSouthKid.value = false;
+      movingWestKid.value = false;
+      movingEastKid.value = false;
+    };
+
+    // Animation loop for continuous movement
+    const animateSwimmingKid = () => {
+      requestAnimationFrame(animateSwimmingKid);
+  
+
+      if (swimmingChildWithAdjustedPose.value) {
+        if (movingNorthKid.value) swimmingChildWithAdjustedPose.value.position.z -= moveSpeedKid;
+        if (movingSouthKid.value) swimmingChildWithAdjustedPose.value.position.z += moveSpeedKid;
+        if (movingWestKid.value) swimmingChildWithAdjustedPose.value.position.x -= moveSpeedKid;
+        if (movingEastKid.value) swimmingChildWithAdjustedPose.value.position.x += moveSpeedKid;
+      }
+    };
+
+    animateSwimmingKid();
     </script>
 
 <style scoped>
@@ -1015,5 +1132,93 @@ animateSwimmingChild(swimmingChildWithAdjustedPose);
 .east-btn {
   background-color: #ff6347; /* Tomato */
 }
+
+.directional-buttons-woman {
+    position: absolute;
+    bottom: 100px;
+    right: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transform: translateX(-620%) translateY(-180%);
+}
+
+.horizontal-buttons-woman {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.directional-btn-woman {
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #FFB6C1; /* Light Pink */
+    color: #4B0082; /* Indigo text for contrast */
+    padding: 12px 18px;
+    border: 3px solid #FF69B4; /* Hot Pink border */
+    box-shadow: 2px 2px 0 #FF69B4, 4px 4px 0 #FFB6C1; /* Soft shadow */
+    text-transform: uppercase;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.directional-btn-woman:hover {
+    background-color: #FF69B4; /* Hot Pink on hover */
+    color: #FFFFFF;
+    transform: translate(-2px, -2px);
+    box-shadow: 1px 1px 0 #FF69B4, 3px 3px 0 #FFB6C1;
+}
+
+.directional-btn-woman:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #FF69B4, 2px 2px 0 #FFB6C1;
+}
+
+.directional-buttons-kid {
+    position: absolute;
+    top: 100px;
+    right: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.horizontal-buttons-kid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.directional-btn-kid {
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #87CEFA; /* Light Sky Blue */
+    color: #2F4F4F; /* Dark Slate Gray text for contrast */
+    padding: 12px 18px;
+    border: 3px solid #4682B4; /* Steel Blue border */
+    box-shadow: 2px 2px 0 #4682B4, 4px 4px 0 #87CEFA; /* Light shadow for water effect */
+    text-transform: uppercase;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.directional-btn-kid:hover {
+    background-color: #4682B4; /* Steel Blue on hover */
+    color: #FFFFFF;
+    transform: translate(-2px, -2px);
+    box-shadow: 1px 1px 0 #4682B4, 3px 3px 0 #87CEFA;
+}
+
+.directional-btn-kid:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #4682B4, 2px 2px 0 #87CEFA;
+}
+
 
 </style>
