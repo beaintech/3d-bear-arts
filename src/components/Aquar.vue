@@ -1031,6 +1031,67 @@ halfSphereGroup.add(shimmerSurface);
     box-shadow: 1px 1px 0 #20B2AA, 2px 2px 0 #4682B4;
 }
 
+.three-canvas {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle, #FFFFFF 20%, #87CEFA 60%, #1E90FF 90%);
+    background-image: 
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 50%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 50%),
+        radial-gradient(circle at center, rgba(173, 216, 230, 0.5), rgba(173, 216, 230, 0) 70%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Snowflake animations */
+@keyframes snowflakes {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    left: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    background: white;
+    opacity: 0.8;
+    border-radius: 50%;
+    box-shadow: 0px 0px 4px rgba(255, 255, 255, 0.9);
+    animation: snowflakes 10s linear infinite;
+    pointer-events: none;
+}
+
+/* Custom styles for pixel buttons to fit winter theme */
+.pixel-btn {
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 14px;
+    background-color: #3C5F8A; /* Winter Steel Blue */
+    color: white;
+    padding: 15px;
+    border: 4px solid #E0FFFF; /* Light Cyan border */
+    box-shadow: 3px 3px 0 #E0FFFF, 6px 6px 0 #3C5F8A; /* Winter shadow */
+    text-transform: uppercase;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+    border-radius: 10px; /* Rounded corners */
+}
+
+.pixel-btn:hover {
+    background-color: #B0E0E6; /* Powder Blue on hover */
+    color: #FFFFFF;
+    transform: translate(-3px, -3px);
+}
+
+.pixel-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 #B0E0E6, 2px 2px 0 #3C5F8A;
+}
+
+
 /* panel to control the man */
 .directional-buttons {
   position: absolute;
