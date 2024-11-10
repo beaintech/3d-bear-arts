@@ -10,6 +10,7 @@
       <router-link to="/3d-bear-arts/">Water</router-link>
       <router-link to="/3d-bear-arts/ghost-bear">ghost</router-link>
       <router-link to="/3d-bear-arts/white-ghost-bear">white ghost</router-link>
+      <router-link to="/3d-bear-arts/aquar">Aquar</router-link>
 
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>
