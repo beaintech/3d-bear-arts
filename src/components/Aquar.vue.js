@@ -82,67 +82,69 @@ onMounted(() => {
         sunTexture.wrapS = sunTexture.wrapT = THREE.RepeatWrapping;
         // sunTexture.repeat.set(2, 2); // Adjust this to scale the texture on the mode
         const bodyMainMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Hot pink as the base
-            map: beachTexture, // Apply the abstract or halftone texture
-            metalness: 0.2, // Lower metalness for less reflective look
-            roughness: 0.7, // Increase roughness for a more matte finish
-            clearcoat: 0.05, // Lower clearcoat to reduce gloss
-            clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
-        });
-        const bodyTransparentBeachMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF,
-            map: beachTexture,
-            metalness: 0.3, // Slight metalness for a subtle shine
-            roughness: 0.5, // Some roughness to reduce reflection
+            color: 0xB0E2FF, // Light blue tint for the glass effect
+            metalness: 0.05, // Low metalness for subtle reflections
+            roughness: 0.1, // Low roughness for a smooth surface
+            clearcoat: 1.0, // High clearcoat for glossiness
+            clearcoatRoughness: 0.1, // Slight clearcoat roughness
+            transmission: 0.9, // High transmission for transparency
+            ior: 1.5, // Refractive index for glass
+            opacity: 0.85, // Slight opacity to maintain glass appearance
             transparent: true,
-            opacity: 0.6,
+            envMapIntensity: 1.0, // Environmental reflections for glass
+        });
+        const bodyTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xB0E2FF, // Light blue color for a subtle tint
+            metalness: 0.05, // Low metalness for subtle reflection
+            roughness: 0.1, // Smooth surface for glassy effect
+            transparent: true,
+            opacity: 0.5, // Medium transparency for glass
+            transmission: 0.95, // High transmission for clarity
+            ior: 1.5, // Refractive index for realistic glass
+            depthWrite: false, // Disable depth write to prevent occlusion
+            depthTest: true, // Depth testing for transparent layering
             side: THREE.DoubleSide,
-            ior: 1.33, // Close to water for refractive effect
-            depthWrite: false, // Prevents overwriting depth information
-            depthTest: true, // Allows depth testing for consistent layering
         });
-        const rightBeachMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Soft blue tint
-            map: beachTexture, // Beach texture for subtle depth
-            metalness: 0.1, // Low metalness to avoid a metallic shine
-            roughness: 0.6, // Higher roughness for softer reflections
+        const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF, // Clear white tint for glass effect
+            metalness: 0.05, // Low metalness for subtle reflection
+            roughness: 0.05, // Smooth surface for glassy appearance
             transparent: true,
-            opacity: 0.6, // Slight opacity for a glassy effect
-            clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
-            clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
-            transmission: 0.7, // Moderate transmission for subtle transparency
-            ior: 1.2, // Slightly lower than water to reduce refraction intensity
-            depthTest: true, // Enables depth testing for consistent layering
-            envMapIntensity: 0.8, // Reduced environment map intensity for softer look
+            opacity: 0.7, // Slight opacity for glass effect
+            clearcoat: 1.0, // Full clearcoat for glossiness
+            clearcoatRoughness: 0.2, // Smooth gloss
+            transmission: 0.9, // High transmission for glass-like clarity
+            ior: 1.5, // Glass refractive index
+            envMapIntensity: 1.0, // Environmental reflections for glass realism
+            depthTest: true,
         });
-        const rightBodyTransparentBeachMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Soft blue tint
-            map: beachTexture, // Beach texture for subtle depth
-            metalness: 0.1, // Low metalness to avoid a metallic shine
-            roughness: 0.6, // Higher roughness for softer reflections
+        const rightBodyTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF, // Clear white tint for glass
+            metalness: 0.05, // Low metalness for subtle shine
+            roughness: 0.05, // Smooth surface for glass effect
             transparent: true,
-            opacity: 0.3, // Slight opacity for a glassy effect
-            clearcoat: 0.9, // Higher clearcoat for a glossy surface layer
-            clearcoatRoughness: 0.4, // Rougher clearcoat for a softer shine
-            ior: 1.2, // Slightly lower than water to reduce refraction intensity
-            depthWrite: false,
-            depthTest: true, // Enables depth testing for consistent layering
-            envMapIntensity: 0.6, // Reduced environment map intensity for softer look
+            opacity: 0.3, // Higher transparency for a clear glass look
+            transmission: 0.95, // High transmission for glass clarity
+            ior: 1.5, // Refractive index for glass effect
+            depthWrite: false, // Depth write off for transparent layering
+            depthTest: true,
+            envMapIntensity: 0.8, // Reduced environmental reflection for softer look
             side: THREE.DoubleSide,
         });
         const leftBeachMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF,
-            map: beachTexture,
-            metalness: 0.3, // Slight metalness for a subtle shine
-            roughness: 0.5, // Some roughness to reduce reflection
+            color: 0xFFFFFF, // Clear white tint for glass effect
+            metalness: 0.05, // Low metalness for glassy reflection
+            roughness: 0.1, // Smooth surface for glass
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.6, // Moderate transparency for glass effect
+            transmission: 0.9, // High transmission for glass clarity
+            ior: 1.5, // Glass-like refraction index
+            depthWrite: true,
+            envMapIntensity: 1.0, // Higher reflection for glass realism
             side: THREE.DoubleSide,
-            ior: 1.33, // Close to water for refractive effect
         });
         const leftLegtMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Hot pink as the base
-            map: beachTexture, // Apply the abstract or halftone texture
+            color: 0xFFFFFF, // Hot pink as the base
             metalness: 0.2, // Lower metalness for less reflective look
             roughness: 0.7, // Increase roughness for a more matte finish
             clearcoat: 0.05, // Lower clearcoat to reduce gloss
@@ -155,8 +157,8 @@ onMounted(() => {
         0, // phiStart
         Math.PI // phiLength (half of the sphere)
         );
-        const rightBody = new THREE.Mesh(bodyGeometry, rightBodyTransparentBeachMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, bodyTransparentBeachMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, rightBodyTransparentSnowMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, leftBeachMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -186,12 +188,12 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, bodyMainMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, leftBeachMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, rightBeachMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, rightSnowMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
@@ -224,87 +226,80 @@ onMounted(() => {
             reflectivity: 0.8,
             envMapIntensity: 1.0,
         });
-        // Create the water mesh using the bottom-half sphere geometry
-        const waterMesh = new THREE.Mesh(waterHalfSphereGeometry, waterMaterial);
-        waterMesh.position.set(0, -0.2, 0); // Align with body position
-        waterMesh.rotation.x = Math.PI; // Face upwards
-        waterMesh.scale.set(1.25, 1.25, 1.25);
-        // Add water mesh to halfSphereGroup
-        halfSphereGroup.add(waterMesh);
-        const waterCircleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x00BFFF, // Slightly light color to match water
-            metalness: 0.1,
-            roughness: 0.5,
-            clearcoat: 0.7,
-            clearcoatRoughness: 0.25,
-            side: THREE.DoubleSide, // Render both sides
-            transparent: true,
-            opacity: 0.7,
-            depthWrite: false, // Prevents it from being overwritten
+        // Create the snow mesh using the bottom-half sphere geometry
+        const snowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff, // Pure white for snow color
+            metalness: 0.1, // Low metalness for a slight shimmer
+            roughness: 0.9, // High roughness for a frosty appearance
+            clearcoat: 0.5, // Clearcoat for a subtle reflective layer
+            clearcoatRoughness: 0.7, // Rougher clearcoat for a diffuse reflection
         });
-        const waterCircle = new THREE.Mesh(circleGeometry, waterCircleMaterial);
-        waterCircle.scale.set(.7, .7, .7);
-        waterCircle.position.set(0, -0.3, 0);
-        waterCircle.rotation.x = Math.PI / 2;
-        waterCircle.renderOrder = 1; // Ensures it renders on top
+        const snowMesh = new THREE.Mesh(waterHalfSphereGeometry, snowMaterial);
+        snowMesh.position.set(0, -0.2, 0); // Align with body position
+        snowMesh.rotation.x = Math.PI; // Face upwards
+        snowMesh.scale.set(1.25, 1.25, 1.25);
+        // Add snow mesh to halfSphereGroup
+        halfSphereGroup.add(snowMesh);
+        // Snow Circle (top layer to cover the flat surface)
+        const snowCircleMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff, // Pure white color
+            metalness: 0.1, // Slight shimmer
+            roughness: 0.9, // High roughness for a powdery snow look
+            clearcoat: 0.6, // Adds slight glossiness on the surface
+            clearcoatRoughness: 0.8, // Slightly rough gloss for snow
+            side: THREE.DoubleSide,
+            transparent: false,
+        });
+        const snowCircle = new THREE.Mesh(circleGeometry, snowCircleMaterial);
+        snowCircle.scale.set(0.7, 0.7, 0.7);
+        snowCircle.position.set(0, -0.3, 0);
+        snowCircle.rotation.x = Math.PI / 2;
+        snowCircle.renderOrder = 1; // Ensures it renders on top
         // Add to the bear group
-        halfSphereGroup.add(waterCircle);
+        halfSphereGroup.add(snowCircle);
         // Combine and add to bearGroup
         bearGroup.add(halfSphereGroup);
-        const waterSurfaceMaterial = new THREE.ShaderMaterial({
+        // Optional: Slight shimmer on the surface to simulate sparkling snowflakes
+        const shimmerMaterial = new THREE.ShaderMaterial({
             transparent: true,
-            depthWrite: false,
-            depthTest: true,
             uniforms: {
                 u_time: { value: 0.0 },
-                u_waveFrequency: { value: 8.0 },
-                u_waveAmplitude: { value: 0.05 },
-                u_waveSpeed: { value: 0.2 },
             },
             vertexShader: `
-                precision mediump float;
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    vec3 pos = position;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                }
-            `,
+        precision mediump float;
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            vec3 pos = position;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        }
+    `,
             fragmentShader: `
-                precision mediump float;
-                uniform float u_time;
-                uniform float u_waveFrequency;
-                uniform float u_waveAmplitude;
-                uniform float u_waveSpeed;
-                varying vec2 vUv;
+        precision mediump float;
+        uniform float u_time;
+        varying vec2 vUv;
 
-                void main() {
-                    float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
-                    float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
-
-                    // Adjusted colors for higher contrast
-                    vec3 baseColor = vec3(0.3, 0.4, 0.5); // Dark base
-                    vec3 waveColor = vec3(0.7, 0.9, 1.0);  // Brighter aqua
-
-                    vec3 color = mix(baseColor, waveColor, 0.5 + (waveX + waveY) * 1.5); 
-                    gl_FragColor = vec4(color, 0.85); // Adjust opacity for visibility
-                }
-            `,
+        void main() {
+            float shimmer = sin(u_time * 5.0 + vUv.x * 10.0) * 0.1;
+            vec3 color = vec3(1.0) * (0.9 + shimmer); // Bright white with subtle shimmer
+            gl_FragColor = vec4(color, 0.8); // Slight transparency for a soft overlay
+        }
+    `,
         });
-        // Water Surface Mesh
-        const waterSurface = new THREE.Mesh(circleGeometry, waterSurfaceMaterial);
-        waterSurface.position.set(0, -0.3, 0); // Center position
-        waterSurface.scale.set(.7, .7, .7);
-        waterSurface.rotation.x = -Math.PI / 2; // Face the camera
-        waterSurface.renderOrder = 1; // Ensure it renders on top
-        // Add water surface to half sphere group
-        halfSphereGroup.add(waterSurface);
+        // Shimmering surface to add a soft snow sparkle effect
+        const shimmerSurface = new THREE.Mesh(circleGeometry, shimmerMaterial);
+        shimmerSurface.position.set(0, -0.2, 0); // Center position
+        shimmerSurface.scale.set(0.7, 0.7, 0.7);
+        shimmerSurface.rotation.x = -Math.PI / 2; // Face the camera
+        shimmerSurface.renderOrder = 2; // Render on top of snow circle
+        // Add shimmer surface to half sphere group
+        halfSphereGroup.add(shimmerSurface);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
         const leftEar = new THREE.Mesh(earGeometry, leftBeachMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, rightBeachMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, rightSnowMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -325,13 +320,13 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, rightBeachMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, rightSnowMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, bodyTransparentBeachMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, bodyTransparentSnowMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -369,11 +364,11 @@ onMounted(() => {
         bearGroup.add(heart);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, bodyTransparentBeachMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, leftBeachMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, rightBodyTransparentBeachMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, rightBodyTransparentSnowMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
@@ -382,7 +377,7 @@ onMounted(() => {
         const leftLeg = new THREE.Mesh(legGeometry, leftBeachMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, rightBeachMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, rightSnowMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
@@ -393,7 +388,7 @@ onMounted(() => {
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, rightBeachMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, rightSnowMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
@@ -436,202 +431,184 @@ onMounted(() => {
             bearGroup.add(oEye);
         });
         // the end of the bear body
-        function createHumanWithSwimmingPantsAndSwimCap() {
-            const humanGroup = new THREE.Group();
-            const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+        function createCat() {
+            const catGroup = new THREE.Group();
+            // Head and Ears
+            const headGeometry = new THREE.SphereGeometry(0.15, 32, 32);
+            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
             const headMesh = new THREE.Mesh(headGeometry, headMaterial);
-            headMesh.position.set(0, 1.5, 0);
-            humanGroup.add(headMesh);
-            const capGeometry = new THREE.SphereGeometry(0.21, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
-            const capMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-            const capMesh = new THREE.Mesh(capGeometry, capMaterial);
-            capMesh.position.set(0, 1.58, 0);
-            humanGroup.add(capMesh);
-            const torsoGeometry = new THREE.CylinderGeometry(0.25, 0.25, 0.6, 32);
-            const torsoMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
-            torsoMesh.position.set(0, 1.0, 0);
-            humanGroup.add(torsoMesh);
-            const pantsGeometry = new THREE.CylinderGeometry(0.26, 0.26, 0.3, 32);
-            const pantsMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff });
-            const pantsMesh = new THREE.Mesh(pantsGeometry, pantsMaterial);
-            pantsMesh.position.set(0, 0.65, 0);
-            humanGroup.add(pantsMesh);
-            const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
-            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+            headMesh.position.set(0, 0.4, 0);
+            catGroup.add(headMesh);
+            const earGeometry = new THREE.ConeGeometry(0.08, 0.15, 32);
+            const earMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
+            const leftEar = new THREE.Mesh(earGeometry, earMaterial);
+            leftEar.position.set(-0.1, 0.55, 0);
+            leftEar.rotation.z = Math.PI / 6;
+            catGroup.add(leftEar);
+            const rightEar = new THREE.Mesh(earGeometry, earMaterial);
+            rightEar.position.set(0.1, 0.55, 0);
+            rightEar.rotation.z = -Math.PI / 6;
+            catGroup.add(rightEar);
+            // Body
+            const bodyGeometry = new THREE.CylinderGeometry(0.12, 0.15, 0.3, 32);
+            const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
+            const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            bodyMesh.position.set(0, 0.2, 0);
+            catGroup.add(bodyMesh);
+            // Legs
+            const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.2, 32);
+            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
             const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
-            leftLeg.position.set(-0.15, 0.25, 0);
-            humanGroup.add(leftLeg);
+            leftLeg.position.set(-0.07, -0.05, 0.05);
+            catGroup.add(leftLeg);
             const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
-            rightLeg.position.set(0.15, 0.25, 0);
-            humanGroup.add(rightLeg);
-            const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.5, 32);
-            const leftArm = new THREE.Mesh(armGeometry, legMaterial);
-            leftArm.position.set(-0.35, 1.3, 0);
+            rightLeg.position.set(0.07, -0.05, 0.05);
+            catGroup.add(rightLeg);
+            // Arms
+            const armGeometry = new THREE.CylinderGeometry(0.04, 0.04, 0.2, 32);
+            const armMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
+            const leftArm = new THREE.Mesh(armGeometry, leftBeachMaterial);
+            leftArm.position.set(-0.15, 0.25, 0);
             leftArm.rotation.z = Math.PI / 4;
-            humanGroup.add(leftArm);
-            const rightArm = new THREE.Mesh(armGeometry, legMaterial);
-            rightArm.position.set(0.35, 1.3, 0);
+            catGroup.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+            rightArm.position.set(0.15, 0.25, 0);
             rightArm.rotation.z = -Math.PI / 4;
-            humanGroup.add(rightArm);
-            humanGroup.scale.set(0.27, 0.27, 0.27);
-            humanGroup.position.set(-0.2, -0.1, -0.15);
-            // humanGroup.position.set(0.2, -0.05, -0.47);
-            return humanGroup;
+            catGroup.add(rightArm);
+            // Tail
+            const tailGeometry = new THREE.CylinderGeometry(0.03, 0.03, 0.25, 32);
+            const tailMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
+            const tailMesh = new THREE.Mesh(tailGeometry, tailMaterial);
+            tailMesh.position.set(0, 0.1, -0.2);
+            tailMesh.rotation.x = Math.PI / 4;
+            catGroup.add(tailMesh);
+            // Scale and position the cat within the bear
+            catGroup.scale.set(0.75, 0.75, 0.75);
+            catGroup.position.set(0.2, 0, 0.2);
+            return catGroup;
         }
-        // const humanWithPantsAndSwimCap = createHumanWithSwimmingPantsAndSwimCap();
-        // bearGroup.add(humanWithPantsAndSwimCap);
-        humanWithPantsAndSwimCap.value = createHumanWithSwimmingPantsAndSwimCap();
-        bearGroup.add(humanWithPantsAndSwimCap.value);
-        scene.add(bearGroup);
-        function createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini() {
-            const humanGroup = new THREE.Group();
-            const headGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            const headMesh = new THREE.Mesh(headGeometry, headMaterial);
-            headMesh.position.set(0, 1.2, 0.04);
-            humanGroup.add(headMesh);
-            const hairTopGeometry = new THREE.SphereGeometry(0.19, 32, 32, 0.4, Math.PI * 2, 0, Math.PI / 2);
-            const hairBackGeometry = new THREE.CylinderGeometry(0.18, 0.18, 0.4, 32);
-            const hairMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-            const hairTopMesh = new THREE.Mesh(hairTopGeometry, hairMaterial);
-            hairTopMesh.position.set(0, 1.28, 0);
-            humanGroup.add(hairTopMesh);
-            const hairBackMesh = new THREE.Mesh(hairBackGeometry, hairMaterial);
-            hairBackMesh.position.set(0, 1.1, -0.01);
-            humanGroup.add(hairBackMesh);
-            const torsoGeometry = new THREE.CylinderGeometry(0.18, 0.2, 0.5, 32);
-            const torsoMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
-            torsoMesh.position.set(0, 0.85, 0);
-            humanGroup.add(torsoMesh);
-            const bikiniTopGeometry = new THREE.SphereGeometry(0.08, 32, 32, 0, Math.PI);
-            const bikiniTopMaterial = new THREE.MeshStandardMaterial({ color: 0xff69b4 });
-            const leftBikiniTop = new THREE.Mesh(bikiniTopGeometry, bikiniTopMaterial);
-            leftBikiniTop.position.set(-0.09, 0.98, 0.15);
-            humanGroup.add(leftBikiniTop);
-            const rightBikiniTop = new THREE.Mesh(bikiniTopGeometry, bikiniTopMaterial);
-            rightBikiniTop.position.set(0.09, 0.98, 0.15);
-            humanGroup.add(rightBikiniTop);
-            const bottomsGeometry = new THREE.CylinderGeometry(0.22, 0.22, 0.25, 32);
-            const bottomsMaterial = new THREE.MeshStandardMaterial({ color: 0xff69b4 });
-            const bottomsMesh = new THREE.Mesh(bottomsGeometry, bottomsMaterial);
-            bottomsMesh.position.set(0, 0.6, 0);
-            humanGroup.add(bottomsMesh);
-            const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.6, 32);
-            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
-            leftLeg.position.set(-0.09, 0.5, 0.2);
-            leftLeg.rotation.x = Math.PI / 2;
-            humanGroup.add(leftLeg);
-            const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
-            rightLeg.position.set(0.09, 0.5, 0.2);
-            rightLeg.rotation.x = Math.PI / 2;
-            humanGroup.add(rightLeg);
-            // const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
-            // leftLeg.position.set(-0.09, 0.5, -0.2); 
-            // leftLeg.rotation.x = Math.PI / 2; 
-            // humanGroup.add(leftLeg);
-            // const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
-            // rightLeg.position.set(0.09, 0.5, -0.2); 
-            // rightLeg.rotation.x = Math.PI / 2; 
-            // humanGroup.add(rightLeg);
-            const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.35, 32);
-            const leftArm = new THREE.Mesh(armGeometry, legMaterial);
-            leftArm.position.set(-0.24, 0.95, 0.18);
-            leftArm.rotation.x = Math.PI / 2;
-            humanGroup.add(leftArm);
-            const rightArm = new THREE.Mesh(armGeometry, legMaterial);
-            rightArm.position.set(0.2, 0.85, 0);
-            rightArm.rotation.z = Math.PI / 20;
-            humanGroup.add(rightArm);
-            humanGroup.scale.set(0.27, 0.27, 0.27);
-            humanGroup.position.set(0.2, -0.15, -0.32);
-            // humanGroup.rotation.y = Math.PI;
-            return humanGroup;
-        }
-        // const seatedWomanWithFullerBodyAndAdjustedBikini = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
-        // bearGroup.add(seatedWomanWithFullerBodyAndAdjustedBikini);
-        womenSittingOnBeach.value = createSeatedWomanOnBeachWithFullerBodyAndAdjustedBikini();
-        bearGroup.add(womenSittingOnBeach.value);
-        function createSwimmingChildWithAdjustedPose() {
-            const humanGroup = new THREE.Group();
+        const catGroup = createCat();
+        // bearGroup.add(catGroup);
+        function createSanta() {
+            const santaGroup = new THREE.Group();
+            // Head and Face
             const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+            const headMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
             const headMesh = new THREE.Mesh(headGeometry, headMaterial);
-            headMesh.position.set(0, 1.5, 0);
-            humanGroup.add(headMesh);
-            const capGeometry = new THREE.SphereGeometry(0.21, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
-            const capMaterial = new THREE.MeshStandardMaterial({ color: 0x006400 });
-            const capMesh = new THREE.Mesh(capGeometry, capMaterial);
-            capMesh.position.set(0, 1.58, 0);
-            humanGroup.add(capMesh);
-            const torsoGeometry = new THREE.CylinderGeometry(0.22, 0.22, 0.5, 32);
-            const torsoMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            const torsoMesh = new THREE.Mesh(torsoGeometry, torsoMaterial);
-            torsoMesh.position.set(0, 1.0, 0);
-            humanGroup.add(torsoMesh);
-            const pantsGeometry = new THREE.CylinderGeometry(0.23, 0.23, 0.3, 32);
-            const pantsMaterial = new THREE.MeshStandardMaterial({ color: 0x800080 });
-            const pantsMesh = new THREE.Mesh(pantsGeometry, pantsMaterial);
-            pantsMesh.position.set(0, 0.65, 0);
-            humanGroup.add(pantsMesh);
-            const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
-            const legMaterial = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-            const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
-            leftLeg.position.set(-0.15, 0.3, -0.25); // Move left leg further back
-            leftLeg.rotation.x = Math.PI / 6; // Angle for swimming motion
-            humanGroup.add(leftLeg);
-            const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
-            rightLeg.position.set(0.15, 0.3, 0.25); // Move right leg further forward
-            rightLeg.rotation.x = -Math.PI / 6; // Opposite angle
-            humanGroup.add(rightLeg);
-            const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.4, 32);
-            const leftArm = new THREE.Mesh(armGeometry, legMaterial);
-            leftArm.position.set(-0.28, 1, -0.2); // Adjusted position for raised arm
-            leftArm.rotation.x = Math.PI / 6; // Rotate slightly forward
-            humanGroup.add(leftArm);
-            const rightArm = new THREE.Mesh(armGeometry, legMaterial);
-            rightArm.position.set(0.28, 1.3, 0.1); // Position for downward arm
-            rightArm.rotation.z = -Math.PI / 8; // Slightly downward angle
-            humanGroup.add(rightArm);
-            humanGroup.scale.set(.15, .15, .15);
-            humanGroup.position.set(0.3, -0.25, 0.25);
-            humanGroup.rotation.x = Math.PI / 12; // Rotate to face downward
-            humanGroup.rotation.y = Math.PI / 2; // Rotate to show side to the camere
-            humanGroup.rotation.z = -Math.PI / 3; // Rotate to show side to the camere
-            return humanGroup;
-        }
-        function animateSwimmingChild(swimmingChildWithAdjustedPose) {
-            let direction = 1; // 1 for moving right, -1 for moving left
-            let floatOffset = 0; // Offset for floating effect
-            function animate() {
-                requestAnimationFrame(animate);
-                // Move horizontally between x: -0.3 and x: 0.3
-                swimmingChildWithAdjustedPose.position.x += 0.01 * direction;
-                if (swimmingChildWithAdjustedPose.position.x >= 0.35) {
-                    direction = -1; // Reverse direction when reaching x: 0.3
-                    swimmingChildWithAdjustedPose.rotation.y = Math.PI; // Face left
-                }
-                else if (swimmingChildWithAdjustedPose.position.x <= -0.35) {
-                    direction = 1; // Reverse direction when reaching x: -0.3
-                    swimmingChildWithAdjustedPose.rotation.y = 0; // Face right
-                }
-                // Floating effect (up and down motion)
-                floatOffset += 0.003; // Controls speed of floating
-                swimmingChildWithAdjustedPose.position.y = -0.4 + Math.sin(floatOffset) * 0.1;
-                renderer.render(scene, camera);
+            headMesh.position.set(0, 1, 0);
+            santaGroup.add(headMesh);
+            const beardMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const beardParts = [
+                { x: 0, y: 0.85, z: 0.15, size: 0.12 },
+                { x: -0.1, y: 0.88, z: 0.1, size: 0.1 },
+                { x: 0.1, y: 0.88, z: 0.1, size: 0.1 },
+                { x: -0.15, y: 0.95, z: 0.1, size: 0.08 },
+                { x: 0.15, y: 0.95, z: 0.1, size: 0.08 },
+            ];
+            for (const part of beardParts) {
+                const beardSphere = new THREE.SphereGeometry(part.size, 16, 16);
+                const beardMesh = new THREE.Mesh(beardSphere, beardMaterial);
+                beardMesh.position.set(part.x, part.y - 0.06, part.z - 0.01);
+                santaGroup.add(beardMesh);
             }
-            animate();
+            // Moustache (two small cylinders)
+            const moustacheMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const leftMoustacheGeometry = new THREE.CylinderGeometry(0.05, 0.06, 0.1, 32);
+            const leftMoustache = new THREE.Mesh(leftMoustacheGeometry, moustacheMaterial);
+            leftMoustache.position.set(-0.06, 0.93, 0.18);
+            leftMoustache.rotation.z = Math.PI / 4;
+            // santaGroup.add(leftMoustache);
+            const rightMoustacheGeometry = new THREE.CylinderGeometry(0.05, 0.06, 0.1, 32);
+            const rightMoustache = new THREE.Mesh(rightMoustacheGeometry, moustacheMaterial);
+            rightMoustache.position.set(0.06, 0.93, 0.18);
+            rightMoustache.rotation.z = -Math.PI / 4;
+            // santaGroup.add(rightMoustache);
+            // Hair (White Cap)
+            const hairGeometry = new THREE.TorusGeometry(0.12, 0.05, 16, 100);
+            const hairMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const hairMesh = new THREE.Mesh(hairGeometry, hairMaterial);
+            hairMesh.position.set(0, 1.15, 0);
+            hairMesh.rotation.x = Math.PI / 2;
+            santaGroup.add(hairMesh);
+            // Hat
+            const hatBaseGeometry = new THREE.ConeGeometry(0.15, 0.3, 32);
+            const hatMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
+            hatBase.position.set(0, 1.3, 0);
+            santaGroup.add(hatBase);
+            const hatPomGeometry = new THREE.SphereGeometry(0.05, 32, 32);
+            const hatPomMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const hatPom = new THREE.Mesh(hatPomGeometry, hatPomMaterial);
+            hatPom.position.set(0, 1.43, 0);
+            santaGroup.add(hatPom);
+            // Body (Red Coat)
+            const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.25, 0.6, 32);
+            const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const bodyMesh = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            bodyMesh.position.set(0, 0.5, 0);
+            santaGroup.add(bodyMesh);
+            // Belt
+            const beltGeometry = new THREE.CylinderGeometry(0.25, 0.25, 0.1, 32);
+            const beltMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+            const beltMesh = new THREE.Mesh(beltGeometry, beltMaterial);
+            beltMesh.position.set(0, 0.4, 0.005);
+            santaGroup.add(beltMesh);
+            // Arms
+            const armGeometry = new THREE.CylinderGeometry(0.06, 0.06, 0.3, 32);
+            const armMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const leftArm = new THREE.Mesh(armGeometry, armMaterial);
+            leftArm.position.set(-0.25, 0.75, 0);
+            leftArm.rotation.z = Math.PI / 4;
+            santaGroup.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeometry, armMaterial);
+            rightArm.position.set(0.25, 0.75, 0);
+            rightArm.rotation.z = -Math.PI / 4;
+            santaGroup.add(rightArm);
+            // Hands (white gloves)
+            const handGeometry = new THREE.SphereGeometry(0.07, 32, 32);
+            const handMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const leftHand = new THREE.Mesh(handGeometry, handMaterial);
+            leftHand.position.set(-0.35, 0.85, 0);
+            santaGroup.add(leftHand);
+            const rightHand = new THREE.Mesh(handGeometry, handMaterial);
+            rightHand.position.set(0.35, 0.85, 0);
+            santaGroup.add(rightHand);
+            const bootGeometry = new THREE.CylinderGeometry(.1, 0.1, 0.15, 32);
+            const bootMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            // Legs
+            const legGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.4, 32);
+            const legMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Black boots
+            const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
+            leftLeg.position.set(-0.1, 0.1, 0);
+            santaGroup.add(leftLeg);
+            const leftBoot = new THREE.Mesh(bootGeometry, bootMaterial);
+            leftBoot.position.set(-0.1, -0.05, 0);
+            santaGroup.add(leftBoot);
+            const rightLeg = new THREE.Mesh(legGeometry, legMaterial);
+            rightLeg.position.set(0.1, 0.1, 0);
+            santaGroup.add(rightLeg);
+            const rightBoot = new THREE.Mesh(bootGeometry, bootMaterial);
+            rightBoot.position.set(0.1, -0.05, 0);
+            santaGroup.add(rightBoot);
+            // Position the Santa
+            santaGroup.scale.set(0.4, 0.4, 0.4);
+            santaGroup.position.set(0.2, -0.1, 0);
+            const bootFrontGeometry = new THREE.SphereGeometry(0.12, 32, 32);
+            const bootFrontMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            // Left boot front
+            const leftBootFront = new THREE.Mesh(bootFrontGeometry, bootFrontMaterial);
+            leftBootFront.scale.set(1, 0.7, 1.5); // Flattened and extended front
+            leftBootFront.position.set(-0.1, -0.12, 0.12); // Position in front of left boot
+            santaGroup.add(leftBootFront);
+            // Right boot front
+            const rightBootFront = new THREE.Mesh(bootFrontGeometry, bootFrontMaterial);
+            rightBootFront.scale.set(1, 0.7, 1.5); // Flattened and extended front
+            rightBootFront.position.set(0.1, -0.1, 0.12); // Position in front of right boot
+            santaGroup.add(rightBootFront);
+            return santaGroup;
         }
-        // const swimmingChildWithAdjustedPose = createSwimmingChildWithAdjustedPose();
-        // bearGroup.add(swimmingChildWithAdjustedPose);
-        // animateSwimmingChild(swimmingChildWithAdjustedPose);
-        swimmingChildWithAdjustedPose.value = createSwimmingChildWithAdjustedPose();
-        bearGroup.add(swimmingChildWithAdjustedPose.value);
-        // Start the animation for floating movement
-        animateSwimmingChild(swimmingChildWithAdjustedPose.value);
+        const santaModel = createSanta();
+        bearGroup.add(santaModel);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -667,7 +644,6 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.03;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
-            waterSurfaceMaterial.uniforms.u_time.value += 0.25;
             heart.rotation.y += 0.04;
             // humanWithPantsAndSwimCap.rotation.y += 0.07
             renderer.render(scene, camera);
@@ -869,11 +845,11 @@ function __VLS_template() {
     let __VLS_styleScopedClasses;
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
+    __VLS_styleScopedClasses['three-canvas'];
+    __VLS_styleScopedClasses['pixel-btn'];
+    __VLS_styleScopedClasses['pixel-btn'];
+    __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['directional-buttons'];
-    __VLS_styleScopedClasses['directional-btn-woman'];
-    __VLS_styleScopedClasses['directional-btn-woman'];
-    __VLS_styleScopedClasses['directional-btn-kid'];
-    __VLS_styleScopedClasses['directional-btn-kid'];
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
@@ -892,18 +868,6 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingWest) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-west"), ...{ class: ("directional-btn west-btn") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingEast) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-east"), ...{ class: ("directional-btn east-btn") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingSouth) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-south"), ...{ class: ("directional-btn south-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons-woman") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanNorth) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman north-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons-woman") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanWest) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman west-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanEast) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman east-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingWomanSouth) }, ...{ onMouseup: (__VLS_ctx.stopMovingWoman) }, ...{ class: ("directional-btn-woman south-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons-kid") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidNorth) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid north-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons-kid") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidWest) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid west-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidEast) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid east-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingKidSouth) }, ...{ onMouseup: (__VLS_ctx.stopMovingKid) }, ...{ class: ("directional-btn-kid south-btn") }, });
     __VLS_styleScopedClasses['pixel-controls'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['up'];
@@ -923,26 +887,6 @@ function __VLS_template() {
     __VLS_styleScopedClasses['directional-btn'];
     __VLS_styleScopedClasses['east-btn'];
     __VLS_styleScopedClasses['directional-btn'];
-    __VLS_styleScopedClasses['south-btn'];
-    __VLS_styleScopedClasses['directional-buttons-woman'];
-    __VLS_styleScopedClasses['directional-btn-woman'];
-    __VLS_styleScopedClasses['north-btn'];
-    __VLS_styleScopedClasses['horizontal-buttons-woman'];
-    __VLS_styleScopedClasses['directional-btn-woman'];
-    __VLS_styleScopedClasses['west-btn'];
-    __VLS_styleScopedClasses['directional-btn-woman'];
-    __VLS_styleScopedClasses['east-btn'];
-    __VLS_styleScopedClasses['directional-btn-woman'];
-    __VLS_styleScopedClasses['south-btn'];
-    __VLS_styleScopedClasses['directional-buttons-kid'];
-    __VLS_styleScopedClasses['directional-btn-kid'];
-    __VLS_styleScopedClasses['north-btn'];
-    __VLS_styleScopedClasses['horizontal-buttons-kid'];
-    __VLS_styleScopedClasses['directional-btn-kid'];
-    __VLS_styleScopedClasses['west-btn'];
-    __VLS_styleScopedClasses['directional-btn-kid'];
-    __VLS_styleScopedClasses['east-btn'];
-    __VLS_styleScopedClasses['directional-btn-kid'];
     __VLS_styleScopedClasses['south-btn'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
@@ -971,16 +915,6 @@ const __VLS_self = (await import('vue')).defineComponent({
             startWalkingWest: startWalkingWest,
             startWalkingEast: startWalkingEast,
             stopWalking: stopWalking,
-            startMovingWomanNorth: startMovingWomanNorth,
-            startMovingWomanSouth: startMovingWomanSouth,
-            startMovingWomanWest: startMovingWomanWest,
-            startMovingWomanEast: startMovingWomanEast,
-            stopMovingWoman: stopMovingWoman,
-            startMovingKidNorth: startMovingKidNorth,
-            startMovingKidSouth: startMovingKidSouth,
-            startMovingKidWest: startMovingKidWest,
-            startMovingKidEast: startMovingKidEast,
-            stopMovingKid: stopMovingKid,
         };
     },
     props: {
