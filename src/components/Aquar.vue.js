@@ -71,13 +71,14 @@ onMounted(() => {
         pointLight.position.set(0, 2, 4); // Close to the object
         scene.add(pointLight);
         const textureLoader = new THREE.TextureLoader();
-        const beachTexture = textureLoader.load('/3d-bear-arts/assets/beach.jpg');
+        const houseTexture = textureLoader.load('/3d-bear-arts/assets/house.jpg');
         // beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
-        beachTexture.repeat.set(0.8, 1);
+        houseTexture.repeat.set(1, 1);
+        const houseTexture2 = textureLoader.load('/3d-bear-arts/assets/house.jpg');
         const sunTexture = textureLoader.load('/3d-bear-arts/assets/sun.jpg');
         // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
-        beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
-        beachTexture.repeat.set(0.8, 1);
+        houseTexture.wrapS = houseTexture.wrapT = THREE.RepeatWrapping;
+        houseTexture.repeat.set(0.5, 1);
         // beachTexture.repeat.set(2, 2); // Adjust this to scale the texture on the model
         sunTexture.wrapS = sunTexture.wrapT = THREE.RepeatWrapping;
         // sunTexture.repeat.set(2, 2); // Adjust this to scale the texture on the mode
@@ -107,13 +108,13 @@ onMounted(() => {
         });
         const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Clear white tint for glass effect
-            metalness: 0.05, // Low metalness for subtle reflection
+            metalness: 0, // Low metalness for subtle reflection
             roughness: 0.05, // Smooth surface for glassy appearance
             transparent: true,
-            opacity: 0.7, // Slight opacity for glass effect
+            opacity: 0.5, // Slight opacity for glass effect
             clearcoat: 1.0, // Full clearcoat for glossiness
             clearcoatRoughness: 0.2, // Smooth gloss
-            transmission: 0.9, // High transmission for glass-like clarity
+            transmission: 1, // High transmission for glass-like clarity
             ior: 1.5, // Glass refractive index
             envMapIntensity: 1.0, // Environmental reflections for glass realism
             depthTest: true,
@@ -131,19 +132,32 @@ onMounted(() => {
             envMapIntensity: 0.8, // Reduced environmental reflection for softer look
             side: THREE.DoubleSide,
         });
-        const leftBeachMaterial = new THREE.MeshPhysicalMaterial({
+        const leftTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF, // Clear white tint for glass effect
+            metalness: 0.05, // Low metalness for glassy reflection
+            map: houseTexture2,
+            roughness: 0.2, // Smooth surface for glass
+            transparent: true,
+            opacity: 0.7, // Moderate transparency for glass effect
+            transmission: 0.4, // High transmission for glass clarity
+            ior: 1.5, // Glass-like refraction index
+            depthWrite: true,
+            envMapIntensity: 1.0, // Higher reflection for glass realism
+            side: THREE.DoubleSide,
+        });
+        const leftPureBeachMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Clear white tint for glass effect
             metalness: 0.05, // Low metalness for glassy reflection
             roughness: 0.1, // Smooth surface for glass
             transparent: true,
-            opacity: 0.6, // Moderate transparency for glass effect
+            opacity: 0.9, // Moderate transparency for glass effect
             transmission: 0.9, // High transmission for glass clarity
             ior: 1.5, // Glass-like refraction index
             depthWrite: true,
             envMapIntensity: 1.0, // Higher reflection for glass realism
             side: THREE.DoubleSide,
         });
-        const leftLegtMaterial = new THREE.MeshPhysicalMaterial({
+        const leftLegMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Hot pink as the base
             metalness: 0.2, // Lower metalness for less reflective look
             roughness: 0.7, // Increase roughness for a more matte finish
@@ -157,8 +171,8 @@ onMounted(() => {
         0, // phiStart
         Math.PI // phiLength (half of the sphere)
         );
-        const rightBody = new THREE.Mesh(bodyGeometry, rightBodyTransparentSnowMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, leftBeachMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, rightSnowMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentSnowMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -167,7 +181,7 @@ onMounted(() => {
         leftBody.rotation.y = Math.PI * 1.5;
         // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, bodyMainMaterial);
+        const circle = new THREE.Mesh(circleGeometry, leftTransparentSnowMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         // Position the circle to cover the flat side
         circle.position.set(0, -0.2, 0); // Position should match the flat side of the half-sphere
@@ -188,7 +202,7 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, leftBeachMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, leftTransparentSnowMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
@@ -199,7 +213,7 @@ onMounted(() => {
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, bodyMainMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, leftTransparentSnowMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
@@ -261,7 +275,7 @@ onMounted(() => {
         bearGroup.add(halfSphereGroup);
         // Optional: Slight shimmer on the surface to simulate sparkling snowflakes
         const shimmerMaterial = new THREE.ShaderMaterial({
-            transparent: true,
+            transparent: false,
             uniforms: {
                 u_time: { value: 0.0 },
             },
@@ -296,7 +310,7 @@ onMounted(() => {
         halfSphereGroup.add(shimmerSurface);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, leftBeachMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, leftTransparentSnowMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
         const rightEar = new THREE.Mesh(earGeometry, rightSnowMaterial);
@@ -309,7 +323,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftBeachMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftLegMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -326,7 +340,7 @@ onMounted(() => {
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, bodyTransparentSnowMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, leftTransparentSnowMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -364,7 +378,7 @@ onMounted(() => {
         bearGroup.add(heart);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, leftBeachMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, leftTransparentSnowMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
@@ -374,7 +388,7 @@ onMounted(() => {
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, leftBeachMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, leftTransparentSnowMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
         const rightLeg = new THREE.Mesh(legGeometry, rightSnowMaterial);
@@ -383,7 +397,7 @@ onMounted(() => {
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftBeachMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftTransparentSnowMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
@@ -394,15 +408,15 @@ onMounted(() => {
         bearGroup.add(rightBootFront);
         // Create rounded buttocks
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-        const leftButtock = new THREE.Mesh(buttockGeometry, leftBeachMaterial);
+        const leftButtock = new THREE.Mesh(buttockGeometry, leftTransparentSnowMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, leftBeachMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, leftLegMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, leftBeachMaterial);
+        const tail = new THREE.Mesh(tailGeometry, leftLegMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
@@ -413,7 +427,7 @@ onMounted(() => {
                 size: 0.2, // Size of the X
                 depth: 0.05,
             });
-            const xEye = new THREE.Mesh(xEyeGeometry, leftLegtMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, leftLegMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -424,7 +438,7 @@ onMounted(() => {
                 size: 0.2, // Size of the O
                 depth: 0.05, // Thickness of the O
             });
-            const oEye = new THREE.Mesh(oEyeGeometry, leftLegtMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, leftLegMaterial);
             oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -467,7 +481,7 @@ onMounted(() => {
             // Arms
             const armGeometry = new THREE.CylinderGeometry(0.04, 0.04, 0.2, 32);
             const armMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
-            const leftArm = new THREE.Mesh(armGeometry, leftBeachMaterial);
+            const leftArm = new THREE.Mesh(armGeometry, leftTransparentSnowMaterial);
             leftArm.position.set(-0.15, 0.25, 0);
             leftArm.rotation.z = Math.PI / 4;
             catGroup.add(leftArm);
