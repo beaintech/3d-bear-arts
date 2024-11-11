@@ -958,8 +958,8 @@ animateSanta(santa.value);
     };
 
     // Animation loop for continuous movement
-    const animateSwimmingKid = () => {
-      requestAnimationFrame(animateSwimmingKid);
+    const animateWalkingSanta = () => {
+      requestAnimationFrame(animateWalkingSanta);
   
       if (santa.value) {
         if (movingNorthSanta.value) santa.value.position.z -= moveSpeedSanta;
@@ -969,7 +969,7 @@ animateSanta(santa.value);
       }
     };
 
-    animateSwimmingKid();
+    animateWalkingSanta();
     </script>
 
 <style scoped>
