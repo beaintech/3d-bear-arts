@@ -22,24 +22,13 @@ let isRotatingRight = ref(false); // Flag for right rotation
 let isRotatingLeft = ref(false); // Flag for left rotation
 let isRotatingUp = ref(false); // Flag for up rotation
 let isRotatingDown = ref(false); // Flag for down rotation
-const humanWithPantsAndSwimCap = shallowRef(null);
-const walkingNorth = ref(false);
-const walkingSouth = ref(false);
-const walkingWest = ref(false);
-const walkingEast = ref(false);
-const walkSpeed = 0.1;
-const womenSittingOnBeach = shallowRef(null);
-const swimmingChildWithAdjustedPose = shallowRef(null);
-const movingNorth = ref(false);
-const movingSouth = ref(false);
-const movingWest = ref(false);
-const movingEast = ref(false);
-const moveSpeed = 0.05;
-const movingNorthKid = ref(false);
-const movingSouthKid = ref(false);
-const movingWestKid = ref(false);
-const movingEastKid = ref(false);
-const moveSpeedKid = 0.08;
+const santa = shallowRef(null);
+const santaModel = shallowRef(null);
+const movingNorthSanta = ref(false);
+const movingSouthSanta = ref(false);
+const movingWestSanta = ref(false);
+const movingEastSanta = ref(false);
+const moveSpeedSanta = 0.2;
 // Initialize renderer and scene
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -76,24 +65,8 @@ onMounted(() => {
         houseTexture.repeat.set(1, 1);
         const houseTexture2 = textureLoader.load('/3d-bear-arts/assets/house.jpg');
         const sunTexture = textureLoader.load('/3d-bear-arts/assets/sun.jpg');
-        // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
         houseTexture.wrapS = houseTexture.wrapT = THREE.RepeatWrapping;
         houseTexture.repeat.set(0.5, 1);
-        // beachTexture.repeat.set(2, 2); // Adjust this to scale the texture on the model
-        sunTexture.wrapS = sunTexture.wrapT = THREE.RepeatWrapping;
-        // sunTexture.repeat.set(2, 2); // Adjust this to scale the texture on the mode
-        const bodyMainMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Light blue tint for the glass effect
-            metalness: 0.05, // Low metalness for subtle reflections
-            roughness: 0.1, // Low roughness for a smooth surface
-            clearcoat: 1.0, // High clearcoat for glossiness
-            clearcoatRoughness: 0.1, // Slight clearcoat roughness
-            transmission: 0.9, // High transmission for transparency
-            ior: 1.5, // Refractive index for glass
-            opacity: 0.85, // Slight opacity to maintain glass appearance
-            transparent: true,
-            envMapIntensity: 1.0, // Environmental reflections for glass
-        });
         const bodyTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xB0E2FF, // Light blue color for a subtle tint
             metalness: 0.05, // Low metalness for subtle reflection
@@ -114,7 +87,7 @@ onMounted(() => {
             opacity: 0.5, // Slight opacity for glass effect
             clearcoat: 1.0, // Full clearcoat for glossiness
             clearcoatRoughness: 0.2, // Smooth gloss
-            transmission: 1, // High transmission for glass-like clarity
+            transmission: 0.6, // High transmission for glass-like clarity
             ior: 1.5, // Glass refractive index
             envMapIntensity: 1.0, // Environmental reflections for glass realism
             depthTest: true,
@@ -139,19 +112,20 @@ onMounted(() => {
             roughness: 0.2, // Smooth surface for glass
             transparent: true,
             opacity: 0.7, // Moderate transparency for glass effect
-            transmission: 0.4, // High transmission for glass clarity
+            transmission: 0.2, // High transmission for glass clarity
             ior: 1.5, // Glass-like refraction index
             depthWrite: true,
             envMapIntensity: 1.0, // Higher reflection for glass realism
             side: THREE.DoubleSide,
         });
-        const leftPureBeachMaterial = new THREE.MeshPhysicalMaterial({
+        const circlehMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Clear white tint for glass effect
             metalness: 0.05, // Low metalness for glassy reflection
-            roughness: 0.1, // Smooth surface for glass
+            map: houseTexture2,
+            roughness: 0.2, // Smooth surface for glass
             transparent: true,
-            opacity: 0.9, // Moderate transparency for glass effect
-            transmission: 0.9, // High transmission for glass clarity
+            opacity: 1, // Moderate transparency for glass effect
+            transmission: 0.2, // High transmission for glass clarity
             ior: 1.5, // Glass-like refraction index
             depthWrite: true,
             envMapIntensity: 1.0, // Higher reflection for glass realism
@@ -181,7 +155,7 @@ onMounted(() => {
         leftBody.rotation.y = Math.PI * 1.5;
         // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, leftTransparentSnowMaterial);
+        const circle = new THREE.Mesh(circleGeometry, circlehMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         // Position the circle to cover the flat side
         circle.position.set(0, -0.2, 0); // Position should match the flat side of the half-sphere
@@ -202,7 +176,7 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, leftTransparentSnowMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, leftLegMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
@@ -213,7 +187,7 @@ onMounted(() => {
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, leftTransparentSnowMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, circlehMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
@@ -310,7 +284,7 @@ onMounted(() => {
         halfSphereGroup.add(shimmerSurface);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, leftTransparentSnowMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, leftLegMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
         const rightEar = new THREE.Mesh(earGeometry, rightSnowMaterial);
@@ -340,7 +314,7 @@ onMounted(() => {
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, leftTransparentSnowMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, circlehMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -360,35 +334,19 @@ onMounted(() => {
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
             clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
-        // Heart shape
-        const heartShape = new THREE.Shape();
-        heartShape.moveTo(0, 0);
-        heartShape.bezierCurveTo(0, -0.3, -0.6, -0.3, -0.6, 0);
-        heartShape.bezierCurveTo(-0.6, 0.3, 0, 0.6, 0, 1);
-        heartShape.bezierCurveTo(0, 0.6, 0.6, 0.3, 0.6, 0);
-        heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
-        // Extrude the heart shape into 3D
-        const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
-        const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        const heart = new THREE.Mesh(heartGeometry, heartMaterial);
-        heart.scale.set(0.2, 0.2, 0.2);
-        heart.position.set(0.25, 1.2, 0);
-        heart.rotation.y = Math.PI;
-        heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
         const leftArm = new THREE.Mesh(armGeometry, leftTransparentSnowMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, rightBodyTransparentSnowMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, rightSnowMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, leftTransparentSnowMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, leftLegMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
         const rightLeg = new THREE.Mesh(legGeometry, rightSnowMaterial);
@@ -397,7 +355,7 @@ onMounted(() => {
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftTransparentSnowMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftLegMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
@@ -606,7 +564,7 @@ onMounted(() => {
             santaGroup.add(rightBoot);
             // Position the Santa
             santaGroup.scale.set(0.4, 0.4, 0.4);
-            santaGroup.position.set(0.2, -0.1, 0);
+            santaGroup.position.set(0.2, 0.5, 0);
             const bootFrontGeometry = new THREE.SphereGeometry(0.12, 32, 32);
             const bootFrontMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
             // Left boot front
@@ -621,8 +579,97 @@ onMounted(() => {
             santaGroup.add(rightBootFront);
             return santaGroup;
         }
+        function santaAnimate() {
+            let floatOffset = 0; // Offset for controlling the floating effect
+            function animateSanta() {
+                requestAnimationFrame(animateSanta);
+                floatOffset += 0.08; // Adjust this value for speed of floating
+                santaModel.position.y = 0.25 + Math.sin(floatOffset) * 0.25; // Oscillates between y = 0 and y = 0.5
+                renderer.render(scene, camera);
+            }
+            animateSanta();
+        }
         const santaModel = createSanta();
         bearGroup.add(santaModel);
+        santaAnimate();
+        function animateSanta(santa) {
+            let direction = 1; // 1 for moving right, -1 for moving left
+            let floatOffset = 0; // Offset for floating effect
+            function animate() {
+                requestAnimationFrame(animate);
+                // Move horizontally between x: -0.3 and x: 0.3
+                santa.position.x += 0.01 * direction;
+                if (santa.position.x >= 0.35) {
+                    direction = -1; // Reverse direction when reaching x: 0.3
+                    santa.rotation.y = Math.PI; // Face left
+                }
+                else if (santa.position.x <= -0.35) {
+                    direction = 1; // Reverse direction when reaching x: -0.3
+                    santa.rotation.y = 0; // Face right
+                }
+                // Floating effect (up and down motion)
+                floatOffset += 0.003; // Controls speed of floating
+                santa.position.y = -0.2 + Math.sin(floatOffset) * 0.1;
+                santa.position.z = 0.2;
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+        santa.value = createSanta();
+        bearGroup.add(santa.value);
+        // Start the animation for floating movement
+        animateSanta(santa.value);
+        function createCuteChristmasHouse() {
+            const houseGroup = new THREE.Group();
+            // Main house structure (small and cozy)
+            const houseGeometry = new THREE.BoxGeometry(0.7, 0.8, 0.7);
+            const houseMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Warm brown wood color
+            const houseMesh = new THREE.Mesh(houseGeometry, houseMaterial);
+            houseMesh.position.set(0, 0.4, 0);
+            houseGroup.add(houseMesh);
+            // Roof (slightly narrower for a cute, proportional look)
+            const roofGeometry = new THREE.ConeGeometry(0.55, 0.25, 4);
+            const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xB22222 }); // Dark red for a festive feel
+            const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
+            roofMesh.position.set(0, 0.9, 0); // Positioned atop the house
+            roofMesh.rotation.y = Math.PI / 4; // Align to be diamond-shaped on house
+            houseGroup.add(roofMesh);
+            // Door (centered and cute size)
+            const doorGeometry = new THREE.BoxGeometry(0.25, 0.35, 0.05);
+            const doorMaterial = new THREE.MeshStandardMaterial({ color: 0x654321 }); // Dark wood
+            const doorMesh = new THREE.Mesh(doorGeometry, doorMaterial);
+            doorMesh.position.set(0, 0.2, 0.36); // Positioned at the front
+            houseGroup.add(doorMesh);
+            // Windows (small and placed symmetrically)
+            const windowGeometry = new THREE.BoxGeometry(0.15, 0.15, 0.05);
+            const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x87CEEB, opacity: 0.8, transparent: true });
+            // Left window
+            const leftWindow = new THREE.Mesh(windowGeometry, windowMaterial);
+            leftWindow.position.set(-0.2, 0.5, 0.38);
+            houseGroup.add(leftWindow);
+            // Right window
+            const rightWindow = new THREE.Mesh(windowGeometry, windowMaterial);
+            rightWindow.position.set(0.2, 0.5, 0.38);
+            houseGroup.add(rightWindow);
+            // Chimney (small and positioned on the roof)
+            const chimneyGeometry = new THREE.BoxGeometry(0.2, 0.4, 0.2);
+            const chimneyMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 }); // Gray color for chimney
+            const chimneyMesh = new THREE.Mesh(chimneyGeometry, chimneyMaterial);
+            chimneyMesh.position.set(0, 0.95, 0); // Centered towards the back on the roof
+            houseGroup.add(chimneyMesh);
+            // Wreath on the door for a festive touch
+            const wreathGeometry = new THREE.TorusGeometry(0.07, 0.04, 32, 100);
+            const wreathMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 }); // Green for the wreath
+            const wreathMesh = new THREE.Mesh(wreathGeometry, wreathMaterial);
+            wreathMesh.position.set(0, 0.45, 0.38); // Centered above the door
+            houseGroup.add(wreathMesh);
+            houseGroup.position.set(0.2, -0.2, 0);
+            houseGroup.scale.set(0.5, 0.5, 0.5);
+            return houseGroup;
+        }
+        // Usage: add the cute house to the scene
+        const cuteChristmasHouse = createCuteChristmasHouse();
+        bearGroup.add(cuteChristmasHouse);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -658,7 +705,6 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.03;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
-            heart.rotation.y += 0.04;
             // humanWithPantsAndSwimCap.rotation.y += 0.07
             renderer.render(scene, camera);
         }
@@ -698,133 +744,47 @@ function stopRotation() {
     isRotatingUp.value = false;
     isRotatingDown.value = false;
 }
-// Movement control methods
-const startWalkingNorth = () => {
-    walkingNorth.value = true;
-    console.log(walkingNorth.value);
-    if (humanWithPantsAndSwimCap.value)
-        humanWithPantsAndSwimCap.value.rotation.y = 0;
-    console.log(humanWithPantsAndSwimCap.value);
+const startMovingSantaNorth = () => {
+    movingNorthSanta.value = true;
+    if (santa.value)
+        santa.value.rotation.y = 0;
 };
-const startWalkingSouth = () => {
-    walkingSouth.value = true;
-    if (humanWithPantsAndSwimCap.value)
-        humanWithPantsAndSwimCap.value.rotation.y = Math.PI;
-    console.log(humanWithPantsAndSwimCap.value);
+const startMovingSantaSouth = () => {
+    movingSouthSanta.value = true;
+    if (santa.value)
+        santa.value.rotation.y = Math.PI;
 };
-const startWalkingWest = () => {
-    walkingWest.value = true;
-    if (humanWithPantsAndSwimCap.value)
-        humanWithPantsAndSwimCap.value.rotation.y = Math.PI / 2;
+const startMovingSantaWest = () => {
+    movingWestSanta.value = true;
+    if (santa.value)
+        santa.value.rotation.y = Math.PI / 2;
 };
-const startWalkingEast = () => {
-    walkingEast.value = true;
-    if (humanWithPantsAndSwimCap.value)
-        humanWithPantsAndSwimCap.value.rotation.y = -Math.PI / 2;
+const startMovingSantaEast = () => {
+    movingEastSanta.value = true;
+    if (santa.value)
+        santa.value.rotation.y = -Math.PI / 2;
 };
-const stopWalking = () => {
-    walkingNorth.value = false;
-    walkingSouth.value = false;
-    walkingWest.value = false;
-    walkingEast.value = false;
-};
-const startMovingWomanNorth = () => {
-    movingNorth.value = true;
-    if (womenSittingOnBeach.value)
-        womenSittingOnBeach.value.rotation.y = Math.PI;
-};
-const startMovingWomanSouth = () => {
-    movingSouth.value = true;
-    if (womenSittingOnBeach.value)
-        womenSittingOnBeach.value.rotation.y = 0;
-};
-const startMovingWomanWest = () => {
-    movingWest.value = true;
-    if (womenSittingOnBeach.value)
-        womenSittingOnBeach.value.rotation.y = -Math.PI / 2;
-};
-const startMovingWomanEast = () => {
-    movingEast.value = true;
-    if (womenSittingOnBeach.value)
-        womenSittingOnBeach.value.rotation.y = Math.PI / 2;
-};
-const stopMovingWoman = () => {
-    movingNorth.value = false;
-    movingSouth.value = false;
-    movingWest.value = false;
-    movingEast.value = false;
+const stopMovingSanta = () => {
+    movingNorthSanta.value = false;
+    movingSouthSanta.value = false;
+    movingWestSanta.value = false;
+    movingEastSanta.value = false;
 };
 // Animation loop for continuous movement
-const animateCharacter = () => {
-    requestAnimationFrame(animateCharacter);
-    if (humanWithPantsAndSwimCap.value) {
-        if (walkingNorth.value)
-            humanWithPantsAndSwimCap.value.position.z -= walkSpeed;
-        if (walkingSouth.value)
-            humanWithPantsAndSwimCap.value.position.z += walkSpeed;
-        if (walkingWest.value)
-            humanWithPantsAndSwimCap.value.position.x -= walkSpeed;
-        if (walkingEast.value)
-            humanWithPantsAndSwimCap.value.position.x += walkSpeed;
-    }
-    renderer.render(scene, camera);
-};
-const animateWoman = () => {
-    requestAnimationFrame(animateWoman);
-    if (womenSittingOnBeach.value) {
-        if (movingNorth.value)
-            womenSittingOnBeach.value.position.z -= moveSpeed;
-        if (movingSouth.value)
-            womenSittingOnBeach.value.position.z += moveSpeed;
-        if (movingWest.value)
-            womenSittingOnBeach.value.position.x -= moveSpeed;
-        if (movingEast.value)
-            womenSittingOnBeach.value.position.x += moveSpeed;
+const animateWalkingSanta = () => {
+    requestAnimationFrame(animateWalkingSanta);
+    if (santa.value) {
+        if (movingNorthSanta.value)
+            santa.value.position.z -= moveSpeedSanta;
+        if (movingSouthSanta.value)
+            santa.value.position.z += moveSpeedSanta;
+        if (movingWestSanta.value)
+            santa.value.position.x -= moveSpeedSanta;
+        if (movingEastSanta.value)
+            santa.value.position.x += moveSpeedSanta;
     }
 };
-animateWoman();
-animateCharacter();
-const startMovingKidNorth = () => {
-    movingNorthKid.value = true;
-    if (swimmingChildWithAdjustedPose.value)
-        swimmingChildWithAdjustedPose.value.rotation.y = 0;
-};
-const startMovingKidSouth = () => {
-    movingSouthKid.value = true;
-    if (swimmingChildWithAdjustedPose.value)
-        swimmingChildWithAdjustedPose.value.rotation.y = Math.PI;
-};
-const startMovingKidWest = () => {
-    movingWestKid.value = true;
-    if (swimmingChildWithAdjustedPose.value)
-        swimmingChildWithAdjustedPose.value.rotation.y = Math.PI / 2;
-};
-const startMovingKidEast = () => {
-    movingEastKid.value = true;
-    if (swimmingChildWithAdjustedPose.value)
-        swimmingChildWithAdjustedPose.value.rotation.y = -Math.PI / 2;
-};
-const stopMovingKid = () => {
-    movingNorthKid.value = false;
-    movingSouthKid.value = false;
-    movingWestKid.value = false;
-    movingEastKid.value = false;
-};
-// Animation loop for continuous movement
-const animateSwimmingKid = () => {
-    requestAnimationFrame(animateSwimmingKid);
-    if (swimmingChildWithAdjustedPose.value) {
-        if (movingNorthKid.value)
-            swimmingChildWithAdjustedPose.value.position.z -= moveSpeedKid;
-        if (movingSouthKid.value)
-            swimmingChildWithAdjustedPose.value.position.z += moveSpeedKid;
-        if (movingWestKid.value)
-            swimmingChildWithAdjustedPose.value.position.x -= moveSpeedKid;
-        if (movingEastKid.value)
-            swimmingChildWithAdjustedPose.value.position.x += moveSpeedKid;
-    }
-};
-animateSwimmingKid();
+animateWalkingSanta();
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         background: {
@@ -863,7 +823,8 @@ function __VLS_template() {
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
-    __VLS_styleScopedClasses['directional-buttons'];
+    __VLS_styleScopedClasses['directional-btn-santa'];
+    __VLS_styleScopedClasses['directional-btn-santa'];
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
@@ -876,12 +837,12 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onLeftButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn left") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onRightButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn right") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onDownButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn down") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingNorth) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-north"), ...{ class: ("directional-btn north-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingWest) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-west"), ...{ class: ("directional-btn west-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingEast) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-east"), ...{ class: ("directional-btn east-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startWalkingSouth) }, ...{ onMouseup: (__VLS_ctx.stopWalking) }, id: ("move-south"), ...{ class: ("directional-btn south-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons-santa") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaNorth) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa north-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons-santa") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaWest) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa west-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaEast) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa east-btn") }, });
+    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaSouth) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa south-btn") }, });
     __VLS_styleScopedClasses['pixel-controls'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['up'];
@@ -892,15 +853,15 @@ function __VLS_template() {
     __VLS_styleScopedClasses['right'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['down'];
-    __VLS_styleScopedClasses['directional-buttons'];
-    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['directional-buttons-santa'];
+    __VLS_styleScopedClasses['directional-btn-santa'];
     __VLS_styleScopedClasses['north-btn'];
-    __VLS_styleScopedClasses['horizontal-buttons'];
-    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['horizontal-buttons-santa'];
+    __VLS_styleScopedClasses['directional-btn-santa'];
     __VLS_styleScopedClasses['west-btn'];
-    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['directional-btn-santa'];
     __VLS_styleScopedClasses['east-btn'];
-    __VLS_styleScopedClasses['directional-btn'];
+    __VLS_styleScopedClasses['directional-btn-santa'];
     __VLS_styleScopedClasses['south-btn'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
@@ -924,11 +885,11 @@ const __VLS_self = (await import('vue')).defineComponent({
             onUpButtonDown: onUpButtonDown,
             onDownButtonDown: onDownButtonDown,
             stopRotation: stopRotation,
-            startWalkingNorth: startWalkingNorth,
-            startWalkingSouth: startWalkingSouth,
-            startWalkingWest: startWalkingWest,
-            startWalkingEast: startWalkingEast,
-            stopWalking: stopWalking,
+            startMovingSantaNorth: startMovingSantaNorth,
+            startMovingSantaSouth: startMovingSantaSouth,
+            startMovingSantaWest: startMovingSantaWest,
+            startMovingSantaEast: startMovingSantaEast,
+            stopMovingSanta: stopMovingSanta,
         };
     },
     props: {
