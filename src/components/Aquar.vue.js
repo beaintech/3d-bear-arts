@@ -23,12 +23,6 @@ let isRotatingLeft = ref(false); // Flag for left rotation
 let isRotatingUp = ref(false); // Flag for up rotation
 let isRotatingDown = ref(false); // Flag for down rotation
 const santa = shallowRef(null);
-const santaModel = shallowRef(null);
-const movingNorthSanta = ref(false);
-const movingSouthSanta = ref(false);
-const movingWestSanta = ref(false);
-const movingEastSanta = ref(false);
-const moveSpeedSanta = 0.2;
 // Initialize renderer and scene
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -61,25 +55,10 @@ onMounted(() => {
         scene.add(pointLight);
         const textureLoader = new THREE.TextureLoader();
         const houseTexture = textureLoader.load('/3d-bear-arts/assets/house.jpg');
-        // beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
-        houseTexture.repeat.set(1, 1);
-        const houseTexture2 = textureLoader.load('/3d-bear-arts/assets/house.jpg');
-        const sunTexture = textureLoader.load('/3d-bear-arts/assets/sun.jpg');
         houseTexture.wrapS = houseTexture.wrapT = THREE.RepeatWrapping;
-        houseTexture.repeat.set(0.5, 1);
-        const bodyTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Light blue color for a subtle tint
-            metalness: 0.05, // Low metalness for subtle reflection
-            roughness: 0.1, // Smooth surface for glassy effect
-            transparent: true,
-            opacity: 0.5, // Medium transparency for glass
-            transmission: 0.95, // High transmission for clarity
-            ior: 1.5, // Refractive index for realistic glass
-            depthWrite: false, // Disable depth write to prevent occlusion
-            depthTest: true, // Depth testing for transparent layering
-            side: THREE.DoubleSide,
-        });
-        const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
+        houseTexture.repeat.set(1, 1);
+        const houseTexture2 = textureLoader.load('/3d-bear-arts/assets/house3.jpg');
+        const rightSnowMaterial1 = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Clear white tint for glass effect
             metalness: 0, // Low metalness for subtle reflection
             roughness: 0.05, // Smooth surface for glassy appearance
@@ -92,36 +71,74 @@ onMounted(() => {
             envMapIntensity: 1.0, // Environmental reflections for glass realism
             depthTest: true,
         });
-        const rightBodyTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFFFFFF, // Clear white tint for glass
-            metalness: 0.05, // Low metalness for subtle shine
-            roughness: 0.05, // Smooth surface for glass effect
+        const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF,
+            metalness: 0.3,
+            roughness: 0.05,
             transparent: true,
-            opacity: 0.3, // Higher transparency for a clear glass look
-            transmission: 0.95, // High transmission for glass clarity
-            ior: 1.5, // Refractive index for glass effect
-            depthWrite: false, // Depth write off for transparent layering
-            depthTest: true,
-            envMapIntensity: 0.8, // Reduced environmental reflection for softer look
+            opacity: 0.4,
+            transmission: 0.95,
+            ior: 1.33,
+            thickness: 0.01,
+            depthWrite: true,
+            envMapIntensity: 2.0,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
             side: THREE.DoubleSide,
         });
         const leftTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFFFFFF, // Clear white tint for glass effect
-            metalness: 0.05, // Low metalness for glassy reflection
-            map: houseTexture2,
-            roughness: 0.2, // Smooth surface for glass
+            color: 0xFFFFFF,
+            metalness: 0.3,
+            map: houseTexture,
+            roughness: 0.05,
             transparent: true,
-            opacity: 0.7, // Moderate transparency for glass effect
-            transmission: 0.2, // High transmission for glass clarity
-            ior: 1.5, // Glass-like refraction index
+            opacity: 0.7,
+            transmission: 0.95,
+            ior: 1.33,
+            thickness: 0.3,
             depthWrite: true,
-            envMapIntensity: 1.0, // Higher reflection for glass realism
+            envMapIntensity: 2.0,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
             side: THREE.DoubleSide,
+        });
+        const leftTransparentPureMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF,
+            metalness: 0.3,
+            roughness: 0.05,
+            transparent: true,
+            opacity: 1,
+            transmission: 0.95,
+            ior: 1.33,
+            thickness: 0.3,
+            depthWrite: true,
+            envMapIntensity: 2.0,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1,
+            side: THREE.DoubleSide,
+        });
+        const envTexture = new THREE.CubeTextureLoader().load([
+            '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg',
+            '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg',
+            '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg'
+        ]);
+        scene.environment = envTexture;
+        const leftTransparentSnowMaterial1 = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff, // Keep it white for metallic effect
+            metalness: 1.0, // High metalness for a metallic look
+            roughness: 0.1, // Low roughness for shine
+            envMap: envTexture, // Apply the environment map
+            envMapIntensity: 1.5, // Increase intensity to amplify reflections
+            ior: 1.25, // Lower ior slightly for metal
+            depthWrite: true,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.7,
         });
         const circlehMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Clear white tint for glass effect
             metalness: 0.05, // Low metalness for glassy reflection
-            map: houseTexture2,
+            map: houseTexture,
             roughness: 0.2, // Smooth surface for glass
             transparent: true,
             opacity: 1, // Moderate transparency for glass effect
@@ -176,7 +193,7 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, leftLegMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, leftTransparentSnowMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
@@ -200,20 +217,7 @@ onMounted(() => {
         // Add the combined head group to the bear group
         bearGroup.add(halfHeadSphereGroup);
         // Create water-like geometry inside the bear
-        const waterHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
-        const waterMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xB0E2FF, // Light blue color for water
-            metalness: 0.1,
-            roughness: 0.2,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1,
-            transparent: true,
-            opacity: 0.9,
-            transmission: 0.9, // High transmission for a glassy effect
-            ior: 1.33, // Index of refraction for water-like appearance
-            reflectivity: 0.8,
-            envMapIntensity: 1.0,
-        });
+        const snowHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
         // Create the snow mesh using the bottom-half sphere geometry
         const snowMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xffffff, // Pure white for snow color
@@ -222,7 +226,7 @@ onMounted(() => {
             clearcoat: 0.5, // Clearcoat for a subtle reflective layer
             clearcoatRoughness: 0.7, // Rougher clearcoat for a diffuse reflection
         });
-        const snowMesh = new THREE.Mesh(waterHalfSphereGeometry, snowMaterial);
+        const snowMesh = new THREE.Mesh(snowHalfSphereGeometry, snowMaterial);
         snowMesh.position.set(0, -0.2, 0); // Align with body position
         snowMesh.rotation.x = Math.PI; // Face upwards
         snowMesh.scale.set(1.25, 1.25, 1.25);
@@ -249,7 +253,7 @@ onMounted(() => {
         bearGroup.add(halfSphereGroup);
         // Optional: Slight shimmer on the surface to simulate sparkling snowflakes
         const shimmerMaterial = new THREE.ShaderMaterial({
-            transparent: false,
+            transparent: true,
             uniforms: {
                 u_time: { value: 0.0 },
             },
@@ -284,7 +288,7 @@ onMounted(() => {
         halfSphereGroup.add(shimmerSurface);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, leftLegMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, leftTransparentSnowMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
         const rightEar = new THREE.Mesh(earGeometry, rightSnowMaterial);
@@ -297,7 +301,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftLegMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftTransparentSnowMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -330,13 +334,12 @@ onMounted(() => {
             color: 0x7FC8A9, // Silver color
             metalness: 1.0, // Fully metallic for reflective surface
             roughness: 0.25, // Slightly rough to blur reflections
-            envMap: sunTexture, // Apply environment map for reflections
             clearcoat: 0.7, // Adds a layer of reflectiveness on top
             clearcoatRoughness: 0.3, // Roughness of the clear coat layer
         });
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, leftTransparentSnowMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, leftTransparentPureMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
@@ -346,7 +349,7 @@ onMounted(() => {
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, leftLegMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, leftTransparentPureMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
         const rightLeg = new THREE.Mesh(legGeometry, rightSnowMaterial);
@@ -355,7 +358,7 @@ onMounted(() => {
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftLegMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftTransparentPureMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
@@ -385,7 +388,7 @@ onMounted(() => {
                 size: 0.2, // Size of the X
                 depth: 0.05,
             });
-            const xEye = new THREE.Mesh(xEyeGeometry, leftLegMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, rightSnowMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -396,12 +399,37 @@ onMounted(() => {
                 size: 0.2, // Size of the O
                 depth: 0.05, // Thickness of the O
             });
-            const oEye = new THREE.Mesh(oEyeGeometry, leftLegMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, rightSnowMaterial);
             oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
+        function createHat() {
+            const hatGroup = new THREE.Group();
+            const hairGeometry = new THREE.TorusGeometry(0.12, 0.05, 16, 100);
+            const hairMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const hairMesh = new THREE.Mesh(hairGeometry, hairMaterial);
+            hairMesh.position.set(0, 1.65, 0);
+            hairMesh.rotation.x = Math.PI / 2;
+            hatGroup.add(hairMesh);
+            // Hat
+            const hatBaseGeometry = new THREE.ConeGeometry(0.15, 0.3, 32);
+            const hatMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+            const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
+            hatBase.position.set(0, 1.8, 0);
+            hatGroup.add(hatBase);
+            const hatPomGeometry = new THREE.SphereGeometry(0.05, 32, 32);
+            const hatPomMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const hatPom = new THREE.Mesh(hatPomGeometry, hatPomMaterial);
+            hatPom.position.set(0, 1.93, 0);
+            hatGroup.add(hatPom);
+            // Scale and position the cat within the bear
+            hatGroup.position.set(0, -0.1, 0);
+            return hatGroup;
+        }
+        const hatGroup = createHat();
+        bearGroup.add(hatGroup);
         // the end of the bear body
         function createCat() {
             const catGroup = new THREE.Group();
@@ -562,9 +590,6 @@ onMounted(() => {
             const rightBoot = new THREE.Mesh(bootGeometry, bootMaterial);
             rightBoot.position.set(0.1, -0.05, 0);
             santaGroup.add(rightBoot);
-            // Position the Santa
-            santaGroup.scale.set(0.4, 0.4, 0.4);
-            santaGroup.position.set(0.2, 0.5, 0);
             const bootFrontGeometry = new THREE.SphereGeometry(0.12, 32, 32);
             const bootFrontMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
             // Left boot front
@@ -577,6 +602,9 @@ onMounted(() => {
             rightBootFront.scale.set(1, 0.7, 1.5); // Flattened and extended front
             rightBootFront.position.set(0.1, -0.1, 0.12); // Position in front of right boot
             santaGroup.add(rightBootFront);
+            // Position the Santa
+            santaGroup.scale.set(0.25, 0.25, 0.25);
+            santaGroup.position.set(0.2, 0.5, -0.0);
             return santaGroup;
         }
         function santaAnimate() {
@@ -584,7 +612,7 @@ onMounted(() => {
             function animateSanta() {
                 requestAnimationFrame(animateSanta);
                 floatOffset += 0.08; // Adjust this value for speed of floating
-                santaModel.position.y = 0.25 + Math.sin(floatOffset) * 0.25; // Oscillates between y = 0 and y = 0.5
+                santaModel.position.y = 0.45 + Math.sin(floatOffset) * 0.45; // Oscillates between y = 0 and y = 0.5
                 renderer.render(scene, camera);
             }
             animateSanta();
@@ -597,20 +625,18 @@ onMounted(() => {
             let floatOffset = 0; // Offset for floating effect
             function animate() {
                 requestAnimationFrame(animate);
-                // Move horizontally between x: -0.3 and x: 0.3
                 santa.position.x += 0.01 * direction;
-                if (santa.position.x >= 0.35) {
-                    direction = -1; // Reverse direction when reaching x: 0.3
+                if (santa.position.x >= 0.5) {
+                    direction = -1;
                     santa.rotation.y = Math.PI; // Face left
                 }
-                else if (santa.position.x <= -0.35) {
-                    direction = 1; // Reverse direction when reaching x: -0.3
+                else if (santa.position.x <= -0.5) {
+                    direction = 1;
                     santa.rotation.y = 0; // Face right
                 }
-                // Floating effect (up and down motion)
-                floatOffset += 0.003; // Controls speed of floating
-                santa.position.y = -0.2 + Math.sin(floatOffset) * 0.1;
-                santa.position.z = 0.2;
+                floatOffset += 0.2; // Controls speed of floating
+                santa.position.y = -0.2 + Math.sin(floatOffset) * 0.01;
+                santa.position.z = 0.5;
                 renderer.render(scene, camera);
             }
             animate();
@@ -629,7 +655,7 @@ onMounted(() => {
             houseGroup.add(houseMesh);
             // Roof (slightly narrower for a cute, proportional look)
             const roofGeometry = new THREE.ConeGeometry(0.55, 0.25, 4);
-            const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xB22222 }); // Dark red for a festive feel
+            const roofMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // Dark red for a festive feel
             const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
             roofMesh.position.set(0, 0.9, 0); // Positioned atop the house
             roofMesh.rotation.y = Math.PI / 4; // Align to be diamond-shaped on house
@@ -642,7 +668,7 @@ onMounted(() => {
             houseGroup.add(doorMesh);
             // Windows (small and placed symmetrically)
             const windowGeometry = new THREE.BoxGeometry(0.15, 0.15, 0.05);
-            const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x87CEEB, opacity: 0.8, transparent: true });
+            const windowMaterial = new THREE.MeshStandardMaterial({ color: 0x87CEEB });
             // Left window
             const leftWindow = new THREE.Mesh(windowGeometry, windowMaterial);
             leftWindow.position.set(-0.2, 0.5, 0.38);
@@ -664,7 +690,7 @@ onMounted(() => {
             wreathMesh.position.set(0, 0.45, 0.38); // Centered above the door
             houseGroup.add(wreathMesh);
             houseGroup.position.set(0.2, -0.2, 0);
-            houseGroup.scale.set(0.5, 0.5, 0.5);
+            houseGroup.scale.set(0.6, 0.6, 0.6);
             return houseGroup;
         }
         // Usage: add the cute house to the scene
@@ -744,47 +770,6 @@ function stopRotation() {
     isRotatingUp.value = false;
     isRotatingDown.value = false;
 }
-const startMovingSantaNorth = () => {
-    movingNorthSanta.value = true;
-    if (santa.value)
-        santa.value.rotation.y = 0;
-};
-const startMovingSantaSouth = () => {
-    movingSouthSanta.value = true;
-    if (santa.value)
-        santa.value.rotation.y = Math.PI;
-};
-const startMovingSantaWest = () => {
-    movingWestSanta.value = true;
-    if (santa.value)
-        santa.value.rotation.y = Math.PI / 2;
-};
-const startMovingSantaEast = () => {
-    movingEastSanta.value = true;
-    if (santa.value)
-        santa.value.rotation.y = -Math.PI / 2;
-};
-const stopMovingSanta = () => {
-    movingNorthSanta.value = false;
-    movingSouthSanta.value = false;
-    movingWestSanta.value = false;
-    movingEastSanta.value = false;
-};
-// Animation loop for continuous movement
-const animateWalkingSanta = () => {
-    requestAnimationFrame(animateWalkingSanta);
-    if (santa.value) {
-        if (movingNorthSanta.value)
-            santa.value.position.z -= moveSpeedSanta;
-        if (movingSouthSanta.value)
-            santa.value.position.z += moveSpeedSanta;
-        if (movingWestSanta.value)
-            santa.value.position.x -= moveSpeedSanta;
-        if (movingEastSanta.value)
-            santa.value.position.x += moveSpeedSanta;
-    }
-};
-animateWalkingSanta();
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         background: {
@@ -819,12 +804,6 @@ function __VLS_template() {
     let __VLS_styleScopedClasses;
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
-    __VLS_styleScopedClasses['three-canvas'];
-    __VLS_styleScopedClasses['pixel-btn'];
-    __VLS_styleScopedClasses['pixel-btn'];
-    __VLS_styleScopedClasses['pixel-btn'];
-    __VLS_styleScopedClasses['directional-btn-santa'];
-    __VLS_styleScopedClasses['directional-btn-santa'];
     // CSS variable injection 
     // CSS variable injection end 
     let __VLS_resolvedLocalAndGlobalComponents;
@@ -837,12 +816,6 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onLeftButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn left") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onRightButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn right") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onDownButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn down") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("directional-buttons-santa") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaNorth) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa north-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("horizontal-buttons-santa") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaWest) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa west-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaEast) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa east-btn") }, });
-    __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.startMovingSantaSouth) }, ...{ onMouseup: (__VLS_ctx.stopMovingSanta) }, ...{ class: ("directional-btn-santa south-btn") }, });
     __VLS_styleScopedClasses['pixel-controls'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['up'];
@@ -853,16 +826,6 @@ function __VLS_template() {
     __VLS_styleScopedClasses['right'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['down'];
-    __VLS_styleScopedClasses['directional-buttons-santa'];
-    __VLS_styleScopedClasses['directional-btn-santa'];
-    __VLS_styleScopedClasses['north-btn'];
-    __VLS_styleScopedClasses['horizontal-buttons-santa'];
-    __VLS_styleScopedClasses['directional-btn-santa'];
-    __VLS_styleScopedClasses['west-btn'];
-    __VLS_styleScopedClasses['directional-btn-santa'];
-    __VLS_styleScopedClasses['east-btn'];
-    __VLS_styleScopedClasses['directional-btn-santa'];
-    __VLS_styleScopedClasses['south-btn'];
     var __VLS_slots;
     var __VLS_inheritedAttrs;
     const __VLS_refs = {
@@ -885,11 +848,6 @@ const __VLS_self = (await import('vue')).defineComponent({
             onUpButtonDown: onUpButtonDown,
             onDownButtonDown: onDownButtonDown,
             stopRotation: stopRotation,
-            startMovingSantaNorth: startMovingSantaNorth,
-            startMovingSantaSouth: startMovingSantaSouth,
-            startMovingSantaWest: startMovingSantaWest,
-            startMovingSantaEast: startMovingSantaEast,
-            stopMovingSanta: stopMovingSanta,
         };
     },
     props: {
