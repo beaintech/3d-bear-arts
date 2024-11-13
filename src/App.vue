@@ -7,11 +7,11 @@
       <router-link to="/3d-bear-arts/pop-art-bear-3">Pop3</router-link>
       <router-link to="/3d-bear-arts/machine">machine</router-link>
       <!-- <router-link to="/3d-bear-arts/water">Water Bear</router-link> -->
-      <router-link to="/3d-bear-arts/">Water</router-link>
+      <router-link to="/3d-bear-arts/water">Water</router-link>
       <router-link to="/3d-bear-arts/ghost-bear">ghost</router-link>
       <router-link to="/3d-bear-arts/white-ghost-bear">white ghost</router-link>
-      <router-link to="/3d-bear-arts/aquar">Aquar</router-link>
-
+      <router-link to="/3d-bear-arts/">santa</router-link>
+      <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>
