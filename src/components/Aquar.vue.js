@@ -82,7 +82,7 @@ onMounted(() => {
             opacity: 0.5,
             transmission: 0.7,
             ior: 1.33,
-            thickness: 0.2,
+            thickness: 0.4,
             depthWrite: true,
             envMapIntensity: 2.0,
             clearcoat: 1.0,
@@ -94,10 +94,10 @@ onMounted(() => {
             metalness: 0.3,
             roughness: 0.05,
             transparent: true,
-            opacity: 1,
+            opacity: 0.6,
             transmission: 0.8,
             ior: 1.33,
-            thickness: 0.3,
+            thickness: 0.8,
             depthWrite: true,
             envMapIntensity: 2.0,
             clearcoat: 1.0,
@@ -168,16 +168,6 @@ onMounted(() => {
         gl_FragColor = vec4(color, opacity); 
     }
 `;
-        const crystalMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0.0 },
-                opacity: { value: 0.5 } // Slightly transparent for crystal look
-            },
-            vertexShader,
-            fragmentShader,
-            transparent: true,
-            depthWrite: false,
-        });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
         32, // Width segments
@@ -248,6 +238,8 @@ onMounted(() => {
             roughness: 0.9, // High roughness for a frosty appearance
             clearcoat: 0.5, // Clearcoat for a subtle reflective layer
             clearcoatRoughness: 0.7, // Rougher clearcoat for a diffuse reflection
+            transparent: false, // Enable transparency
+            opacity: 0.85,
         });
         const snowMesh = new THREE.Mesh(snowHalfSphereGeometry, snowMaterial);
         snowMesh.position.set(0, -0.2, 0); // Align with body position
@@ -354,13 +346,6 @@ onMounted(() => {
         halfSnoutGroup.add(snoutCircle);
         // Add the snout group to the bear group
         bearGroup.add(halfSnoutGroup);
-        const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x7FC8A9, // Silver color
-            metalness: 1.0, // Fully metallic for reflective surface
-            roughness: 0.25, // Slightly rough to blur reflections
-            clearcoat: 0.7, // Adds a layer of reflectiveness on top
-            clearcoatRoughness: 0.3, // Roughness of the clear coat layer
-        });
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
         const leftArm = new THREE.Mesh(armGeometry, leftTransparentPureMaterial);
@@ -401,7 +386,7 @@ onMounted(() => {
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, snowWhiteMaterial);
+        const tail = new THREE.Mesh(tailGeometry, leftTransparentPureMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
@@ -412,7 +397,7 @@ onMounted(() => {
                 size: 0.2, // Size of the X
                 depth: 0.05,
             });
-            const xEye = new THREE.Mesh(xEyeGeometry, rightSnowMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, snowWhiteMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -423,7 +408,7 @@ onMounted(() => {
                 size: 0.2, // Size of the O
                 depth: 0.05, // Thickness of the O
             });
-            const oEye = new THREE.Mesh(oEyeGeometry, rightSnowMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, snowWhiteMaterial);
             oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -635,14 +620,17 @@ onMounted(() => {
             let floatOffset = 0; // Offset for controlling the floating effect
             function animateSanta() {
                 requestAnimationFrame(animateSanta);
-                floatOffset += 0.08; // Adjust this value for speed of floating
-                santaModel.position.y = 0.45 + Math.sin(floatOffset) * 0.45; // Oscillates between y = 0 and y = 0.5
+                floatOffset += 0.4; // Adjust this value for speed of floating
+                santaModel.position.y = 0.5 + Math.sin(floatOffset) * 0.45; // Oscillates between y = 0 and y = 0.5
                 renderer.render(scene, camera);
             }
             animateSanta();
         }
         const santaModel = createSanta();
         bearGroup.add(santaModel);
+        const santa2 = createSanta();
+        santa2.position.set(-0.2, -0.1, 0.5);
+        bearGroup.add(santa2);
         santaAnimate();
         function animateSanta(santa) {
             let direction = 1; // 1 for moving right, -1 for moving left
@@ -654,11 +642,11 @@ onMounted(() => {
                     direction = -1;
                     santa.rotation.y = Math.PI; // Face left
                 }
-                else if (santa.position.x <= -0.5) {
+                else if (santa.position.x <= 0) {
                     direction = 1;
                     santa.rotation.y = 0; // Face right
                 }
-                floatOffset += 0.2; // Controls speed of floating
+                floatOffset += 1; // Controls speed of floating
                 santa.position.y = -0.2 + Math.sin(floatOffset) * 0.01;
                 santa.position.z = 0.5;
                 renderer.render(scene, camera);
@@ -721,8 +709,8 @@ onMounted(() => {
         const cuteChristmasHouse = createCuteChristmasHouse();
         bearGroup.add(cuteChristmasHouse);
         const smallChristmasHouse = createCuteChristmasHouse();
-        smallChristmasHouse.position.set(-0.1, -0.2, 0);
-        smallChristmasHouse.scale.set(0.3, 0.3, 0.3);
+        smallChristmasHouse.position.set(-0.2, -0.2, 0);
+        smallChristmasHouse.scale.set(0.35, 0.35, 0.35);
         bearGroup.add(smallChristmasHouse);
         const snowflakeCount = 1000;
         const snowflakeGeometry = new THREE.BufferGeometry();
@@ -747,8 +735,10 @@ onMounted(() => {
         const snowflakes = new THREE.Points(snowflakeGeometry, snowflakeMaterial);
         bearGroup.add(snowflakes);
         function animateSnowFlake() {
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animateSnowFlake); // Recursive call to keep the animation loop running
+            // Access the positions attribute directly for performance
             const positions = snowflakeGeometry.attributes.position.array;
+            // Loop through each snowflake and update its Y position
             for (let i = 1; i < positions.length; i += 3) {
                 positions[i] -= 0.02; // Move snowflake downward
                 // Reset snowflake to the top once it reaches the ground
@@ -756,10 +746,56 @@ onMounted(() => {
                     positions[i] = 10;
                 }
             }
+            // Mark position attribute as needing an update
             snowflakeGeometry.attributes.position.needsUpdate = true;
+            // Render the scene
             renderer.render(scene, camera);
         }
+        // Start the snowflake animation
         animateSnowFlake();
+        const innerSnowflakeCount = 2000; // Adjust for density
+        const innerSnowflakePositions = [];
+        const radius = 0.6; // Adjust slightly smaller than the body radius for containment
+        // Generate random positions within the spherical boundary
+        for (let i = 0; i < innerSnowflakeCount; i++) {
+            const x = (Math.random() - 0.5) * radius * 2;
+            const y = (Math.random() - 0.5) * radius * 2;
+            const z = (Math.random() - 0.5) * radius * 2;
+            if (Math.sqrt(x * x + y * y + z * z) < radius) {
+                innerSnowflakePositions.push(x, y, z);
+            }
+        }
+        // Create buffer geometry and set the positions attribute
+        const innerSnowflakeGeometry = new THREE.BufferGeometry();
+        innerSnowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(innerSnowflakePositions, 3));
+        // Material for the inner snowflakes
+        const innerSnowflakeMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.05, // Adjust size for visibility
+            transparent: true,
+            opacity: 0.9
+        });
+        // Create inner snowflake particles
+        const innerSnowflakes = new THREE.Points(innerSnowflakeGeometry, snowMaterial);
+        innerSnowflakes.position.set(0, -0.2, 0); // Position to match the bear body
+        bearGroup.add(innerSnowflakes);
+        const innerSnowflakes2 = new THREE.Points(innerSnowflakeGeometry, snowCircleMaterial);
+        innerSnowflakes2.position.set(0, 0.8, 0); // Position to match the bear body
+        bearGroup.add(innerSnowflakes2);
+        // Animate inner snowflakes
+        function animateInnerSnowflakes() {
+            requestAnimationFrame(animateInnerSnowflakes);
+            const positions = innerSnowflakeGeometry.attributes.position.array;
+            for (let i = 1; i < positions.length; i += 3) {
+                positions[i] -= 0.02; // Move downward
+                if (positions[i] < -radius) {
+                    positions[i] = radius;
+                }
+            }
+            innerSnowflakeGeometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
+        }
+        animateInnerSnowflakes();
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -796,7 +832,9 @@ onMounted(() => {
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
             if (santa.value)
-                santa.value.rotation.y += 0.1;
+                santa.value.rotation.y += 0.7;
+            shimmerMaterial.uniforms.u_time.value += 0.5;
+            santa2.rotation.y += 0.25;
             renderer.render(scene, camera);
         }
         animate();
@@ -883,19 +921,6 @@ function __VLS_template() {
     };
     let __VLS_directives;
     let __VLS_styleScopedClasses;
-    __VLS_styleScopedClasses['light'];
-    __VLS_styleScopedClasses['light'];
-    __VLS_styleScopedClasses['light'];
-    __VLS_styleScopedClasses['light'];
-    __VLS_styleScopedClasses['light'];
-    __VLS_styleScopedClasses['confetti'];
-    __VLS_styleScopedClasses['confetti'];
-    __VLS_styleScopedClasses['confetti'];
-    __VLS_styleScopedClasses['confetti'];
-    __VLS_styleScopedClasses['confetti'];
-    __VLS_styleScopedClasses['confetti'];
-    __VLS_styleScopedClasses['light'];
-    __VLS_styleScopedClasses['confetti'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
     // CSS variable injection 

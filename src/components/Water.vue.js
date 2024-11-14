@@ -75,7 +75,6 @@ onMounted(() => {
         // beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
         beachTexture.repeat.set(0.8, 1);
         const sunTexture = textureLoader.load('/3d-bear-arts/assets/sun.jpg');
-        // https://www.google.com/imgres?q=pop%20art&imgurl=https%3A%2F%2Fi00.eu%2Fimg%2F605%2F1024x1024%2F9ahr1mu8%2F366098.jpg&imgrefurl=https%3A%2F%2Fwww.dovido.de%2FPop-Art-Bilder%2FWandbild-Pop-Art-Lutscher&docid=tZrAljc23vedzM&tbnid=aWwpNILeFq7VKM&vet=12ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA..i&w=1024&h=682&hcb=2&ved=2ahUKEwiKs57Y-5OJAxXUnf0HHfLwHKYQM3oECHwQAA
         beachTexture.wrapS = beachTexture.wrapT = THREE.RepeatWrapping;
         beachTexture.repeat.set(0.8, 1);
         // beachTexture.repeat.set(2, 2); // Adjust this to scale the texture on the model
