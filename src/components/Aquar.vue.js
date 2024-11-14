@@ -57,27 +57,14 @@ onMounted(() => {
         const houseTexture = textureLoader.load('/3d-bear-arts/assets/house.jpg');
         houseTexture.wrapS = houseTexture.wrapT = THREE.RepeatWrapping;
         houseTexture.repeat.set(1, 1);
-        const houseTexture2 = textureLoader.load('/3d-bear-arts/assets/house3.jpg');
-        const rightSnowMaterial1 = new THREE.MeshPhysicalMaterial({
-            color: 0xFFFFFF, // Clear white tint for glass effect
-            metalness: 0, // Low metalness for subtle reflection
-            roughness: 0.05, // Smooth surface for glassy appearance
-            transparent: true,
-            opacity: 0.5, // Slight opacity for glass effect
-            clearcoat: 1.0, // Full clearcoat for glossiness
-            clearcoatRoughness: 0.2, // Smooth gloss
-            transmission: 0.6, // High transmission for glass-like clarity
-            ior: 1.5, // Glass refractive index
-            envMapIntensity: 1.0, // Environmental reflections for glass realism
-            depthTest: true,
-        });
+        const houseChurch = textureLoader.load('/3d-bear-arts/assets/houseenv_texture_5.jpg');
         const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,
             metalness: 0.3,
             roughness: 0.05,
             transparent: true,
-            opacity: 0.4,
-            transmission: 0.95,
+            opacity: 0.5,
+            transmission: 1,
             ior: 1.33,
             thickness: 0.01,
             depthWrite: true,
@@ -92,7 +79,7 @@ onMounted(() => {
             map: houseTexture,
             roughness: 0.05,
             transparent: true,
-            opacity: 0.45,
+            opacity: 0.5,
             transmission: 0.7,
             ior: 1.33,
             thickness: 0.2,
@@ -118,27 +105,18 @@ onMounted(() => {
             side: THREE.DoubleSide,
         });
         const envTexture = new THREE.CubeTextureLoader().load([
-            '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg',
-            '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg',
-            '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg'
+            '/3d-bear-arts/assets/house_env_texture_1.jpg',
+            '/3d-bear-arts/assets/house_env_texture_4.jpg',
+            '/3d-bear-arts/assets/house_env_texture_6.jpg',
+            '/3d-bear-arts/assets/house_env_texture_2.jpg',
+            '/3d-bear-arts/assets/house_env_texture_5.jpg',
+            '/3d-bear-arts/assets/house_env_texture_3.jpg'
         ]);
         scene.environment = envTexture;
-        const leftTransparentSnowMaterial1 = new THREE.MeshPhysicalMaterial({
-            color: 0xffffff, // Keep it white for metallic effect
-            metalness: 1.0, // High metalness for a metallic look
-            roughness: 0.1, // Low roughness for shine
-            envMap: envTexture, // Apply the environment map
-            envMapIntensity: 1.5, // Increase intensity to amplify reflections
-            ior: 1.25, // Lower ior slightly for metal
-            depthWrite: true,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.7,
-        });
         const circlehMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Clear white tint for glass effect
             metalness: 0.05, // Low metalness for glassy reflection
-            map: houseTexture,
+            // map: houseTexture,
             roughness: 0.2, // Smooth surface for glass
             transparent: true,
             opacity: 1, // Moderate transparency for glass effect
@@ -208,7 +186,7 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         const rightBody = new THREE.Mesh(bodyGeometry, rightSnowMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentSnowMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentPureMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -286,6 +264,7 @@ onMounted(() => {
             clearcoatRoughness: 0.8, // Slightly rough gloss for snow
             side: THREE.DoubleSide,
             transparent: false,
+            opacity: 0.8,
         });
         const snowCircle = new THREE.Mesh(circleGeometry, snowCircleMaterial);
         snowCircle.scale.set(0.7, 0.7, 0.7);
@@ -512,7 +491,7 @@ onMounted(() => {
             // Arms
             const armGeometry = new THREE.CylinderGeometry(0.04, 0.04, 0.2, 32);
             const armMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
-            const leftArm = new THREE.Mesh(armGeometry, leftTransparentSnowMaterial);
+            const leftArm = new THREE.Mesh(armGeometry, leftTransparentPureMaterial);
             leftArm.position.set(-0.15, 0.25, 0);
             leftArm.rotation.z = Math.PI / 4;
             catGroup.add(leftArm);
@@ -745,6 +724,42 @@ onMounted(() => {
         smallChristmasHouse.position.set(-0.1, -0.2, 0);
         smallChristmasHouse.scale.set(0.3, 0.3, 0.3);
         bearGroup.add(smallChristmasHouse);
+        const snowflakeCount = 1000;
+        const snowflakeGeometry = new THREE.BufferGeometry();
+        const snowflakePositions = [];
+        // Generate random positions for each snowflake
+        for (let i = 0; i < snowflakeCount; i++) {
+            const x = (Math.random() - 0.5) * 20;
+            const y = Math.random() * 20;
+            const z = (Math.random() - 0.5) * 20;
+            snowflakePositions.push(x, y, z);
+        }
+        // Assign positions to geometry
+        snowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(snowflakePositions, 3));
+        // Snowflake Material
+        const snowflakeMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.8,
+        });
+        // Create Points (particles) for snowflakes and add to bearGroup
+        const snowflakes = new THREE.Points(snowflakeGeometry, snowflakeMaterial);
+        bearGroup.add(snowflakes);
+        function animateSnowFlake() {
+            requestAnimationFrame(animate);
+            const positions = snowflakeGeometry.attributes.position.array;
+            for (let i = 1; i < positions.length; i += 3) {
+                positions[i] -= 0.02; // Move snowflake downward
+                // Reset snowflake to the top once it reaches the ground
+                if (positions[i] < -10) {
+                    positions[i] = 10;
+                }
+            }
+            snowflakeGeometry.attributes.position.needsUpdate = true;
+            renderer.render(scene, camera);
+        }
+        animateSnowFlake();
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -820,6 +835,22 @@ function stopRotation() {
     isRotatingUp.value = false;
     isRotatingDown.value = false;
 }
+const numConfetti = 15;
+for (let i = 0; i < numConfetti; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = `${Math.random() * 100}vw`;
+    confetti.style.animationDuration = `${Math.random() * 3 + 4}s`;
+    confetti.style.animationDelay = `${Math.random() * 5}s`;
+    document.body.appendChild(confetti);
+}
+// Add twinkling lights
+const numLights = 5;
+for (let i = 0; i < numLights; i++) {
+    const light = document.createElement('div');
+    light.classList.add('light');
+    document.body.appendChild(light);
+}
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         background: {
@@ -852,6 +883,19 @@ function __VLS_template() {
     };
     let __VLS_directives;
     let __VLS_styleScopedClasses;
+    __VLS_styleScopedClasses['light'];
+    __VLS_styleScopedClasses['light'];
+    __VLS_styleScopedClasses['light'];
+    __VLS_styleScopedClasses['light'];
+    __VLS_styleScopedClasses['light'];
+    __VLS_styleScopedClasses['confetti'];
+    __VLS_styleScopedClasses['confetti'];
+    __VLS_styleScopedClasses['confetti'];
+    __VLS_styleScopedClasses['confetti'];
+    __VLS_styleScopedClasses['confetti'];
+    __VLS_styleScopedClasses['confetti'];
+    __VLS_styleScopedClasses['light'];
+    __VLS_styleScopedClasses['confetti'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
     // CSS variable injection 
