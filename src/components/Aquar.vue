@@ -931,54 +931,52 @@ animateSanta(santa.value);
 
       const innerSnowflakeCount = 2000; // Adjust for density
       const innerSnowflakePositions = [];
-      const innerSnowflakeGeometry =new THREE.SphereGeometry(2, 32, 32);
-      const innerSnowflakeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
-            
       const radius = 0.6; // Adjust slightly smaller than the body radius for containment
+
+      // Generate random positions within the spherical boundary
       for (let i = 0; i < innerSnowflakeCount; i++) {
           const x = (Math.random() - 0.5) * radius * 2;
           const y = (Math.random() - 0.5) * radius * 2;
           const z = (Math.random() - 0.5) * radius * 2;
 
-          // Only push points that are within the spherical boundary
           if (Math.sqrt(x * x + y * y + z * z) < radius) {
               innerSnowflakePositions.push(x, y, z);
           }
       }
 
-      // Set the inner snowflake positions
+      // Create buffer geometry and set the positions attribute
+      const innerSnowflakeGeometry = new THREE.BufferGeometry();
       innerSnowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(innerSnowflakePositions, 3));
 
       // Material for the inner snowflakes
+      const innerSnowflakeMaterial = new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.05, // Adjust size for visibility
+          transparent: true,
+          opacity: 0.9
+      });
 
       // Create inner snowflake particles
-      const innerSnowflakes = new THREE.Points(innerSnowflakeGeometry, innerSnowflakeMaterial);
-      const innerSnowflakes2 = new THREE.Points(innerSnowflakeGeometry, innerSnowflakeMaterial);
+      const innerSnowflakes = new THREE.Points(innerSnowflakeGeometry, snowMaterial);
       innerSnowflakes.position.set(0, -0.2, 0); // Position to match the bear body
-      innerSnowflakes2.position.set(0, 0.7, 0);
-
       bearGroup.add(innerSnowflakes);
+      const innerSnowflakes2 = new THREE.Points(innerSnowflakeGeometry, snowCircleMaterial);
+      innerSnowflakes2.position.set(0, 0.8, 0); // Position to match the bear body
       bearGroup.add(innerSnowflakes2);
-
-
       // Animate inner snowflakes
       function animateInnerSnowflakes() {
           requestAnimationFrame(animateInnerSnowflakes);
 
-          // Access and update the position attribute for movement
           const positions = innerSnowflakeGeometry.attributes.position.array;
           for (let i = 1; i < positions.length; i += 3) {
               positions[i] -= 0.02; // Move downward
 
-              // Reset snowflake to the top within the bear body once it reaches the bottom
               if (positions[i] < -radius) {
                   positions[i] = radius;
               }
           }
 
-          // Update the geometry for rendering
           innerSnowflakeGeometry.attributes.position.needsUpdate = true;
-
           renderer.render(scene, camera);
       }
 
@@ -1096,81 +1094,43 @@ for (let i = 0; i < numLights; i++) {
     </script>
 
 <style scoped>
-/* .three-canvas {
+.three-canvas {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle, #FFD700 15%, #B22222 55%, #006400 90%);
+    background: radial-gradient(circle, rgba(255, 0, 0, 0.9) 15%, rgba(34, 139, 34, 0.85) 45%, rgba(255, 99, 71, 0.9) 70%);
     background-image: 
-        radial-gradient(circle at top left, rgba(255, 215, 0, 0.7), rgba(178, 34, 34, 0) 50%),
-        radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.6), rgba(34, 139, 34, 0) 50%),
-        radial-gradient(circle at center, rgba(255, 69, 0, 0.3), rgba(34, 139, 34, 0) 80%);
+        radial-gradient(circle at top left, rgba(255, 0, 0, 0.9) 20%, rgba(178, 34, 34, 0) 60%),
+        radial-gradient(circle at bottom right, rgba(34, 139, 34, 0.85) 20%, rgba(34, 139, 34, 0) 60%),
+        radial-gradient(circle at center, rgba(255, 99, 71, 0.9) 20%, rgba(34, 139, 34, 0) 60%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-} 
-*/
-
-.three-canvas {
-  margin: 0;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background: radial-gradient(
-    circle at 50% 50%, 
-    rgba(255, 0, 0, 0.9),      /* Bright red */
-    rgba(34, 139, 34, 0.85),   /* Forest green */
-    rgba(255, 99, 71, 0.9)     /* Tomato red */
-  );
-  background-size: 200% 200%;
-  background-repeat: no-repeat;
-  animation: heartTunnel 1s infinite linear;
 }
-  
-  /* Keyframes for heart tunnel-like animation */
-  /* @keyframes heartTunnel {
-    0% {
-      background-size: 150% 150%;
-      background-position: center;
-    }
-    50% {
-      background-size: 100% 100%;
-      background-position: center;
-    }
-    100% {
-      background-size: 150% 150%;
-      background-position: center;
-    }
-  }
-
-  .three-container {
-    background-color: transparent;
-  } */
-
 
 .pixel-btn {
     font-family: 'Press Start 2P', sans-serif;
     font-size: 14px;
-    background-color: #3C5F8A; /* Winter Steel Blue */
-    color: white;
+    background-color: #8B0000; /* Dark Red for Christmas theme */
+    color: #FFD700; /* Gold text color */
     padding: 15px;
-    border: 4px solid #E0FFFF; /* Light Cyan border */
-    box-shadow: 3px 3px 0 #E0FFFF, 6px 6px 0 #3C5F8A; /* Winter shadow */
+    border: 4px solid #32CD32; /* Lime Green border */
+    box-shadow: 4px 4px 0 #FFD700, 8px 8px 0 #8B0000; /* Festive shadow */
     text-transform: uppercase;
     transition: transform 0.2s ease-in-out;
     cursor: pointer;
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
 }
 
 .pixel-btn:hover {
-    background-color: #B0E0E6; /* Powder Blue on hover */
-    color: #FFFFFF;
-    transform: translate(-3px, -3px);
+    background-color: #B22222; /* Firebrick Red on hover */
+    color: #FFFFFF; /* White text */
+    transform: translate(-4px, -4px);
 }
 
 .pixel-btn:active {
     transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #B0E0E6, 2px 2px 0 #3C5F8A;
+    box-shadow: 1px 1px 0 #FFD700, 3px 3px 0 #8B0000;
 }
 
 .pixel-controls {
