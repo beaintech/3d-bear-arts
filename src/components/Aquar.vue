@@ -81,29 +81,15 @@
         houseTexture.wrapS = houseTexture.wrapT = THREE.RepeatWrapping;
         houseTexture.repeat.set(1,1);
 
-        const houseTexture2 = textureLoader.load('/3d-bear-arts/assets/house3.jpg');
-
-const rightSnowMaterial1 = new THREE.MeshPhysicalMaterial({
-    color: 0xFFFFFF,         // Clear white tint for glass effect
-    metalness: 0,         // Low metalness for subtle reflection
-    roughness: 0.05,         // Smooth surface for glassy appearance
-    transparent: true,
-    opacity: 0.5,            // Slight opacity for glass effect
-    clearcoat: 1.0,          // Full clearcoat for glossiness
-    clearcoatRoughness: 0.2, // Smooth gloss
-    transmission: 0.6,       // High transmission for glass-like clarity
-    ior: 1.5,                // Glass refractive index
-    envMapIntensity: 1.0,    // Environmental reflections for glass realism
-    depthTest: true,
-});
+        const houseChurch = textureLoader.load('/3d-bear-arts/assets/houseenv_texture_5.jpg');
 
 const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xFFFFFF,
     metalness: 0.3,
     roughness: 0.05,
     transparent: true,
-    opacity: 0.4,
-    transmission: 0.95,
+    opacity: 0.5,
+    transmission: 1,
     ior: 1.33,
     thickness: 0.01,
     depthWrite: true,
@@ -119,7 +105,7 @@ const leftTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
     map: houseTexture,
     roughness: 0.05,
     transparent: true,
-    opacity: 0.45,
+    opacity: 0.5,
     transmission: 0.7,
     ior: 1.33,
     thickness: 0.2,
@@ -147,30 +133,19 @@ const leftTransparentPureMaterial = new THREE.MeshPhysicalMaterial({
 });
 
 const envTexture = new THREE.CubeTextureLoader().load([
-  '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg',
-  '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg',
-  '/3d-bear-arts/assets/house.jpg', '/3d-bear-arts/assets/house.jpg'
+  '/3d-bear-arts/assets/house_env_texture_1.jpg',
+  '/3d-bear-arts/assets/house_env_texture_4.jpg',
+  '/3d-bear-arts/assets/house_env_texture_6.jpg',
+  '/3d-bear-arts/assets/house_env_texture_2.jpg',
+  '/3d-bear-arts/assets/house_env_texture_5.jpg',
+  '/3d-bear-arts/assets/house_env_texture_3.jpg'
 ]);
 scene.environment = envTexture;
-
-const leftTransparentSnowMaterial1 = new THREE.MeshPhysicalMaterial({
-  color: 0xffffff,          // Keep it white for metallic effect
-    metalness: 1.0,           // High metalness for a metallic look
-    roughness: 0.1,           // Low roughness for shine
-    envMap: envTexture,       // Apply the environment map
-    envMapIntensity: 1.5,     // Increase intensity to amplify reflections
-    ior: 1.25,                // Lower ior slightly for metal
-    depthWrite: true,
-    side: THREE.DoubleSide,
-    transparent: true,
-    opacity: 0.7,  
-});
-
 
 const circlehMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xFFFFFF,         // Clear white tint for glass effect
     metalness: 0.05,         // Low metalness for glassy reflection
-    map: houseTexture,
+    // map: houseTexture,
     roughness: 0.2,          // Smooth surface for glass
     transparent: true,
     opacity: 1,            // Moderate transparency for glass effect
@@ -180,7 +155,6 @@ const circlehMaterial = new THREE.MeshPhysicalMaterial({
     envMapIntensity: 1.0,    // Higher reflection for glass realism
     side: THREE.DoubleSide,
 });
-
 
 const snowWhiteMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xFFFFFF,  // Hot pink as the base
@@ -248,7 +222,7 @@ const crystalMaterial = new THREE.ShaderMaterial({
         );
 
       const rightBody = new THREE.Mesh(bodyGeometry, rightSnowMaterial);
-      const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentSnowMaterial);
+      const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentPureMaterial);
   
       rightBody.scale.set(0.85, 0.85, 0.8);
       leftBody.scale.set(0.85, 0.85, 0.8);
@@ -346,6 +320,7 @@ const snowCircleMaterial = new THREE.MeshPhysicalMaterial({
     clearcoatRoughness: 0.8, // Slightly rough gloss for snow
     side: THREE.DoubleSide,
     transparent: false,
+    opacity: 0.8,
 });
 
 const snowCircle = new THREE.Mesh(circleGeometry, snowCircleMaterial);
@@ -618,7 +593,7 @@ halfSphereGroup.add(shimmerSurface);
         // Arms
       const armGeometry = new THREE.CylinderGeometry(0.04, 0.04, 0.2, 32);
       const armMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
-      const leftArm = new THREE.Mesh(armGeometry, leftTransparentSnowMaterial);
+      const leftArm = new THREE.Mesh(armGeometry, leftTransparentPureMaterial);
       leftArm.position.set(-0.15, 0.25, 0);
       leftArm.rotation.z = Math.PI / 4;
       catGroup.add(leftArm);
@@ -914,6 +889,52 @@ animateSanta(santa.value);
 
       bearGroup.add(smallChristmasHouse);
 
+      const snowflakeCount = 1000;
+const snowflakeGeometry = new THREE.BufferGeometry();
+const snowflakePositions = [];
+
+// Generate random positions for each snowflake
+for (let i = 0; i < snowflakeCount; i++) {
+    const x = (Math.random() - 0.5) * 20;
+    const y = Math.random() * 20;
+    const z = (Math.random() - 0.5) * 20;
+    snowflakePositions.push(x, y, z);
+}
+
+// Assign positions to geometry
+snowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(snowflakePositions, 3));
+
+// Snowflake Material
+const snowflakeMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.1,
+    transparent: true,
+    opacity: 0.8,
+});
+
+// Create Points (particles) for snowflakes and add to bearGroup
+const snowflakes = new THREE.Points(snowflakeGeometry, snowflakeMaterial);
+bearGroup.add(snowflakes);
+
+function animateSnowFlake() {
+    requestAnimationFrame(animate);
+
+    const positions = snowflakeGeometry.attributes.position.array;
+    for (let i = 1; i < positions.length; i += 3) {
+        positions[i] -= 0.02; // Move snowflake downward
+
+        // Reset snowflake to the top once it reaches the ground
+        if (positions[i] < -10) {
+            positions[i] = 10;
+        }
+    }
+    snowflakeGeometry.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+}
+
+animateSnowFlake();
+
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
       scene.add(bearGroup);
@@ -1003,6 +1024,24 @@ animateSanta(santa.value);
           isRotatingUp.value = false;
           isRotatingDown.value = false;
         }
+
+        const numConfetti = 15;
+for (let i = 0; i < numConfetti; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = `${Math.random() * 100}vw`;
+    confetti.style.animationDuration = `${Math.random() * 3 + 4}s`;
+    confetti.style.animationDelay = `${Math.random() * 5}s`;
+    document.body.appendChild(confetti);
+}
+
+// Add twinkling lights
+const numLights = 5;
+for (let i = 0; i < numLights; i++) {
+    const light = document.createElement('div');
+    light.classList.add('light');
+    document.body.appendChild(light);
+}
     </script>
 
 <style scoped>
@@ -1010,48 +1049,70 @@ animateSanta(santa.value);
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle, #FFFFFF 20%, #87CEFA 60%, #1E90FF 90%);
+    background: radial-gradient(circle, #FFD700 15%, #B22222 55%, #006400 90%); /* Gold to Firebrick Red to Dark Green */
     background-image: 
-        radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 50%),
-        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0) 50%),
-        radial-gradient(circle at center, rgba(173, 216, 230, 0.5), rgba(173, 216, 230, 0) 70%);
+        radial-gradient(circle at top left, rgba(255, 215, 0, 0.7), rgba(178, 34, 34, 0) 50%),
+        radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.6), rgba(34, 139, 34, 0) 50%),
+        radial-gradient(circle at center, rgba(255, 69, 0, 0.3), rgba(34, 139, 34, 0) 80%);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
 
-/* Snowflake animations */
-@keyframes snowflakes {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(100vh); }
+/* Twinkling lights animation */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
 }
 
-.snowflake {
+.light {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #FFD700; /* Gold lights */
+    border-radius: 50%;
+    box-shadow: 0px 0px 10px rgba(255, 215, 0, 1);
+    opacity: 0.8;
+    animation: twinkle 3s infinite alternate ease-in-out;
+}
+
+/* Placing lights around the canvas */
+.light:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+.light:nth-child(2) { top: 40%; left: 70%; animation-delay: 1.5s; }
+.light:nth-child(3) { top: 60%; left: 50%; animation-delay: 1s; }
+.light:nth-child(4) { top: 80%; left: 20%; animation-delay: 2s; }
+.light:nth-child(5) { top: 15%; left: 80%; animation-delay: 1.2s; }
+
+/* Falling confetti */
+@keyframes fall {
+    0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+.confetti {
     position: absolute;
     top: -10px;
-    left: calc(50% - 10px);
-    width: 20px;
-    height: 20px;
-    background: white;
-    opacity: 0.8;
-    border-radius: 50%;
-    box-shadow: 0px 0px 4px rgba(255, 255, 255, 0.9);
-    animation: snowflakes 10s linear infinite;
+    width: 6px;
+    height: 12px;
+    background: linear-gradient(45deg, #FF4500, #FFD700); /* Orange to Gold */
+    animation: fall 4s linear infinite;
+    opacity: 0.9;
+}
+
+/* Confetti randomization */
+.confetti:nth-child(1) { left: 10%; animation-duration: 6s; animation-delay: 0s; }
+.confetti:nth-child(2) { left: 25%; animation-duration: 5s; animation-delay: 1s; }
+.confetti:nth-child(3) { left: 40%; animation-duration: 6.5s; animation-delay: 0.5s; }
+.confetti:nth-child(4) { left: 55%; animation-duration: 4s; animation-delay: 2s; }
+.confetti:nth-child(5) { left: 70%; animation-duration: 5.5s; animation-delay: 1.5s; }
+.confetti:nth-child(6) { left: 85%; animation-duration: 6s; animation-delay: 0.3s; }
+
+/* Snowflake and twinkle lights layer order */
+.snowflake, .light, .confetti {
     pointer-events: none;
+    z-index: 1;
 }
 
-.pixel-controls {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(120%) translateY(-100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Custom styles for pixel buttons to fit winter theme */
 .pixel-btn {
     font-family: 'Press Start 2P', sans-serif;
     font-size: 14px;
@@ -1076,4 +1137,16 @@ animateSanta(santa.value);
     transform: translate(2px, 2px);
     box-shadow: 1px 1px 0 #B0E0E6, 2px 2px 0 #3C5F8A;
 }
+
+.pixel-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(120%) translateY(-100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
 </style>

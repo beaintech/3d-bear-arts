@@ -92,10 +92,10 @@ onMounted(() => {
             map: houseTexture,
             roughness: 0.05,
             transparent: true,
-            opacity: 0.7,
-            transmission: 0.95,
+            opacity: 0.45,
+            transmission: 0.7,
             ior: 1.33,
-            thickness: 0.3,
+            thickness: 0.2,
             depthWrite: true,
             envMapIntensity: 2.0,
             clearcoat: 1.0,
@@ -108,7 +108,7 @@ onMounted(() => {
             roughness: 0.05,
             transparent: true,
             opacity: 1,
-            transmission: 0.95,
+            transmission: 0.8,
             ior: 1.33,
             thickness: 0.3,
             depthWrite: true,
@@ -148,12 +148,57 @@ onMounted(() => {
             envMapIntensity: 1.0, // Higher reflection for glass realism
             side: THREE.DoubleSide,
         });
-        const leftLegMaterial = new THREE.MeshPhysicalMaterial({
+        const snowWhiteMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF, // Hot pink as the base
             metalness: 0.2, // Lower metalness for less reflective look
             roughness: 0.7, // Increase roughness for a more matte finish
             clearcoat: 0.05, // Lower clearcoat to reduce gloss
             clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
+        });
+        // Vertex shader
+        const vertexShader = `
+    varying vec2 vUv;
+    void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+        // Fragment shader
+        const fragmentShader = `
+    uniform float time;
+    uniform float opacity;
+    varying vec2 vUv;
+
+    void main() {
+        vec2 p = vUv * 2.0 - vec2(1.0);
+        float len = length(p);
+        float angle = atan(p.y, p.x);
+
+        // Soft pulsating wave for frosty effect
+        float wave = sin(len * 15.0 - time * 2.0) * 0.2 + 0.8;
+
+        // White and silver tones for icy crystal effect
+        vec3 color1 = vec3(0.95, 0.95, 0.95); // Light silvery white
+        vec3 color2 = vec3(0.8, 0.8, 0.85);   // Soft silver
+        vec3 color3 = vec3(1.0, 1.0, 1.0);    // Pure white for highlights
+
+        // Blend colors to achieve a frosty, metallic look
+        vec3 color = mix(color1, color2, wave);
+        color = mix(color, color3, sin(angle + time * 0.5) * 0.3 + 0.7);
+
+        // Apply opacity for crystal transparency
+        gl_FragColor = vec4(color, opacity); 
+    }
+`;
+        const crystalMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0.0 },
+                opacity: { value: 0.5 } // Slightly transparent for crystal look
+            },
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            depthWrite: false,
         });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
@@ -190,10 +235,10 @@ onMounted(() => {
         32, // Width segments
         32, // Height segments
         0, // phiStart
-        Math.PI // phiLength (half of the sphere)
+        Math.PI // phiLength (half of the sphere) 
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, leftTransparentSnowMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, leftTransparentPureMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
@@ -288,7 +333,7 @@ onMounted(() => {
         halfSphereGroup.add(shimmerSurface);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, leftTransparentSnowMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, leftTransparentPureMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
         const rightEar = new THREE.Mesh(earGeometry, rightSnowMaterial);
@@ -301,7 +346,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftTransparentSnowMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftTransparentPureMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -369,15 +414,15 @@ onMounted(() => {
         bearGroup.add(rightBootFront);
         // Create rounded buttocks
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-        const leftButtock = new THREE.Mesh(buttockGeometry, leftTransparentSnowMaterial);
+        const leftButtock = new THREE.Mesh(buttockGeometry, snowWhiteMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, leftLegMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, snowWhiteMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, leftLegMaterial);
+        const tail = new THREE.Mesh(tailGeometry, snowWhiteMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
@@ -441,11 +486,11 @@ onMounted(() => {
             catGroup.add(headMesh);
             const earGeometry = new THREE.ConeGeometry(0.08, 0.15, 32);
             const earMaterial = new THREE.MeshStandardMaterial({ color: 0xffcc99 });
-            const leftEar = new THREE.Mesh(earGeometry, earMaterial);
+            const leftEar = new THREE.Mesh(earGeometry, leftTransparentPureMaterial);
             leftEar.position.set(-0.1, 0.55, 0);
             leftEar.rotation.z = Math.PI / 6;
             catGroup.add(leftEar);
-            const rightEar = new THREE.Mesh(earGeometry, earMaterial);
+            const rightEar = new THREE.Mesh(earGeometry, leftTransparentPureMaterial);
             rightEar.position.set(0.1, 0.55, 0);
             rightEar.rotation.z = -Math.PI / 6;
             catGroup.add(rightEar);
@@ -689,13 +734,17 @@ onMounted(() => {
             const wreathMesh = new THREE.Mesh(wreathGeometry, wreathMaterial);
             wreathMesh.position.set(0, 0.45, 0.38); // Centered above the door
             houseGroup.add(wreathMesh);
-            houseGroup.position.set(0.2, -0.2, 0);
-            houseGroup.scale.set(0.6, 0.6, 0.6);
+            houseGroup.position.set(0.22, -0.2, 0);
+            houseGroup.scale.set(0.5, 0.5, 0.5);
             return houseGroup;
         }
         // Usage: add the cute house to the scene
         const cuteChristmasHouse = createCuteChristmasHouse();
         bearGroup.add(cuteChristmasHouse);
+        const smallChristmasHouse = createCuteChristmasHouse();
+        smallChristmasHouse.position.set(-0.1, -0.2, 0);
+        smallChristmasHouse.scale.set(0.3, 0.3, 0.3);
+        bearGroup.add(smallChristmasHouse);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -731,7 +780,8 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.03;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.03;
-            // humanWithPantsAndSwimCap.rotation.y += 0.07
+            if (santa.value)
+                santa.value.rotation.y += 0.1;
             renderer.render(scene, camera);
         }
         animate();
