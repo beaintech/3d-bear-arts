@@ -108,7 +108,7 @@ const leftTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
     opacity: 0.5,
     transmission: 0.7,
     ior: 1.33,
-    thickness: 0.2,
+    thickness: 0.4,
     depthWrite: true,
     envMapIntensity: 2.0,
     clearcoat: 1.0,
@@ -121,10 +121,10 @@ const leftTransparentPureMaterial = new THREE.MeshPhysicalMaterial({
     metalness: 0.3,
     roughness: 0.05,
     transparent: true,
-    opacity: 1,
+    opacity: 0.6,
     transmission: 0.8,
     ior: 1.33,
-    thickness: 0.3,
+    thickness: 0.8,
     depthWrite: true,
     envMapIntensity: 2.0,
     clearcoat: 1.0,
@@ -200,17 +200,6 @@ const fragmentShader = `
         gl_FragColor = vec4(color, opacity); 
     }
 `;
-
-const crystalMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-        time: { value: 0.0 },
-        opacity: { value: 0.5 } // Slightly transparent for crystal look
-    },
-    vertexShader,
-    fragmentShader,
-    transparent: true,
-    depthWrite: false,
-});
 
 // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(
@@ -301,6 +290,8 @@ const snowMaterial = new THREE.MeshPhysicalMaterial({
     roughness: 0.9,        // High roughness for a frosty appearance
     clearcoat: 0.5,        // Clearcoat for a subtle reflective layer
     clearcoatRoughness: 0.7, // Rougher clearcoat for a diffuse reflection
+    transparent: false,         // Enable transparency
+    opacity: 0.85,  
 });
 
 const snowMesh = new THREE.Mesh(snowHalfSphereGeometry, snowMaterial);
@@ -426,14 +417,6 @@ halfSphereGroup.add(shimmerSurface);
         // Add the snout group to the bear group
         bearGroup.add(halfSnoutGroup);
 
-        const heartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0x7FC8A9,  // Silver color
-            metalness: 1.0,    // Fully metallic for reflective surface
-            roughness: 0.25,    // Slightly rough to blur reflections
-            clearcoat: 0.7,    // Adds a layer of reflectiveness on top
-            clearcoatRoughness: 0.3,  // Roughness of the clear coat layer
-        });
-
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
         const leftArm = new THREE.Mesh(armGeometry, leftTransparentPureMaterial);
@@ -483,7 +466,7 @@ halfSphereGroup.add(shimmerSurface);
 
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, snowWhiteMaterial);
+        const tail = new THREE.Mesh(tailGeometry, leftTransparentPureMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
 
@@ -496,7 +479,7 @@ halfSphereGroup.add(shimmerSurface);
             depth: 0.05,
          });
 
-        const xEye = new THREE.Mesh(xEyeGeometry, rightSnowMaterial);
+        const xEye = new THREE.Mesh(xEyeGeometry, snowWhiteMaterial);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
         xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -509,7 +492,7 @@ halfSphereGroup.add(shimmerSurface);
         depth: 0.05, // Thickness of the O
         });
 
-        const oEye = new THREE.Mesh(oEyeGeometry, rightSnowMaterial);
+        const oEye = new THREE.Mesh(oEyeGeometry, snowWhiteMaterial);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -774,8 +757,8 @@ halfSphereGroup.add(shimmerSurface);
         function animateSanta() {
             requestAnimationFrame(animateSanta);
 
-            floatOffset += 0.08; // Adjust this value for speed of floating
-            santaModel.position.y = 0.45 + Math.sin(floatOffset) * 0.45; // Oscillates between y = 0 and y = 0.5
+            floatOffset += 0.4; // Adjust this value for speed of floating
+            santaModel.position.y = 0.5 + Math.sin(floatOffset) * 0.45; // Oscillates between y = 0 and y = 0.5
 
             renderer.render(scene, camera);
         }
@@ -785,6 +768,10 @@ halfSphereGroup.add(shimmerSurface);
 
       const santaModel = createSanta();
       bearGroup.add(santaModel);
+
+      const santa2 = createSanta();
+      santa2.position.set(-0.2, -0.1, 0.5);
+      bearGroup.add(santa2);
 
       santaAnimate();
 
@@ -799,12 +786,12 @@ halfSphereGroup.add(shimmerSurface);
             if (santa.position.x >= 0.5) {
                 direction = -1; 
                 santa.rotation.y = Math.PI; // Face left
-            } else if (santa.position.x <= -0.5) {
+            } else if (santa.position.x <= 0) {
                 direction = 1; 
                 santa.rotation.y = 0; // Face right
             }
 
-            floatOffset += 0.2; // Controls speed of floating
+            floatOffset += 1; // Controls speed of floating
             santa.position.y = -0.2 + Math.sin(floatOffset) * 0.01; 
             santa.position.z = 0.5;
             renderer.render(scene, camera);
@@ -884,56 +871,118 @@ animateSanta(santa.value);
       bearGroup.add(cuteChristmasHouse);
 
       const smallChristmasHouse = createCuteChristmasHouse();
-      smallChristmasHouse.position.set(-0.1, -0.2, 0);
-      smallChristmasHouse.scale.set(0.3, 0.3, 0.3);
+      smallChristmasHouse.position.set(-0.2, -0.2, 0);
+      smallChristmasHouse.scale.set(0.35, 0.35, 0.35);
 
       bearGroup.add(smallChristmasHouse);
 
       const snowflakeCount = 1000;
-const snowflakeGeometry = new THREE.BufferGeometry();
-const snowflakePositions = [];
+      const snowflakeGeometry = new THREE.BufferGeometry();
+      const snowflakePositions = [];
 
-// Generate random positions for each snowflake
-for (let i = 0; i < snowflakeCount; i++) {
-    const x = (Math.random() - 0.5) * 20;
-    const y = Math.random() * 20;
-    const z = (Math.random() - 0.5) * 20;
-    snowflakePositions.push(x, y, z);
-}
+      // Generate random positions for each snowflake
+      for (let i = 0; i < snowflakeCount; i++) {
+          const x = (Math.random() - 0.5) * 20;
+          const y = Math.random() * 20;
+          const z = (Math.random() - 0.5) * 20;
+          snowflakePositions.push(x, y, z);
+      }
 
-// Assign positions to geometry
-snowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(snowflakePositions, 3));
+      // Assign positions to geometry
+      snowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(snowflakePositions, 3));
 
-// Snowflake Material
-const snowflakeMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.1,
-    transparent: true,
-    opacity: 0.8,
-});
+      // Snowflake Material
+      const snowflakeMaterial = new THREE.PointsMaterial({
+          color: 0xffffff,
+          size: 0.1,
+          transparent: true,
+          opacity: 0.8,
+      });
 
-// Create Points (particles) for snowflakes and add to bearGroup
-const snowflakes = new THREE.Points(snowflakeGeometry, snowflakeMaterial);
-bearGroup.add(snowflakes);
+      // Create Points (particles) for snowflakes and add to bearGroup
+      const snowflakes = new THREE.Points(snowflakeGeometry, snowflakeMaterial);
+      bearGroup.add(snowflakes);
 
-function animateSnowFlake() {
-    requestAnimationFrame(animate);
+      function animateSnowFlake() {
+          requestAnimationFrame(animateSnowFlake); // Recursive call to keep the animation loop running
 
-    const positions = snowflakeGeometry.attributes.position.array;
-    for (let i = 1; i < positions.length; i += 3) {
-        positions[i] -= 0.02; // Move snowflake downward
+          // Access the positions attribute directly for performance
+          const positions = snowflakeGeometry.attributes.position.array;
 
-        // Reset snowflake to the top once it reaches the ground
-        if (positions[i] < -10) {
-            positions[i] = 10;
-        }
-    }
-    snowflakeGeometry.attributes.position.needsUpdate = true;
+          // Loop through each snowflake and update its Y position
+          for (let i = 1; i < positions.length; i += 3) {
+              positions[i] -= 0.02; // Move snowflake downward
 
-    renderer.render(scene, camera);
-}
+              // Reset snowflake to the top once it reaches the ground
+              if (positions[i] < -10) {
+                  positions[i] = 10;
+              }
+          }
 
-animateSnowFlake();
+          // Mark position attribute as needing an update
+          snowflakeGeometry.attributes.position.needsUpdate = true;
+
+          // Render the scene
+          renderer.render(scene, camera);
+      }
+
+      // Start the snowflake animation
+      animateSnowFlake();
+
+      const innerSnowflakeCount = 2000; // Adjust for density
+      const innerSnowflakePositions = [];
+      const innerSnowflakeGeometry =new THREE.SphereGeometry(2, 32, 32);
+      const innerSnowflakeMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
+            
+      const radius = 0.6; // Adjust slightly smaller than the body radius for containment
+      for (let i = 0; i < innerSnowflakeCount; i++) {
+          const x = (Math.random() - 0.5) * radius * 2;
+          const y = (Math.random() - 0.5) * radius * 2;
+          const z = (Math.random() - 0.5) * radius * 2;
+
+          // Only push points that are within the spherical boundary
+          if (Math.sqrt(x * x + y * y + z * z) < radius) {
+              innerSnowflakePositions.push(x, y, z);
+          }
+      }
+
+      // Set the inner snowflake positions
+      innerSnowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(innerSnowflakePositions, 3));
+
+      // Material for the inner snowflakes
+
+      // Create inner snowflake particles
+      const innerSnowflakes = new THREE.Points(innerSnowflakeGeometry, innerSnowflakeMaterial);
+      const innerSnowflakes2 = new THREE.Points(innerSnowflakeGeometry, innerSnowflakeMaterial);
+      innerSnowflakes.position.set(0, -0.2, 0); // Position to match the bear body
+      innerSnowflakes2.position.set(0, 0.7, 0);
+
+      bearGroup.add(innerSnowflakes);
+      bearGroup.add(innerSnowflakes2);
+
+
+      // Animate inner snowflakes
+      function animateInnerSnowflakes() {
+          requestAnimationFrame(animateInnerSnowflakes);
+
+          // Access and update the position attribute for movement
+          const positions = innerSnowflakeGeometry.attributes.position.array;
+          for (let i = 1; i < positions.length; i += 3) {
+              positions[i] -= 0.02; // Move downward
+
+              // Reset snowflake to the top within the bear body once it reaches the bottom
+              if (positions[i] < -radius) {
+                  positions[i] = radius;
+              }
+          }
+
+          // Update the geometry for rendering
+          innerSnowflakeGeometry.attributes.position.needsUpdate = true;
+
+          renderer.render(scene, camera);
+      }
+
+      animateInnerSnowflakes();
 
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -976,8 +1025,10 @@ animateSnowFlake();
           if (isRotatingUp.value) bearGroup.rotation.x -= 0.03;
           if (isRotatingDown.value) bearGroup.rotation.x += 0.03;
 
-           if(santa.value) santa.value.rotation.y += 0.1
+           if(santa.value) santa.value.rotation.y += 0.7;
+           shimmerMaterial.uniforms.u_time.value += 0.5;
 
+          santa2.rotation.y += 0.25
           renderer.render(scene, camera);
     }
         animate();
@@ -1045,11 +1096,11 @@ for (let i = 0; i < numLights; i++) {
     </script>
 
 <style scoped>
-.three-canvas {
+/* .three-canvas {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle, #FFD700 15%, #B22222 55%, #006400 90%); /* Gold to Firebrick Red to Dark Green */
+    background: radial-gradient(circle, #FFD700 15%, #B22222 55%, #006400 90%);
     background-image: 
         radial-gradient(circle at top left, rgba(255, 215, 0, 0.7), rgba(178, 34, 34, 0) 50%),
         radial-gradient(circle at bottom right, rgba(255, 215, 0, 0.6), rgba(34, 139, 34, 0) 50%),
@@ -1057,61 +1108,45 @@ for (let i = 0; i < numLights; i++) {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+} 
+*/
+
+.three-canvas {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    rgba(255, 0, 0, 0.9),      /* Bright red */
+    rgba(34, 139, 34, 0.85),   /* Forest green */
+    rgba(255, 99, 71, 0.9)     /* Tomato red */
+  );
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  animation: heartTunnel 1s infinite linear;
 }
+  
+  /* Keyframes for heart tunnel-like animation */
+  /* @keyframes heartTunnel {
+    0% {
+      background-size: 150% 150%;
+      background-position: center;
+    }
+    50% {
+      background-size: 100% 100%;
+      background-position: center;
+    }
+    100% {
+      background-size: 150% 150%;
+      background-position: center;
+    }
+  }
 
-/* Twinkling lights animation */
-@keyframes twinkle {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
-}
+  .three-container {
+    background-color: transparent;
+  } */
 
-.light {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #FFD700; /* Gold lights */
-    border-radius: 50%;
-    box-shadow: 0px 0px 10px rgba(255, 215, 0, 1);
-    opacity: 0.8;
-    animation: twinkle 3s infinite alternate ease-in-out;
-}
-
-/* Placing lights around the canvas */
-.light:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
-.light:nth-child(2) { top: 40%; left: 70%; animation-delay: 1.5s; }
-.light:nth-child(3) { top: 60%; left: 50%; animation-delay: 1s; }
-.light:nth-child(4) { top: 80%; left: 20%; animation-delay: 2s; }
-.light:nth-child(5) { top: 15%; left: 80%; animation-delay: 1.2s; }
-
-/* Falling confetti */
-@keyframes fall {
-    0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-}
-
-.confetti {
-    position: absolute;
-    top: -10px;
-    width: 6px;
-    height: 12px;
-    background: linear-gradient(45deg, #FF4500, #FFD700); /* Orange to Gold */
-    animation: fall 4s linear infinite;
-    opacity: 0.9;
-}
-
-/* Confetti randomization */
-.confetti:nth-child(1) { left: 10%; animation-duration: 6s; animation-delay: 0s; }
-.confetti:nth-child(2) { left: 25%; animation-duration: 5s; animation-delay: 1s; }
-.confetti:nth-child(3) { left: 40%; animation-duration: 6.5s; animation-delay: 0.5s; }
-.confetti:nth-child(4) { left: 55%; animation-duration: 4s; animation-delay: 2s; }
-.confetti:nth-child(5) { left: 70%; animation-duration: 5.5s; animation-delay: 1.5s; }
-.confetti:nth-child(6) { left: 85%; animation-duration: 6s; animation-delay: 0.3s; }
-
-/* Snowflake and twinkle lights layer order */
-.snowflake, .light, .confetti {
-    pointer-events: none;
-    z-index: 1;
-}
 
 .pixel-btn {
     font-family: 'Press Start 2P', sans-serif;
