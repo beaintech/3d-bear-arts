@@ -15,7 +15,6 @@ const routes = [
     // { path: '/3d-bear-arts/pop-art-bear', name: 'PopArtBear 2', component: PopBear2 },
     { path: '/3d-bear-arts/pop-art-bear-3', name: 'PopArtBear 3', component: PopBear3 },
     { path: '/3d-bear-arts/machine', name: 'MetalMachineBear', component: MetalMachineBear },
-    { path: '/3d-bear-arts/water', name: 'Water Bear', component: WaterBear },
     { path: '/3d-bear-arts/water', name: 'Water', component: Water },
     { path: '/3d-bear-arts/ghost-bear', name: 'GhostBear', component: GhostBear },
     { path: '/3d-bear-arts/white-ghost-bear', name: 'GhostBallonBear', component: GhostBallonBear },
