@@ -4,7 +4,6 @@ import MetalBear from '../components/MetalBear.vue';
 import PopArtBear from '../components/PopartBear.vue';
 import PopBear3 from '../components/PopArtBear3.vue';
 import MetalMachineBear from '../components/MetalMachineBear.vue';
-import WaterBear from '../components/WaterBear.vue';
 import Water from '../components/Water.vue';
 import GhostBear from '../components/GhostBear.vue';
 import GhostBallonBear from '../components/GhostballonBear.vue';
