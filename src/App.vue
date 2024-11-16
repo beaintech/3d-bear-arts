@@ -1,17 +1,18 @@
 <template>
   <div id="app">
     <nav v-show="isNavVisible">
-      <router-link to="/3d-bear-arts/leather">Leather</router-link>
+      <router-link to="/3d-bear-arts/leather">LV</router-link>
       <router-link to="/3d-bear-arts/pop-art">Pop MouseMove</router-link>
       <!-- <router-link to="/3d-bear-arts/pop-art-bear">Pop-Bear</router-link> -->
-      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop3</router-link>
-      <router-link to="/3d-bear-arts/machine">machine</router-link>
-      <!-- <router-link to="/3d-bear-arts/water">Water Bear</router-link> -->
+      <router-link to="/3d-bear-arts/pop-art-bear-3">Pop Art</router-link>
+      <router-link to="/3d-bear-arts/machine">Machine</router-link>
       <router-link to="/3d-bear-arts/water">Water</router-link>
-      <router-link to="/3d-bear-arts/ghost-bear">ghost</router-link>
-      <router-link to="/3d-bear-arts/white-ghost-bear">white ghost</router-link>
-      <router-link to="/3d-bear-arts/">santa</router-link>
+      <router-link to="/3d-bear-arts/ghost-bear">Pumpkin</router-link>
+      <router-link to="/3d-bear-arts/white-ghost-bear">Ghost</router-link>
+      <router-link to="/3d-bear-arts/">Santa</router-link>
       <router-link to="/3d-bear-arts/coffee">Coffee</router-link>
+      <router-link to="/3d-bear-arts/christmas-ball-pink">Christmas Pink</router-link>
+
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>

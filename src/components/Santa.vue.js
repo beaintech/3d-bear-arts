@@ -762,10 +762,10 @@ onMounted(() => {
         const fullSizeCoffeeCup = createCoffeeCup(1.2, { x: 0, y: 0, z: 0 });
         scene.add(fullSizeCoffeeCup);
         function coffeeAnimate() {
-            let floatOffset = 0; // Offset for controlling the floating effect
+            let floatOffset = 1; // Offset for controlling the floating effect
             function animateCoffee() {
                 requestAnimationFrame(animateCoffee);
-                floatOffset -= 0.06; // Adjust this value for speed of floating
+                floatOffset -= 0.1; // Adjust this value for speed of floating
                 fullSizeCoffeeCup.position.y = -0.5 + Math.sin(floatOffset) * 4; // Oscillates between y = 0 and y = 0.5
                 renderer.render(scene, camera);
             }
