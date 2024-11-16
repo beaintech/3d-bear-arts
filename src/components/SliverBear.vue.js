@@ -86,13 +86,21 @@ onMounted(() => {
         }
         updateReflection(); // Start reflection updates
         const mirrorLoader = new THREE.CubeTextureLoader();
-        const environmentMap = mirrorLoader.load([
+        const environmentMap1 = mirrorLoader.load([
             'https://threejs.org/examples/textures/cube/Park2/posx.jpg',
             'https://threejs.org/examples/textures/cube/Park2/negx.jpg',
             'https://threejs.org/examples/textures/cube/Park2/posy.jpg',
             'https://threejs.org/examples/textures/cube/Park2/negy.jpg',
             'https://threejs.org/examples/textures/cube/Park2/posz.jpg',
             'https://threejs.org/examples/textures/cube/Park2/negz.jpg',
+        ]);
+        const environmentMap = mirrorLoader.load([
+            '/3d-bear-arts/assets/snow.jpg',
+            '/3d-bear-arts/assets/snow.jpg',
+            '/3d-bear-arts/assets/snow.jpg',
+            '/3d-bear-arts/assets/snow.jpg',
+            '/3d-bear-arts/assets/snow.jpg',
+            '/3d-bear-arts/assets/snow.jpg'
         ]);
         scene.environment = environmentMap;
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
@@ -459,42 +467,104 @@ onMounted(() => {
         // Update heart renderOrder to ensure it's always drawn last
         tail.renderOrder = 1;
         // Add bear group to the scene
-        bearGroup.scale.set(1.2, 1.2, 1.2);
+        bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
         bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
         camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
         camera.lookAt(props.bodyPosition.x, 0, 0);
         camera.position.z = 4;
-        // New mouse tracking functionality
         const mouse = { x: 0, y: 0 };
         let isAnimating = true; // To track if the bear should be rotating
         let timeoutId = null; // To track the timeout when resuming the animation
-        // Update bearGroup rotation based on mouse movement
+        let currentRotationY = 0; // Current rotation for Y-axis
+        let currentRotationX = 0; // Current rotation for X-axis
+        let isRotatingRight = ref(false); // Is rotating to right
+        let isRotatingLeft = ref(false); // Is rotating to left
+        let shouldFaceMouse = ref(false); // Should bear face the mouse?
+        const storeCurrentRotation = () => {
+            currentRotationY = bearGroup.rotation.y;
+            currentRotationX = bearGroup.rotation.x;
+        };
+        const startRotateRight = () => {
+            isRotatingRight.value = true;
+            isRotatingLeft.value = false;
+            shouldFaceMouse.value = false;
+        };
+        const startRotateLeft = () => {
+            isRotatingRight.value = false;
+            isRotatingLeft.value = true;
+            shouldFaceMouse.value = false;
+        };
+        // Stop all rotations
+        const stopRotation = () => {
+            isRotatingRight.value = false;
+            isRotatingLeft.value = false;
+            storeCurrentRotation();
+        };
+        // Update the logic to store the current rotation when the mouse stops
+        const handleMouseStop = (mouseX) => {
+            const centerX = window.innerWidth / 2;
+            // If mouse stops on the right side, rotate to right, otherwise to the left
+            if (mouseX > centerX) {
+                startRotateRight();
+            }
+            else {
+                startRotateLeft();
+            }
+            // Capture the current rotation of the bear when the mouse stops
+            storeCurrentRotation();
+        };
+        // Logic to update bear rotation based on the mouse movement
         const onMouseMove = (event) => {
-            isAnimating = false;
-            // Normalize mouse coordinates from -1 to 1
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            // Calculate rotation based on mouse position
-            const targetRotationY = mouse.x * Math.PI * 0.2; // Y-axis rotation (left-right)
-            const targetRotationX = mouse.y * Math.PI * 0.2; // X-axis rotation (up-down)
-            // Apply the calculated rotation to the bear group
-            bearGroup.rotation.y = targetRotationY;
-            bearGroup.rotation.x = targetRotationX;
-            // Clear the existing timeout and set a new one for 3 seconds to resume the animation
             clearTimeout(timeoutId);
+            stopRotation(); // Stop any ongoing rotation when mouse moves
+            shouldFaceMouse.value = true; // Allow the bear to face the mouse
+            // Capture the mouse position
+            const mouse = {
+                x: (event.clientX / window.innerWidth) * 2 - 1,
+                y: -(event.clientY / window.innerHeight) * 2 + 1
+            };
+            // Rotate the bear to face the mouse
+            if (shouldFaceMouse.value) {
+                const targetRotationY = mouse.x * Math.PI * 0.2;
+                const targetRotationX = mouse.y * Math.PI * 0.2;
+                bearGroup.rotation.y = targetRotationY;
+                bearGroup.rotation.x = targetRotationX;
+                // Store the current rotation
+                currentRotationY = targetRotationY;
+                currentRotationX = targetRotationX;
+            }
+            // Set a delay to trigger the stop logic again after no movement
             timeoutId = setTimeout(() => {
-                isAnimating = true; // Resume animation after 3 seconds
-            }, 500);
+                shouldFaceMouse.value = false; // Stop facing the mouse after 2 seconds of no movement
+                handleMouseStop(event.clientX);
+            }, 500); // 2 seconds delay before rotating
         };
         // Add event listener for mouse movement
         window.addEventListener('mousemove', onMouseMove);
+        // Logic to trigger the bear facing the mouse (after 2 seconds of no movement)
+        const onMouseStopForFacing = (event) => {
+            if (shouldFaceMouse.value) {
+                const mouse = {
+                    x: (event.clientX / window.innerWidth) * 2 - 1,
+                    y: -(event.clientY / window.innerHeight) * 2 + 1
+                };
+                const targetRotationY = mouse.x * Math.PI * 0.2;
+                const targetRotationX = mouse.y * Math.PI * 0.2;
+                bearGroup.rotation.y = targetRotationY;
+                bearGroup.rotation.x = targetRotationX;
+            }
+        };
+        window.addEventListener('mousemove', onMouseStopForFacing);
         // Animation function
         function animate() {
             requestAnimationFrame(animate);
-            if (isAnimating) {
-                bearGroup.rotation.y += 0.03; // Rotate the bear slightly on the Y-axis
+            if (isRotatingRight.value) {
+                bearGroup.rotation.y += 0.03; // Rotate to the right
+            }
+            else if (isRotatingLeft.value) {
+                bearGroup.rotation.y -= 0.03; // Rotate to the left
             }
             renderer.render(scene, camera);
         }

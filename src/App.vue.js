@@ -101,11 +101,18 @@ function __VLS_template() {
     const __VLS_50 = __VLS_49({ to: ("/3d-bear-arts/coffee"), }, ...__VLS_functionalComponentArgsRest(__VLS_49));
     __VLS_nonNullable(__VLS_53.slots).default;
     const __VLS_53 = __VLS_pickFunctionalComponentCtx(__VLS_48, __VLS_50);
-    const __VLS_54 = __VLS_resolvedLocalAndGlobalComponents.RouterView;
+    const __VLS_54 = __VLS_resolvedLocalAndGlobalComponents.RouterLink;
+    /** @type { [typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, ] } */
+    // @ts-ignore
+    const __VLS_55 = __VLS_asFunctionalComponent(__VLS_54, new __VLS_54({ to: ("/3d-bear-arts/christmas-ball-pink"), }));
+    const __VLS_56 = __VLS_55({ to: ("/3d-bear-arts/christmas-ball-pink"), }, ...__VLS_functionalComponentArgsRest(__VLS_55));
+    __VLS_nonNullable(__VLS_59.slots).default;
+    const __VLS_59 = __VLS_pickFunctionalComponentCtx(__VLS_54, __VLS_56);
+    const __VLS_60 = __VLS_resolvedLocalAndGlobalComponents.RouterView;
     /** @type { [typeof __VLS_components.RouterView, typeof __VLS_components.routerView, typeof __VLS_components.RouterView, typeof __VLS_components.routerView, ] } */
     // @ts-ignore
-    const __VLS_55 = __VLS_asFunctionalComponent(__VLS_54, new __VLS_54({}));
-    const __VLS_56 = __VLS_55({}, ...__VLS_functionalComponentArgsRest(__VLS_55));
+    const __VLS_61 = __VLS_asFunctionalComponent(__VLS_60, new __VLS_60({}));
+    const __VLS_62 = __VLS_61({}, ...__VLS_functionalComponentArgsRest(__VLS_61));
     var __VLS_slots;
     var __VLS_inheritedAttrs;
     const __VLS_refs = {};

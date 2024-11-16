@@ -759,14 +759,14 @@ onMounted(() => {
         const smallCoffeeCup = createCoffeeCup(0.1, { x: 0, y: 0, z: 1 });
         // bearGroup.add(smallCoffeeCup);
         // Add a full-sized coffee cup to the scene
-        const fullSizeCoffeeCup = createCoffeeCup(1.2, { x: 0, y: 0, z: 0 });
-        scene.add(fullSizeCoffeeCup);
+        const fullSizeCoffeeCup = createCoffeeCup(1.1, { x: 0, y: -1.2, z: 0 });
+        // scene.add(fullSizeCoffeeCup);
         function coffeeAnimate() {
             let floatOffset = 1; // Offset for controlling the floating effect
             function animateCoffee() {
                 requestAnimationFrame(animateCoffee);
                 floatOffset -= 0.1; // Adjust this value for speed of floating
-                fullSizeCoffeeCup.position.y = -0.5 + Math.sin(floatOffset) * 4; // Oscillates between y = 0 and y = 0.5
+                fullSizeCoffeeCup.position.y = 0.5 + Math.sin(floatOffset) * 0.8; // Oscillates between y = 0 and y = 0.5
                 renderer.render(scene, camera);
             }
             animateCoffee();
@@ -815,6 +815,10 @@ onMounted(() => {
         animateSnowFlake();
         // Add bear group to the scene
         bearGroup.scale.set(1.2, 1.2, 1.2);
+        scene.add(bearGroup);
+        // scene.add(fullSizeCoffeeCup);
+        bearGroup.scale.set(1.4, 1.4, 1.4);
+        bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
         bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
