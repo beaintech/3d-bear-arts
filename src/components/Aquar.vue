@@ -459,7 +459,7 @@ const fragmentShader = `
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
 
-        const rightButtock = new THREE.Mesh(buttockGeometry, snowWhiteMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, leftTransparentPureMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
 
@@ -875,31 +875,19 @@ animateSanta(santa.value);
       bearGroup.add(smallChristmasHouse);
 
       function createCoffeeCup(scale = 1, position = { x: 0, y: 0, z: 0 }) {
-        // Create the coffee cup group
         const coffeeCupGroup = new THREE.Group();
 
-        // Create the coffee cup body with an inverted tapered shape
         const cupGeometry = new THREE.CylinderGeometry(1.2, 0.9, 3, 32); // Larger bottom, smaller top
         const cupMaterial = new THREE.MeshStandardMaterial({ color: 0x006241 }); // White cup
         const cupMesh = new THREE.Mesh(cupGeometry, cupMaterial);
         coffeeCupGroup.add(cupMesh);
 
-        // Create the cup lid
         const lidGeometry = new THREE.CylinderGeometry(1.3, 1.3, 0.2, 32); // Flat lid
         const lidMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Dark lid
         const lidMesh = new THREE.Mesh(lidGeometry, lidMaterial);
         lidMesh.position.y = 1.6;
         coffeeCupGroup.add(lidMesh);
 
-        // Create the sleeve
-        const sleeveHeight = 2; // Taller sleeve
-        const sleeveGeometry = new THREE.CylinderGeometry(1.1, 1.1, sleeveHeight, 32); // Sleeve fits the inverted cup
-        const sleeveMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown sleeve
-        const sleeveMesh = new THREE.Mesh(sleeveGeometry, sleeveMaterial);
-        sleeveMesh.position.y = 0; // Move sleeve higher
-        // coffeeCupGroup.add(sleeveMesh);
-
-        // Add Starbucks logo to the sleeve
         const coffeeloader = new THREE.TextureLoader();
         coffeeloader.load('/3d-bear-arts/assets/starbucks-logo.png', function (texture) {
               texture.repeat.set(4, 1); // 0.5 for slimmer horizontal scaling, 1 for normal vertical scaling
@@ -913,25 +901,22 @@ animateSanta(santa.value);
                   transparent: true,
               });
 
-              // Create the sleeve geometry and apply the material
+              const sleeveHeight = 2;
               const sleeveGeometry = new THREE.CylinderGeometry(1.1, 1.05, 1.5, 32);
               const sleeveMesh = new THREE.Mesh(sleeveGeometry, sleeveMaterial);
               sleeveMesh.position.y = -0.5;
               coffeeCupGroup.add(sleeveMesh);
           });
-          // Scale and position the entire coffee cup
           coffeeCupGroup.scale.set(scale, scale, scale);
           coffeeCupGroup.position.set(position.x, position.y, position.z);
 
           return coffeeCupGroup; 
       }
 
-      // Add a small coffee cup to the scene
       const smallCoffeeCup = createCoffeeCup(0.1, { x: 0, y: 0, z: 1 });
-      bearGroup.add(smallCoffeeCup);
+      // bearGroup.add(smallCoffeeCup);
 
-      // Add a full-sized coffee cup to the scene
-      const fullSizeCoffeeCup = createCoffeeCup(0.7, { x: 0, y: 0, z: 1 });
+      const fullSizeCoffeeCup = createCoffeeCup(0.6, { x: 0, y: -1.5 , z: 0 });
       scene.add(fullSizeCoffeeCup);
 
       const snowflakeCount = 1000;
@@ -1042,14 +1027,16 @@ animateSanta(santa.value);
       animateInnerSnowflakes();
 
       // Add bear group to the scene
-      bearGroup.scale.set(1.4, 1.4, 1.4);
+      bearGroup.scale.set( 0.85, 0.85, 0.85);
+      // bearGroup.scale.set( 2, 2, 2);
+      // bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+
       scene.add(bearGroup);
 
       // Set initial positions for bearGroup and camera
-      bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+      bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y + 0.9, props.bodyPosition.z);
       camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
       camera.lookAt(props.bodyPosition.x, 0, 0);
-
       camera.position.z = 4;
 
     // New mouse tracking functionality
@@ -1085,25 +1072,24 @@ animateSanta(santa.value);
            if(santa.value) santa.value.rotation.y += 0.7;
            shimmerMaterial.uniforms.u_time.value += 0.5;
 
-          santa2.rotation.y += 0.45
-          smallCoffeeCup.rotation.y += 0.05
-          
+          santa2.rotation.y += 0.45;
+          smallCoffeeCup.rotation.y += 0.05;
+          fullSizeCoffeeCup.rotation.y += 0.05;
+          bearGroup.rotation.y -= 0.05;
+
           renderer.render(scene, camera);
-    }
+        }
         animate();
 
-      // Watch for changes in bodyPosition
         watch(() => props.bodyPosition, (newPos) => {
             bearGroup.position.set(newPos.x, newPos.y, newPos.z);
         });
 
-      // Watch for changes in cameraPosition
         watch(() => props.cameraPosition, (newPos) => {
             camera.position.set(props.bodyPosition.x, 1, newPos);
             camera.lookAt(props.bodyPosition.x, 0, 0);
         });
 
-        // Handle window resize
         window.addEventListener('resize', () => {
           camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
@@ -1136,123 +1122,122 @@ animateSanta(santa.value);
         }
 
         const numConfetti = 15;
-for (let i = 0; i < numConfetti; i++) {
-    const confetti = document.createElement('div');
-    confetti.classList.add('confetti');
-    confetti.style.left = `${Math.random() * 100}vw`;
-    confetti.style.animationDuration = `${Math.random() * 3 + 4}s`;
-    confetti.style.animationDelay = `${Math.random() * 5}s`;
-    document.body.appendChild(confetti);
-}
+        for (let i = 0; i < numConfetti; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = `${Math.random() * 100}vw`;
+            confetti.style.animationDuration = `${Math.random() * 3 + 4}s`;
+            confetti.style.animationDelay = `${Math.random() * 5}s`;
+            document.body.appendChild(confetti);
+        }
 
-// Add twinkling lights
-const numLights = 5;
-for (let i = 0; i < numLights; i++) {
-    const light = document.createElement('div');
-    light.classList.add('light');
-    document.body.appendChild(light);
-}
+        // Add twinkling lights
+        const numLights = 5;
+        for (let i = 0; i < numLights; i++) {
+            const light = document.createElement('div');
+            light.classList.add('light');
+            document.body.appendChild(light);
+        }
     </script>
 
 <style scoped>
-.three-canvas {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: linear-gradient(45deg, #006241 30%, #c92a28 60%, #013220 90%); /* Starbucks green and holiday red */
-    background-image: 
-        radial-gradient(circle at top left, rgba(201, 42, 40, 1), rgba(0, 128, 0, 0.5) 50%, rgba(0, 64, 0, 0) 70%),
-        radial-gradient(circle at bottom right, rgba(0, 128, 0, 1), rgba(0, 255, 0, 0.5) 50%, rgba(0, 64, 0, 0) 70%),
-        radial-gradient(circle at center, rgba(255, 0, 0, 1), rgba(0, 100, 0, 0.5) 40%, rgba(0, 50, 0, 0) 60%);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+    .three-canvas {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(45deg, #006241 30%, #c92a28 60%, #013220 90%); /* Starbucks green and holiday red */
+        background-image: 
+            radial-gradient(circle at top left, rgba(201, 42, 40, 1), rgba(0, 128, 0, 0.5) 50%, rgba(0, 64, 0, 0) 70%),
+            radial-gradient(circle at bottom right, rgba(0, 128, 0, 1), rgba(0, 255, 0, 0.5) 50%, rgba(0, 64, 0, 0) 70%),
+            radial-gradient(circle at center, rgba(255, 0, 0, 1), rgba(0, 100, 0, 0.5) 40%, rgba(0, 50, 0, 0) 60%);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
+    /* Red sparkles */
+    @keyframes sparkle {
+        0%, 100% { opacity: 0.8; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
 
-/* Red sparkles */
-@keyframes sparkle {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
-}
+    .sparkle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #FF0000; /* Bright red */
+        border-radius: 50%;
+        box-shadow: 0px 0px 8px rgba(255, 0, 0, 1); /* Red glow */
+        opacity: 0.8;
+        animation: sparkle 3s infinite alternate ease-in-out;
+    }
 
-.sparkle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: #FF0000; /* Bright red */
-    border-radius: 50%;
-    box-shadow: 0px 0px 8px rgba(255, 0, 0, 1); /* Red glow */
-    opacity: 0.8;
-    animation: sparkle 3s infinite alternate ease-in-out;
-}
+    .sparkle:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
+    .sparkle:nth-child(2) { top: 40%; left: 70%; animation-delay: 1.5s; }
+    .sparkle:nth-child(3) { top: 60%; left: 50%; animation-delay: 1s; }
+    .sparkle:nth-child(4) { top: 80%; left: 20%; animation-delay: 2s; }
+    .sparkle:nth-child(5) { top: 15%; left: 80%; animation-delay: 1.2s; }
 
-.sparkle:nth-child(1) { top: 20%; left: 30%; animation-delay: 0s; }
-.sparkle:nth-child(2) { top: 40%; left: 70%; animation-delay: 1.5s; }
-.sparkle:nth-child(3) { top: 60%; left: 50%; animation-delay: 1s; }
-.sparkle:nth-child(4) { top: 80%; left: 20%; animation-delay: 2s; }
-.sparkle:nth-child(5) { top: 15%; left: 80%; animation-delay: 1.2s; }
+    /* Festive-themed buttons */
+    .pixel-btn {
+        font-family: 'Press Start 2P', sans-serif;
+        font-size: 14px;
+        background-color: #8B0000; /* Deep red, Starbucks style */
+        color: #DC143C; /* Crimson text */
+        padding: 15px;
+        border: 4px solid #32CD32; /* Green border */
+        box-shadow: 4px 4px 0 #DC143C, 8px 8px 0 #8B0000;
+        text-transform: uppercase;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+        border-radius: 10px;
+    }
 
-/* Festive-themed buttons */
-.pixel-btn {
-    font-family: 'Press Start 2P', sans-serif;
-    font-size: 14px;
-    background-color: #8B0000; /* Deep red, Starbucks style */
-    color: #DC143C; /* Crimson text */
-    padding: 15px;
-    border: 4px solid #32CD32; /* Green border */
-    box-shadow: 4px 4px 0 #DC143C, 8px 8px 0 #8B0000;
-    text-transform: uppercase;
-    transition: transform 0.2s ease-in-out;
-    cursor: pointer;
-    border-radius: 10px;
-}
+    .pixel-btn:hover {
+        background-color: #B22222;
+        color: #FF0000; /* Bright red text on hover */
+        transform: translate(-4px, -4px);
+    }
 
-.pixel-btn:hover {
-    background-color: #B22222;
-    color: #FF0000; /* Bright red text on hover */
-    transform: translate(-4px, -4px);
-}
+    .pixel-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 #DC143C, 3px 3px 0 #8B0000;
+    }
 
-.pixel-btn:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #DC143C, 3px 3px 0 #8B0000;
-}
+    .pixel-btn {
+        font-family: 'Press Start 2P', sans-serif;
+        font-size: 14px;
+        background-color: #8B0000; /* Dark Red for Christmas theme */
+        color: #FFD700; /* Gold text color */
+        padding: 15px;
+        border: 4px solid #32CD32; /* Lime Green border */
+        box-shadow: 4px 4px 0 #FFD700, 8px 8px 0 #8B0000; /* Festive shadow */
+        text-transform: uppercase;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+        border-radius: 10px;
+    }
 
-.pixel-btn {
-    font-family: 'Press Start 2P', sans-serif;
-    font-size: 14px;
-    background-color: #8B0000; /* Dark Red for Christmas theme */
-    color: #FFD700; /* Gold text color */
-    padding: 15px;
-    border: 4px solid #32CD32; /* Lime Green border */
-    box-shadow: 4px 4px 0 #FFD700, 8px 8px 0 #8B0000; /* Festive shadow */
-    text-transform: uppercase;
-    transition: transform 0.2s ease-in-out;
-    cursor: pointer;
-    border-radius: 10px;
-}
+    .pixel-btn:hover {
+        background-color: #B22222; /* Firebrick Red on hover */
+        color: #FFFFFF; /* White text */
+        transform: translate(-4px, -4px);
+    }
 
-.pixel-btn:hover {
-    background-color: #B22222; /* Firebrick Red on hover */
-    color: #FFFFFF; /* White text */
-    transform: translate(-4px, -4px);
-}
+    .pixel-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 #FFD700, 3px 3px 0 #8B0000;
+    }
 
-.pixel-btn:active {
-    transform: translate(2px, 2px);
-    box-shadow: 1px 1px 0 #FFD700, 3px 3px 0 #8B0000;
-}
-
-.pixel-controls {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(120%) translateY(-100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
+    .pixel-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(120%) translateY(-100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
 
 </style>

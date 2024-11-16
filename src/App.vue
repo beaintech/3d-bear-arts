@@ -11,7 +11,7 @@
       <router-link to="/3d-bear-arts/ghost-bear">ghost</router-link>
       <router-link to="/3d-bear-arts/white-ghost-bear">white ghost</router-link>
       <router-link to="/3d-bear-arts/">santa</router-link>
-      <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>
+      <router-link to="/3d-bear-arts/coffee">Coffee</router-link>
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>
       <router-link to="/3d-bear-arts/half">HalfTranparent</router-link>
