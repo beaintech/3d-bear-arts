@@ -917,7 +917,7 @@ animateSanta(santa.value);
       // bearGroup.add(smallCoffeeCup);
 
       const fullSizeCoffeeCup = createCoffeeCup(0.6, { x: 0, y: -1.5 , z: 0 });
-      scene.add(fullSizeCoffeeCup);
+      // scene.add(fullSizeCoffeeCup);
 
       const snowflakeCount = 1000;
       const snowflakeGeometry = new THREE.BufferGeometry();
@@ -1026,15 +1026,20 @@ animateSanta(santa.value);
 
       animateInnerSnowflakes();
 
-      // Add bear group to the scene
       bearGroup.scale.set( 0.85, 0.85, 0.85);
+      bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y + 0.9, props.bodyPosition.z);
+
       // bearGroup.scale.set( 2, 2, 2);
       // bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
-
+      
+      // bearGroup.scale.set( 1.4, 1.4, 1.4);
+     //  bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
       scene.add(bearGroup);
 
+      scene.add(fullSizeCoffeeCup);
+
       // Set initial positions for bearGroup and camera
-      bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y + 0.9, props.bodyPosition.z);
+    
       camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
       camera.lookAt(props.bodyPosition.x, 0, 0);
       camera.position.z = 4;

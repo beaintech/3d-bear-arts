@@ -936,13 +936,13 @@ const fragmentShader = `
 
 
       function coffeeAnimate() {
-        let floatOffset = 0; // Offset for controlling the floating effect
+        let floatOffset = 1; // Offset for controlling the floating effect
 
         function animateCoffee() {
             requestAnimationFrame(animateCoffee);
 
-            floatOffset -= 0.03; // Adjust this value for speed of floating
-            fullSizeCoffeeCup.position.y = -0.5 + Math.sin(floatOffset) * 6; // Oscillates between y = 0 and y = 0.5
+            floatOffset -= 0.1; // Adjust this value for speed of floating
+            fullSizeCoffeeCup.position.y = -0.5 + Math.sin(floatOffset) * 4; // Oscillates between y = 0 and y = 0.5
 
             renderer.render(scene, camera);
         }
