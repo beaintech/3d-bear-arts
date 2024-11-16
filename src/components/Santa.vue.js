@@ -846,7 +846,7 @@ onMounted(() => {
         }
         animateInnerSnowflakes();
         // Add bear group to the scene
-        bearGroup.scale.set(1.4, 1.4, 1.4);
+        bearGroup.scale.set(0.6, 0.6, 0.6);
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
         bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
