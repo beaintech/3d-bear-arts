@@ -380,7 +380,7 @@ onMounted(() => {
         const leftButtock = new THREE.Mesh(buttockGeometry, leftTransparentPureMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, snowWhiteMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, leftTransparentPureMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
@@ -712,27 +712,16 @@ onMounted(() => {
         smallChristmasHouse.scale.set(0.35, 0.35, 0.35);
         bearGroup.add(smallChristmasHouse);
         function createCoffeeCup(scale = 1, position = { x: 0, y: 0, z: 0 }) {
-            // Create the coffee cup group
             const coffeeCupGroup = new THREE.Group();
-            // Create the coffee cup body with an inverted tapered shape
             const cupGeometry = new THREE.CylinderGeometry(1.2, 0.9, 3, 32); // Larger bottom, smaller top
             const cupMaterial = new THREE.MeshStandardMaterial({ color: 0x006241 }); // White cup
             const cupMesh = new THREE.Mesh(cupGeometry, cupMaterial);
             coffeeCupGroup.add(cupMesh);
-            // Create the cup lid
             const lidGeometry = new THREE.CylinderGeometry(1.3, 1.3, 0.2, 32); // Flat lid
             const lidMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Dark lid
             const lidMesh = new THREE.Mesh(lidGeometry, lidMaterial);
             lidMesh.position.y = 1.6;
             coffeeCupGroup.add(lidMesh);
-            // Create the sleeve
-            const sleeveHeight = 2; // Taller sleeve
-            const sleeveGeometry = new THREE.CylinderGeometry(1.1, 1.1, sleeveHeight, 32); // Sleeve fits the inverted cup
-            const sleeveMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // Brown sleeve
-            const sleeveMesh = new THREE.Mesh(sleeveGeometry, sleeveMaterial);
-            sleeveMesh.position.y = 0; // Move sleeve higher
-            // coffeeCupGroup.add(sleeveMesh);
-            // Add Starbucks logo to the sleeve
             const coffeeloader = new THREE.TextureLoader();
             coffeeloader.load('/3d-bear-arts/assets/starbucks-logo.png', function (texture) {
                 texture.repeat.set(4, 1); // 0.5 for slimmer horizontal scaling, 1 for normal vertical scaling
@@ -744,22 +733,19 @@ onMounted(() => {
                     map: texture, // Map the logo texture onto the sleeve
                     transparent: true,
                 });
-                // Create the sleeve geometry and apply the material
+                const sleeveHeight = 2;
                 const sleeveGeometry = new THREE.CylinderGeometry(1.1, 1.05, 1.5, 32);
                 const sleeveMesh = new THREE.Mesh(sleeveGeometry, sleeveMaterial);
                 sleeveMesh.position.y = -0.5;
                 coffeeCupGroup.add(sleeveMesh);
             });
-            // Scale and position the entire coffee cup
             coffeeCupGroup.scale.set(scale, scale, scale);
             coffeeCupGroup.position.set(position.x, position.y, position.z);
             return coffeeCupGroup;
         }
-        // Add a small coffee cup to the scene
         const smallCoffeeCup = createCoffeeCup(0.1, { x: 0, y: 0, z: 1 });
-        bearGroup.add(smallCoffeeCup);
-        // Add a full-sized coffee cup to the scene
-        const fullSizeCoffeeCup = createCoffeeCup(0.7, { x: 0, y: 0, z: 1 });
+        // bearGroup.add(smallCoffeeCup);
+        const fullSizeCoffeeCup = createCoffeeCup(0.6, { x: 0, y: -1.5, z: 0 });
         scene.add(fullSizeCoffeeCup);
         const snowflakeCount = 1000;
         const snowflakeGeometry = new THREE.BufferGeometry();
@@ -846,10 +832,12 @@ onMounted(() => {
         }
         animateInnerSnowflakes();
         // Add bear group to the scene
-        bearGroup.scale.set(1.4, 1.4, 1.4);
+        bearGroup.scale.set(0.85, 0.85, 0.85);
+        // bearGroup.scale.set( 2, 2, 2);
+        // bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
-        bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
+        bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y + 0.9, props.bodyPosition.z);
         camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
         camera.lookAt(props.bodyPosition.x, 0, 0);
         camera.position.z = 4;
@@ -885,19 +873,18 @@ onMounted(() => {
             shimmerMaterial.uniforms.u_time.value += 0.5;
             santa2.rotation.y += 0.45;
             smallCoffeeCup.rotation.y += 0.05;
+            fullSizeCoffeeCup.rotation.y += 0.05;
+            bearGroup.rotation.y -= 0.05;
             renderer.render(scene, camera);
         }
         animate();
-        // Watch for changes in bodyPosition
         watch(() => props.bodyPosition, (newPos) => {
             bearGroup.position.set(newPos.x, newPos.y, newPos.z);
         });
-        // Watch for changes in cameraPosition
         watch(() => props.cameraPosition, (newPos) => {
             camera.position.set(props.bodyPosition.x, 1, newPos);
             camera.lookAt(props.bodyPosition.x, 0, 0);
         });
-        // Handle window resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();

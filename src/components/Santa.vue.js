@@ -757,10 +757,21 @@ onMounted(() => {
         }
         // Add a small coffee cup to the scene
         const smallCoffeeCup = createCoffeeCup(0.1, { x: 0, y: 0, z: 1 });
-        bearGroup.add(smallCoffeeCup);
+        // bearGroup.add(smallCoffeeCup);
         // Add a full-sized coffee cup to the scene
-        const fullSizeCoffeeCup = createCoffeeCup(0.7, { x: 0, y: 0, z: 1 });
+        const fullSizeCoffeeCup = createCoffeeCup(1.2, { x: 0, y: 0, z: 0 });
         scene.add(fullSizeCoffeeCup);
+        function coffeeAnimate() {
+            let floatOffset = 0; // Offset for controlling the floating effect
+            function animateCoffee() {
+                requestAnimationFrame(animateCoffee);
+                floatOffset -= 0.06; // Adjust this value for speed of floating
+                fullSizeCoffeeCup.position.y = -0.5 + Math.sin(floatOffset) * 4; // Oscillates between y = 0 and y = 0.5
+                renderer.render(scene, camera);
+            }
+            animateCoffee();
+        }
+        coffeeAnimate();
         const snowflakeCount = 1000;
         const snowflakeGeometry = new THREE.BufferGeometry();
         const snowflakePositions = [];
@@ -802,51 +813,8 @@ onMounted(() => {
         }
         // Start the snowflake animation
         animateSnowFlake();
-        const innerSnowflakeCount = 2000; // Adjust for density
-        const innerSnowflakePositions = [];
-        const radius = 0.6; // Adjust slightly smaller than the body radius for containment
-        // Generate random positions within the spherical boundary
-        for (let i = 0; i < innerSnowflakeCount; i++) {
-            const x = (Math.random() - 0.5) * radius * 2;
-            const y = (Math.random() - 0.5) * radius * 2;
-            const z = (Math.random() - 0.5) * radius * 2;
-            if (Math.sqrt(x * x + y * y + z * z) < radius) {
-                innerSnowflakePositions.push(x, y, z);
-            }
-        }
-        // Create buffer geometry and set the positions attribute
-        const innerSnowflakeGeometry = new THREE.BufferGeometry();
-        innerSnowflakeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(innerSnowflakePositions, 3));
-        // Material for the inner snowflakes
-        const innerSnowflakeMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.05, // Adjust size for visibility
-            transparent: true,
-            opacity: 0.9
-        });
-        // Create inner snowflake particles
-        const innerSnowflakes = new THREE.Points(innerSnowflakeGeometry, snowMaterial);
-        innerSnowflakes.position.set(0, -0.2, 0); // Position to match the bear body
-        // bearGroup.add(innerSnowflakes);
-        const innerSnowflakes2 = new THREE.Points(innerSnowflakeGeometry, snowCircleMaterial);
-        innerSnowflakes2.position.set(0, 0.8, 0); // Position to match the bear body
-        // bearGroup.add(innerSnowflakes2);
-        // Animate inner snowflakes
-        function animateInnerSnowflakes() {
-            requestAnimationFrame(animateInnerSnowflakes);
-            const positions = innerSnowflakeGeometry.attributes.position.array;
-            for (let i = 1; i < positions.length; i += 3) {
-                positions[i] -= 0.02; // Move downward
-                if (positions[i] < -radius) {
-                    positions[i] = radius;
-                }
-            }
-            innerSnowflakeGeometry.attributes.position.needsUpdate = true;
-            renderer.render(scene, camera);
-        }
-        animateInnerSnowflakes();
         // Add bear group to the scene
-        bearGroup.scale.set(0.6, 0.6, 0.6);
+        bearGroup.scale.set(1.2, 1.2, 1.2);
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
         bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
@@ -885,6 +853,7 @@ onMounted(() => {
             shimmerMaterial.uniforms.u_time.value += 0.5;
             santa2.rotation.y += 0.45;
             smallCoffeeCup.rotation.y += 0.05;
+            fullSizeCoffeeCup.rotation.y += 0.08;
             renderer.render(scene, camera);
         }
         animate();
