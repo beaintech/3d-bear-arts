@@ -1,5 +1,11 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
+    <!-- <div style="display: grid; grid-template-columns: 1 1 1 1;" >
+      <div><BearFace class="bear-background"/></div>
+      <div><BearFace class="bear-background"/></div>
+      <div><BearFace class="bear-background"/></div>
+      <div><BearFace class="bear-background"/></div>
+    </div> -->
   </template>
     
     <script setup lang="ts">
@@ -7,6 +13,8 @@
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; 
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
+    import BearFace from './BearFaceWhite.vue';
+
   
     const props = defineProps({
     background: {
@@ -115,13 +123,22 @@ updateReflection();  // Start reflection updates
       'https://threejs.org/examples/textures/cube/Park2/negz.jpg',
     ]);
 
+    // const environmentMap = mirrorLoader.load([
+    //   '/3d-bear-arts/assets/christmas_garden.jpg',
+    //   '/3d-bear-arts/assets/christmas_ground.jpg',
+    //   '/3d-bear-arts/assets/christmas_front.jpg',
+    //   '/3d-bear-arts/assets/christmas_house.jpg',
+    //   '/3d-bear-arts/assets/christmas_tree.jpg',
+    //   '/3d-bear-arts/assets/christmas_sky.jpg'
+    // ]);
+    
     const environmentMap = mirrorLoader.load([
-        '/3d-bear-arts/assets/snow.jpg',
-      '/3d-bear-arts/assets/snow.jpg',
-      '/3d-bear-arts/assets/snow.jpg',
-      '/3d-bear-arts/assets/snow.jpg',
-      '/3d-bear-arts/assets/snow.jpg',
-      '/3d-bear-arts/assets/snow.jpg'
+      '/3d-bear-arts/assets/popbear1.jpg',
+      '/3d-bear-arts/assets/popbear1.jpg',
+      '/3d-bear-arts/assets/popbear1.jpg',
+      '/3d-bear-arts/assets/popbear1.jpg',
+      '/3d-bear-arts/assets/popbear1.jpg',
+      '/3d-bear-arts/assets/popbear1.jpg'
     ]);
 
     scene.environment = environmentMap;
@@ -143,7 +160,7 @@ updateReflection();  // Start reflection updates
       clearcoat: 1.0, // High clearcoat for added shine
       clearcoatRoughness: 0.05, // Low roughness for clear reflections
       transparent: true, // Enable transparency
-      opacity: 0.5, // Semi-transparent
+      opacity: 0.4, // Semi-transparent
       envMap: environmentMap, // Link the environment map
       reflectivity: 1, // Maximum reflectivity
     });
@@ -185,7 +202,7 @@ updateReflection();  // Start reflection updates
       });
   
         const redHeartMaterial = new THREE.MeshPhysicalMaterial({
-          color: 0xCC0000,          // Red color
+          color: '#FF00CC',          // Red color
           metalness: 0.2,           // Lower metalness for a more plastic feel
           roughness: 0.6,           // Increase roughness for a more matte appearance
           clearcoat: 0.1,           // Low clearcoat for minimal shine
@@ -197,7 +214,7 @@ updateReflection();  // Start reflection updates
   });
   
   const hotPinkHeartMaterial = new THREE.MeshPhysicalMaterial({
-          color: 0xFF69B4,          // Red color
+          color: '#4C99FF',          // Red color
           metalness: 0.2,           // Lower metalness for a more plastic feel
           roughness: 0.6,           // Increase roughness for a more matte appearance
           clearcoat: 0.1,           // Low clearcoat for minimal shine
@@ -445,7 +462,7 @@ updateReflection();  // Start reflection updates
         
         const heart2 = new THREE.Mesh(heartGeometry, hotPinkHeartMaterial);
         heart2.scale.set(0.25, 0.25, 0.25);
-        heart2.position.set(0.27, 0.2, 0); // Position it in front of the body
+        heart2.position.set(0.27, 0.4, 0); // Position it in front of the body
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
         bearGroup.add(heart2);
@@ -707,11 +724,13 @@ updateReflection();  // Start reflection updates
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f);
+    background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     animation: waterEffect 5s infinite ease-in-out;
   }
+
+  /* background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f); */
   
   @keyframes waterEffect {
     0% {
@@ -743,6 +762,15 @@ updateReflection();  // Start reflection updates
               overflow: hidden;
               background: none;  
           }
+
+          .bear-background {
+            position: absolute;
+            background: black;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            }
           
     </style>
     
