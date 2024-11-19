@@ -1,6 +1,14 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
     <div><BearFace class="bear-background"/></div>
+    <div class="pixel-controls">
+    <button class="pixel-btn up border-gold" @mousedown="onUpButtonDown" @mouseup="stopRotation">▲</button>
+    <div class="side-buttons">
+      <button class="pixel-btn left border-silver" @mousedown="onLeftButtonDown" @mouseup="stopRotation">◀</button>
+      <button class="pixel-btn right border-silver" @mousedown="onRightButtonDown" @mouseup="stopRotation">▶</button>
+    </div>
+    <button class="pixel-btn down border-gold" @mousedown="onDownButtonDown" @mouseup="stopRotation">▼</button>
+  </div>
   </template>
     
     <script setup lang="ts">
@@ -134,7 +142,7 @@
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
-          opacity: 0.3, // Semi-transparent
+          opacity: 0.2, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
         });
@@ -282,7 +290,7 @@
   
       // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, transparentBlurrMaterial);
+        const circle = new THREE.Mesh(circleGeometry, sliverMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
   
         // Position the circle to cover the flat side
@@ -322,7 +330,7 @@
   
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, transparentBlurrMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, sliverMaterial);
   
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
@@ -402,7 +410,7 @@
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
         const heart = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
-        heart.scale.set(0.45, 0.45, 0.45);
+        heart.scale.set(0.38, 0.38, 0.38);
         heart.position.set(0.35, 0, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
@@ -415,23 +423,23 @@
         heart1.rotation.x = Math.PI;
         bearGroup.add(heart1);
         
-        const heart2 = new THREE.Mesh(heartGeometry, bluePinkHeartMaterial);
-        heart2.scale.set(0.25, 0.25, 0.25);
+        const heart2 = new THREE.Mesh(heartGeometry, sliverMaterial);
+        heart2.scale.set(0.22, 0.22, 0.22);
         heart2.position.set(0.27, 0.4, 0);
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
         bearGroup.add(heart2);
   
         const heart3 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart3.scale.set(0.3, 0.3, 0.3);
+        heart3.scale.set(0.25, 0.25, 0.25);
         heart3.position.set(0.23, -0.5, 0.3);
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
         bearGroup.add(heart3);
         
         const heart4 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart4.scale.set(0.35, 0.35, 0.35);
-        heart4.position.set(0.23, -0.2, -0.3);
+        heart4.scale.set(0.3, 0.3, 0.3);
+        heart4.position.set(0.23, 0.2, -0.4);
         heart4.rotation.y = Math.PI;
         heart4.rotation.x = Math.PI;
         bearGroup.add(heart4);
@@ -485,7 +493,7 @@
     
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, pinkSliverHeartMaterial);
+        const tail = new THREE.Mesh(tailGeometry, sliverMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
     
@@ -536,8 +544,8 @@
       let timeoutId: any = null;  // To track the timeout when resuming the animation
       let currentRotationY = 0;   // Current rotation for Y-axis
       let currentRotationX = 0;   // Current rotation for X-axis
-      let isRotatingRight = ref(false); // Is rotating to right
-      let isRotatingLeft = ref(false);  // Is rotating to left
+      // let isRotatingRight = ref(false); // Is rotating to right
+      // let isRotatingLeft = ref(false);  // Is rotating to left
       let shouldFaceMouse = ref(false); // Should bear face the mouse?
 
       const storeCurrentRotation = () => {
@@ -545,35 +553,35 @@
         currentRotationX = bearGroup.rotation.x;
       };
     
-      const startRotateRight = () => {
-        isRotatingRight.value = true;
-        isRotatingLeft.value = false;
-        shouldFaceMouse.value = false;
-      };
+      // const startRotateRight = () => {
+      //   isRotatingRight.value = true;
+      //   isRotatingLeft.value = false;
+      //   shouldFaceMouse.value = false;
+      // };
 
-      const startRotateLeft = () => {
-        isRotatingRight.value = false;
-        isRotatingLeft.value = true;
-        shouldFaceMouse.value = false;
-      };
+      // const startRotateLeft = () => {
+      //   isRotatingRight.value = false;
+      //   isRotatingLeft.value = true;
+      //   shouldFaceMouse.value = false;
+      // };
 
-      // Stop all rotations
-      const stopRotation = () => {
-        isRotatingRight.value = false;
-        isRotatingLeft.value = false;
-        storeCurrentRotation();
-      };
+      // // Stop all rotations
+      // const stopRotation = () => {
+      //   isRotatingRight.value = false;
+      //   isRotatingLeft.value = false;
+      //   storeCurrentRotation();
+      // };
 
       // Update the logic to store the current rotation when the mouse stops
       const handleMouseStop = (mouseX: number) => {
       const centerX = window.innerWidth / 2;
 
       // If mouse stops on the right side, rotate to right, otherwise to the left
-      if (mouseX > centerX) {
-        startRotateRight();
-      } else {
-        startRotateLeft();
-      }
+      // if (mouseX > centerX) {
+      //   startRotateRight();
+      // } else {
+      //   startRotateLeft();
+      // }
 
       // Capture the current rotation of the bear when the mouse stops
       storeCurrentRotation();
@@ -612,7 +620,7 @@
     };
   
       // Add event listener for mouse movement
-      window.addEventListener('mousemove', onMouseMove);
+      // window.addEventListener('mousemove', onMouseMove);
 
       // Logic to trigger the bear facing the mouse (after 2 seconds of no movement)
     const onMouseStopForFacing = (event: MouseEvent) => {
@@ -637,11 +645,17 @@
           bluePinkHeartMaterial.uniforms.time.value += 0.07;
           pinkSliverHeartMaterial.uniforms.time.value += 0.07;
 
-        if (isRotatingRight.value) {
-          bearGroup.rotation.y += 0.03; 
-        } else if (isRotatingLeft.value) {
-          bearGroup.rotation.y -= 0.03;
-        }
+          if (isRotatingRight.value) bearGroup.rotation.y += 0.07;
+          if (isRotatingLeft.value) bearGroup.rotation.y -= 0.07;
+          if (isRotatingUp.value) bearGroup.rotation.x -= 0.07;
+          if (isRotatingDown.value) bearGroup.rotation.x += 0.07;
+
+
+        // if (isRotatingRight.value) {
+        //   bearGroup.rotation.y += 0.03; 
+        // } else if (isRotatingLeft.value) {
+        //   bearGroup.rotation.y -= 0.03;
+        // }
           renderer.render(scene, camera);
         }
     
@@ -665,44 +679,90 @@
         });
       }
     });
+
+        let isRotatingRight = ref(false); // Flag for right rotation
+        let isRotatingLeft = ref(false);  // Flag for left rotation
+        let isRotatingUp = ref(false);    // Flag for up rotation
+        let isRotatingDown = ref(false);  // Flag for down rotation
+
+        function onLeftButtonDown() {          
+          isRotatingLeft.value = true;
+        }
+
+        function onRightButtonDown() {
+          isRotatingRight.value = true;
+        }
+
+        function onUpButtonDown() {
+          isRotatingUp.value = true;
+        }
+
+        function onDownButtonDown() {
+          isRotatingDown.value = true;
+        }
+
+        function stopRotation() {
+          isRotatingLeft.value = false;
+          isRotatingRight.value = false;
+          isRotatingUp.value = false;
+          isRotatingDown.value = false;
+        }
+
+        const numConfetti = 15;
+      for (let i = 0; i < numConfetti; i++) {
+          const confetti = document.createElement('div');
+          confetti.classList.add('confetti');
+          confetti.style.left = `${Math.random() * 100}vw`;
+          confetti.style.animationDuration = `${Math.random() * 3 + 4}s`;
+          confetti.style.animationDelay = `${Math.random() * 5}s`;
+          document.body.appendChild(confetti);
+      }
+
+      // Add twinkling lights
+      const numLights = 5;
+      for (let i = 0; i < numLights; i++) {
+          const light = document.createElement('div');
+          light.classList.add('light');
+          document.body.appendChild(light);
+      }
     </script>
     
     <style scoped>
-  .three-canvas {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
-    background-color: rgba(0, 0, 0, 0.6);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    animation: waterEffect 5s infinite ease-in-out;
-  }
+      .three-canvas {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
+        background-color: rgba(0, 0, 0, 0.85);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        animation: waterEffect 5s infinite ease-in-out;
+      }
 
-  /* background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f); */
-  
-  @keyframes waterEffect {
-    0% {
-      background-size: 100% 100%;
-      background-position: 0% 50%;
-    }
-    25% {
-      background-size: 150% 150%;
-      background-position: 50% 100%;
-    }
-    50% {
-      background-size: 200% 200%;
-      background-position: 100% 50%;
-    }
-    75% {
-      background-size: 150% 150%;
-      background-position: 50% 0%;
-    }
-    100% {
-      background-size: 100% 100%;
-      background-position: 0% 50%;
-    }
-  }
+      /* background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f); */
+      
+      @keyframes waterEffect {
+        0% {
+          background-size: 100% 100%;
+          background-position: 0% 50%;
+        }
+        25% {
+          background-size: 150% 150%;
+          background-position: 50% 100%;
+        }
+        50% {
+          background-size: 200% 200%;
+          background-position: 100% 50%;
+        }
+        75% {
+          background-size: 150% 150%;
+          background-position: 50% 0%;
+        }
+        100% {
+          background-size: 100% 100%;
+          background-position: 0% 50%;
+        }
+      }
   
     .no-bg {
             margin: 0;
@@ -714,11 +774,63 @@
 
           .bear-background {
             position: absolute;
-            background: black;
+            background: rgba(0, 0, 0);
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            }
+          }
           
-    </style>
+    .pixel-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(200%) translateY(-100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .side-buttons {
+      display: flex;
+      justify-content: space-between;
+      width: 120px;
+    }
+
+    .pixel-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      font-family: "Comic Sans MS", "Arial", sans-serif; /* Pop-art font */
+      font-weight: bold;
+      color: #000000; /* Black text for contrast */
+      background: #ff69b4; /* Hot pink background */
+      border: 3px solid #ffffff; /* White border (default) */
+      border-radius: 5px; /* Slightly rounded corners */
+      box-shadow: 4px 4px 0px #000000; /* Strong shadow for a comic effect */
+      cursor: pointer;
+      text-align: center;
+      line-height: 50px; /* Center the arrow vertically */
+      transition: transform 0.2s ease, border-color 0.3s ease;
+    }
+
+    /* Change border colors based on preference */
+    .pixel-btn.border-silver {
+      border-color: #c0c0c0; /* Silver */
+    }
+
+    .pixel-btn.border-gold {
+      border-color: #ffd700; /* Gold */
+    }
+
+    .pixel-btn:hover {
+      transform: translateY(-2px); /* Hover effect */
+    }
+
+    .pixel-btn:active {
+      transform: translateY(2px); /* Pressed effect */
+      box-shadow: 2px 2px 0px #000000; /* Reduced shadow */
+    }
+
+</style>
