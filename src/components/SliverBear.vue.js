@@ -94,13 +94,21 @@ onMounted(() => {
             'https://threejs.org/examples/textures/cube/Park2/posz.jpg',
             'https://threejs.org/examples/textures/cube/Park2/negz.jpg',
         ]);
+        // const environmentMap = mirrorLoader.load([
+        //   '/3d-bear-arts/assets/christmas_garden.jpg',
+        //   '/3d-bear-arts/assets/christmas_ground.jpg',
+        //   '/3d-bear-arts/assets/christmas_front.jpg',
+        //   '/3d-bear-arts/assets/christmas_house.jpg',
+        //   '/3d-bear-arts/assets/christmas_tree.jpg',
+        //   '/3d-bear-arts/assets/christmas_sky.jpg'
+        // ]);
         const environmentMap = mirrorLoader.load([
-            '/3d-bear-arts/assets/snow.jpg',
-            '/3d-bear-arts/assets/snow.jpg',
-            '/3d-bear-arts/assets/snow.jpg',
-            '/3d-bear-arts/assets/snow.jpg',
-            '/3d-bear-arts/assets/snow.jpg',
-            '/3d-bear-arts/assets/snow.jpg'
+            '/3d-bear-arts/assets/popbear1.jpg',
+            '/3d-bear-arts/assets/popbear1.jpg',
+            '/3d-bear-arts/assets/popbear1.jpg',
+            '/3d-bear-arts/assets/popbear1.jpg',
+            '/3d-bear-arts/assets/popbear1.jpg',
+            '/3d-bear-arts/assets/popbear1.jpg'
         ]);
         scene.environment = environmentMap;
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
@@ -119,7 +127,7 @@ onMounted(() => {
             clearcoat: 1.0, // High clearcoat for added shine
             clearcoatRoughness: 0.05, // Low roughness for clear reflections
             transparent: true, // Enable transparency
-            opacity: 0.5, // Semi-transparent
+            opacity: 0.4, // Semi-transparent
             envMap: environmentMap, // Link the environment map
             reflectivity: 1, // Maximum reflectivity
         });
@@ -158,7 +166,7 @@ onMounted(() => {
             opacity: 0.89,
         });
         const redHeartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xCC0000, // Red color
+            color: '#FF00CC', // Red color
             metalness: 0.2, // Lower metalness for a more plastic feel
             roughness: 0.6, // Increase roughness for a more matte appearance
             clearcoat: 0.1, // Low clearcoat for minimal shine
@@ -169,7 +177,7 @@ onMounted(() => {
             depthTest: true, // Ensure depth testing
         });
         const hotPinkHeartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFF69B4, // Red color
+            color: '#4C99FF', // Red color
             metalness: 0.2, // Lower metalness for a more plastic feel
             roughness: 0.6, // Increase roughness for a more matte appearance
             clearcoat: 0.1, // Low clearcoat for minimal shine
@@ -378,7 +386,7 @@ onMounted(() => {
         bearGroup.add(heart1);
         const heart2 = new THREE.Mesh(heartGeometry, hotPinkHeartMaterial);
         heart2.scale.set(0.25, 0.25, 0.25);
-        heart2.position.set(0.27, 0.2, 0); // Position it in front of the body
+        heart2.position.set(0.27, 0.4, 0); // Position it in front of the body
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
         bearGroup.add(heart2);

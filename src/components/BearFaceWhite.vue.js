@@ -33,7 +33,7 @@ onMounted(() => {
                 ctx.clip(); // Clip left half
                 // Ears (Stroke)
                 ctx.lineWidth = 15;
-                ctx.strokeStyle = '#FFFFFF';
+                ctx.strokeStyle = '#FF69B4';
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.85, centerY - strokeFaceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
                 ctx.stroke();
@@ -71,7 +71,7 @@ onMounted(() => {
                 ctx.rect(canvas.width / 2, 0, canvas.width / 2, canvas.height); // Right half
                 ctx.clip(); // Clip right half
                 // Ears (Color)
-                ctx.fillStyle = '#FFFFFF'; // Pink color
+                ctx.fillStyle = '#FF69B4'; // Pink color
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
                 ctx.fill();
@@ -83,7 +83,7 @@ onMounted(() => {
                 ctx.arc(centerX, centerY, faceRadius, 0, Math.PI * 2, true); // Circle for the head
                 ctx.fill();
                 // Eyes (Color)
-                ctx.fillStyle = '#FFFFFF';
+                ctx.fillStyle = '#FF69B4';
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.4, centerY - faceRadius * 0.2, eyeRadius, 0, Math.PI * 2, true); // O eye
                 ctx.fill();
@@ -101,7 +101,7 @@ onMounted(() => {
                 ctx.beginPath();
                 ctx.ellipse(centerX, centerY + faceRadius * 0.4, snoutRadius * 1.5, snoutRadius, 0, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = '#FFFFFF'; // Nose color
+                ctx.fillStyle = '#FF69B4'; // Nose color
                 ctx.beginPath();
                 ctx.arc(centerX, centerY + faceRadius * 0.3, noseRadius * 1.2, 0, Math.PI * 2, true);
                 ctx.fill();

@@ -1,11 +1,6 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
-    <!-- <div style="display: grid; grid-template-columns: 1 1 1 1;" >
-      <div><BearFace class="bear-background"/></div>
-      <div><BearFace class="bear-background"/></div>
-      <div><BearFace class="bear-background"/></div>
-      <div><BearFace class="bear-background"/></div>
-    </div> -->
+    <div><BearFace class="bear-background"/></div>
   </template>
     
     <script setup lang="ts">
@@ -45,127 +40,105 @@
         
         threeCanvas.value.appendChild(renderer.domElement);
             // Create the bear group and all parts
-    const bearGroup = new THREE.Group();
-    
-// Ambient Light (provides soft overall illumination)
-const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Stronger ambient light
-scene.add(ambientLight);
+        const bearGroup = new THREE.Group();
+        
+        // Ambient Light (provides soft overall illumination)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Stronger ambient light
+        scene.add(ambientLight);
 
-// Directional Light (for strong highlights)
-const directionalLight = new THREE.DirectionalLight(0xffffff, 4); // Increase intensity
-directionalLight.position.set(5, 5, 5); // Position it above and to the side of the object
-scene.add(directionalLight);
+        // Directional Light (for strong highlights)
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 4); // Increase intensity
+        directionalLight.position.set(5, 5, 5); // Position it above and to the side of the object
+        scene.add(directionalLight);
 
-// Point Light (for localized bright spots)
-const pointLight = new THREE.PointLight(0xffffff, 5, 50); // Strong point light
-pointLight.position.set(0, 2, 4); // Close to the object
-scene.add(pointLight);
+        // Point Light (for localized bright spots)
+        const pointLight = new THREE.PointLight(0xffffff, 5, 50); // Strong point light
+        pointLight.position.set(0, 2, 4); // Close to the object
+        scene.add(pointLight);
 
-// Load gradient-like texture
-const textureLoader = new THREE.TextureLoader();
-const gradientTexture = textureLoader.load('3d-bear-arts/src/assets/gradient_texture.jpg');
+        // Load gradient-like texture
+        const textureLoader = new THREE.TextureLoader();
 
-// Configure cube render target for reflections
-const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
-  format: THREE.RGBAFormat,
-  generateMipmaps: true,
-  minFilter: THREE.LinearMipmapLinearFilter,
-});
+        // Configure cube render target for reflections
+        const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
+          format: THREE.RGBAFormat,
+          generateMipmaps: true,
+          minFilter: THREE.LinearMipmapLinearFilter,
+        });
 
-// Create CubeCamera with the correct WebGLCubeRenderTarget
-const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
+        // Create CubeCamera with the correct WebGLCubeRenderTarget
+        const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
 
-// Reflective material using gradient texture as envMap
-const sliverMaterial1 = new THREE.MeshPhysicalMaterial({
-  color: 0xFF69B4, // Hot pink or silver color
-  metalness: 1.0,  // Full metalness for maximum reflectivity
-  roughness: 0.1,  // Low roughness for sharper reflections
-  clearcoat: 1.0,  // High clearcoat for added shine
-  clearcoatRoughness: 0.1, // Low clearcoat roughness for shininess
-  envMap: gradientTexture, // Use gradient texture for reflections
-  envMapIntensity: 1.5, // Increase reflection intensity
-});
+        // Transparent reflective material using gradient texture as envMap
+        const transparentBlurrMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xC0C0C0,   // Silver color for transparency
+          metalness: 1.0,    // Full metalness for reflectivity
+          roughness: 0.05,   // Lower roughness for sharper reflections
+          clearcoat: 1.0,    // High clearcoat for added shine
+          clearcoatRoughness: 0.1, // Low clearcoat roughness for shininess
+          transparent: true,  // Enable transparency
+          opacity: 0.4,      // Semi-transparent
+          envMap: cubeRenderTarget.texture,  // Use cube render target texture for reflections
+          envMapIntensity: 1.5, // Increase reflection intensity
+        });
 
-// Transparent reflective material using gradient texture as envMap
-const transparentSliverMaterial1 = new THREE.MeshPhysicalMaterial({
-  color: 0xC0C0C0,   // Silver color for transparency
-  metalness: 1.0,    // Full metalness for reflectivity
-  roughness: 0.05,   // Lower roughness for sharper reflections
-  clearcoat: 1.0,    // High clearcoat for added shine
-  clearcoatRoughness: 0.1, // Low clearcoat roughness for shininess
-  transparent: true,  // Enable transparency
-  opacity: 0.35,      // Semi-transparent
-  envMap: cubeRenderTarget.texture,  // Use cube render target texture for reflections
-  envMapIntensity: 1.5, // Increase reflection intensity
-});
+        // Add the cubeCamera and bear group to the scene
+        scene.add(cubeCamera);
+        scene.environment = cubeRenderTarget.texture;  // Set environment map for reflections
 
-// Add the cubeCamera and bear group to the scene
-scene.add(cubeCamera);
-scene.environment = cubeRenderTarget.texture;  // Set environment map for reflections
+        // Update reflections regularly
+        function updateReflection() {
+          bearGroup.visible = false;  // Hide bear during cube camera reflection capture
+          cubeCamera.update(renderer, scene);  // Update cube camera to reflect environment
+          bearGroup.visible = true;   // Show the bear again
+          requestAnimationFrame(updateReflection);
+        }
+        updateReflection();  // Start reflection updates
 
-// Update reflections regularly
-function updateReflection() {
-  bearGroup.visible = false;  // Hide bear during cube camera reflection capture
-  cubeCamera.update(renderer, scene);  // Update cube camera to reflect environment
-  bearGroup.visible = true;   // Show the bear again
-  requestAnimationFrame(updateReflection);
-}
+        const mirrorLoader = new THREE.CubeTextureLoader();
 
-updateReflection();  // Start reflection updates
+        // const environmentMap = mirrorLoader.load([
+        //   '/3d-bear-arts/assets/christmas_garden.jpg',
+        //   '/3d-bear-arts/assets/christmas_ground.jpg',
+        //   '/3d-bear-arts/assets/christmas_front.jpg',
+        //   '/3d-bear-arts/assets/christmas_house.jpg',
+        //   '/3d-bear-arts/assets/christmas_tree.jpg',
+        //   '/3d-bear-arts/assets/christmas_sky.jpg'
+        // ]);
+        
+        const environmentMap = mirrorLoader.load([
+          '/3d-bear-arts/assets/popbear1.jpg',
+          '/3d-bear-arts/assets/popbear1.jpg',
+          '/3d-bear-arts/assets/popbear1.jpg',
+          '/3d-bear-arts/assets/popbear1.jpg',
+          '/3d-bear-arts/assets/popbear1.jpg',
+          '/3d-bear-arts/assets/popbear1.jpg'
+        ]);
+        scene.environment = environmentMap;
+          
+        const sliverMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xFF69B4, // Silver color
+          metalness: 1.0,  // Full metalness for maximum reflectivity
+          roughness: 0.05, // Low roughness for sharper reflections
+          clearcoat: 1.0,  // High clearcoat for added shine
+          clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
+          envMap: environmentMap, // Link the environment map
+          reflectivity: 1, // Maximum reflectivity
+        });
 
-    const mirrorLoader = new THREE.CubeTextureLoader();
-    const environmentMap1 = mirrorLoader.load([
-      'https://threejs.org/examples/textures/cube/Park2/posx.jpg',
-      'https://threejs.org/examples/textures/cube/Park2/negx.jpg',
-      'https://threejs.org/examples/textures/cube/Park2/posy.jpg',
-      'https://threejs.org/examples/textures/cube/Park2/negy.jpg',
-      'https://threejs.org/examples/textures/cube/Park2/posz.jpg',
-      'https://threejs.org/examples/textures/cube/Park2/negz.jpg',
-    ]);
+        //Import to keep this sliver material
+        const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0xFF69B4, // Silver color
+          metalness: 1.0, // High metalness
+          roughness: 0.05, // Low roughness for reflective effect
+          clearcoat: 1.0, // High clearcoat for added shine
+          clearcoatRoughness: 0.05, // Low roughness for clear reflections
+          transparent: true, // Enable transparency
+          opacity: 0.3, // Semi-transparent
+          envMap: environmentMap, // Link the environment map
+          reflectivity: 0, // Maximum reflectivity
+        });
 
-    // const environmentMap = mirrorLoader.load([
-    //   '/3d-bear-arts/assets/christmas_garden.jpg',
-    //   '/3d-bear-arts/assets/christmas_ground.jpg',
-    //   '/3d-bear-arts/assets/christmas_front.jpg',
-    //   '/3d-bear-arts/assets/christmas_house.jpg',
-    //   '/3d-bear-arts/assets/christmas_tree.jpg',
-    //   '/3d-bear-arts/assets/christmas_sky.jpg'
-    // ]);
-    
-    const environmentMap = mirrorLoader.load([
-      '/3d-bear-arts/assets/popbear1.jpg',
-      '/3d-bear-arts/assets/popbear1.jpg',
-      '/3d-bear-arts/assets/popbear1.jpg',
-      '/3d-bear-arts/assets/popbear1.jpg',
-      '/3d-bear-arts/assets/popbear1.jpg',
-      '/3d-bear-arts/assets/popbear1.jpg'
-    ]);
-
-    scene.environment = environmentMap;
-      
-    const sliverMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xFF69B4, // Silver color
-      metalness: 1.0,  // Full metalness for maximum reflectivity
-      roughness: 0.05, // Low roughness for sharper reflections
-      clearcoat: 1.0,  // High clearcoat for added shine
-      clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
-      envMap: environmentMap, // Link the environment map
-      reflectivity: 1, // Maximum reflectivity
-    });
-
-    const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xFF69B4, // Silver color
-      metalness: 1.0, // High metalness
-      roughness: 0.05, // Low roughness for reflective effect
-      clearcoat: 1.0, // High clearcoat for added shine
-      clearcoatRoughness: 0.05, // Low roughness for clear reflections
-      transparent: true, // Enable transparency
-      opacity: 0.4, // Semi-transparent
-      envMap: environmentMap, // Link the environment map
-      reflectivity: 1, // Maximum reflectivity
-    });
-
-        // Shader material with gradient animation for the bear's body
         const bigHeartMaterial = new THREE.ShaderMaterial({
           uniforms: {
             time: { value: 0 },
@@ -191,41 +164,53 @@ updateReflection();  // Start reflection updates
           `,
         });
 
-      const pinkMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0xFF69B4, // Pink
-        metalness: 0.2,
-        roughness: 0.5,
-        clearcoat: 0.1,
-        clearcoatRoughness: 0.8,
-        transparent: true,
-        opacity: 0.89,
-      });
+      const vertexShader1 = `
+      varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+      `;
   
-        const redHeartMaterial = new THREE.MeshPhysicalMaterial({
-          color: '#FF00CC',          // Red color
-          metalness: 0.2,           // Lower metalness for a more plastic feel
-          roughness: 0.6,           // Increase roughness for a more matte appearance
-          clearcoat: 0.1,           // Low clearcoat for minimal shine
-          clearcoatRoughness: 0.8,  // Higher clearcoat roughness for a matte finish
-          transparent: false,        // Enable transparency
-          opacity: 0.99,            // Slight transparency
-          depthWrite: true,        // Disable depth writing
-          depthTest: true,          // Ensure depth testing
-  });
+        const fragmentShader1 = `
+        uniform float time;
+            uniform float opacity; // Add opacity uniform
+            varying vec2 vUv;
+        
+            void main() {
+                // Dynamic water-like gradient effect
+                vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
+                float len = length(p); // Get the length of the vector (distance from center)
+                float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
+        
+                // Create a time-based oscillating value for smooth gradient transitions
+                float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
+        
+                // Color gradient based on the angle and distance from the center
+                vec3 color1 = vec3(1.0, 0.078, 0.576); 
+                vec3 color2 = vec3(0.878, 0.878, 0.878); 
+                vec3 color3 = vec3(1.0, 0.0, 0.8); 
+        
+                // Mix the colors based on wave and angle for a dynamic effect
+                vec3 color = mix(color1, color2, wave);
+                color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
+        
+                // Set the fragment color with opacity
+                gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
+            }
+      `;
   
-  const hotPinkHeartMaterial = new THREE.MeshPhysicalMaterial({
-          color: '#4C99FF',          // Red color
-          metalness: 0.2,           // Lower metalness for a more plastic feel
-          roughness: 0.6,           // Increase roughness for a more matte appearance
-          clearcoat: 0.1,           // Low clearcoat for minimal shine
-          clearcoatRoughness: 0.8,  // Higher clearcoat roughness for a matte finish
-          transparent: false,        // Enable transparency
-          opacity: 0.99,            // Slight transparency
-          depthWrite: true,        // Disable depth writing
-          depthTest: true,          // Ensure depth testing
-  });
-  
-    // Vertex shader
+      const pinkSliverHeartMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            time: { value: 0.0 }, // Time uniform to animate the shader
+            opacity: { value: 1 } // Opacity uniform (set to 0.6 for 60% transparency)
+        },
+        vertexShader:vertexShader1,
+        fragmentShader:fragmentShader1,
+        transparent: false, // Enable transparency in the material
+        depthWrite: true // Disable depth writing to ensure proper rendering
+    });
+
     const vertexShader = `
       varying vec2 vUv;
             void main() {
@@ -263,7 +248,7 @@ updateReflection();  // Start reflection updates
             }
       `;
   
-      const bodyMaterial = new THREE.ShaderMaterial({
+      const bluePinkHeartMaterial = new THREE.ShaderMaterial({
         uniforms: {
             time: { value: 0.0 }, // Time uniform to animate the shader
             opacity: { value: 1 } // Opacity uniform (set to 0.6 for 60% transparency)
@@ -273,7 +258,7 @@ updateReflection();  // Start reflection updates
         transparent: false, // Enable transparency in the material
         depthWrite: true // Disable depth writing to ensure proper rendering
     });
-    
+
       // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(
             1,            // Radius
@@ -297,7 +282,7 @@ updateReflection();  // Start reflection updates
   
       // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, sliverMaterial);
+        const circle = new THREE.Mesh(circleGeometry, transparentBlurrMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
   
         // Position the circle to cover the flat side
@@ -337,7 +322,7 @@ updateReflection();  // Start reflection updates
   
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, sliverMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, transparentBlurrMaterial);
   
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
@@ -414,72 +399,42 @@ updateReflection();  // Start reflection updates
         heartShape.bezierCurveTo(0, 0.6, 0.6, 0.3, 0.6, 0);
         heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
     
-        // Extrude the heart shape into 3D
-        const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
-        const largeHeartMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xffffff,       // Use white color to simulate a diamond
-            metalness: 0.0,        // High metalness for a reflective surface
-            roughness: 0.1,        // Low roughness for a glossy appearance
-            clearcoat: 1.0,        // High clearcoat for added shine
-            clearcoatRoughness: 0.1, // Smooth clearcoat
-            transparent: true,     // Enable transparency
-            opacity: 0.85,          // High opacity for translucence
-            reflectivity: 1,       // Increase reflectivity for better light interaction
-            envMapIntensity: 1,    // Make environment reflections more prominent
-        });
-        
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-  
-        // Create the black material for the heart
-       const blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  
-        // Create the small black heart tattoo mesh
-        const smallHeart = new THREE.Mesh(heartGeometry, pinkMaterial);
-        smallHeart.scale.set(0.1, 0.1, 0.1); // Scale the heart down to be small
-  
-        // Rotate the heart by 30 degrees (in radians) and position it on the left side of the bear's face
-        smallHeart.rotation.z = THREE.MathUtils.degToRad(210); // Rotate 30 degrees
-        smallHeart.rotation.x = THREE.MathUtils.degToRad(5);
-        smallHeart.rotation.y = THREE.MathUtils.degToRad(-45);
-        smallHeart.position.set(-0.4, 0.9, 0.45); // Position it on the pink side of the face
-  
-        // Add the heart to the bear group
-        // bearGroup.add(smallHeart);
-        const heart = new THREE.Mesh(heartGeometry, bodyMaterial);
-        heart.scale.set(0.5, 0.5, 0.5);
-        heart.position.set(0.35, 0, 0); // Position it in front of the body
+        const heart = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
+        heart.scale.set(0.45, 0.45, 0.45);
+        heart.position.set(0.35, 0, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
     
-        const heart1 = new THREE.Mesh(heartGeometry, bigHeartMaterial);
+        const heart1 = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
         heart1.scale.set(0.35, 0.35, 0.35);
-        heart1.position.set(0.3, 0, 0); // Position it in front of the body
+        heart1.position.set(0.3, 0, 0);
         heart1.rotation.y = Math.PI;
         heart1.rotation.x = Math.PI;
         bearGroup.add(heart1);
         
-        const heart2 = new THREE.Mesh(heartGeometry, hotPinkHeartMaterial);
+        const heart2 = new THREE.Mesh(heartGeometry, bluePinkHeartMaterial);
         heart2.scale.set(0.25, 0.25, 0.25);
-        heart2.position.set(0.27, 0.4, 0); // Position it in front of the body
+        heart2.position.set(0.27, 0.4, 0);
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
         bearGroup.add(heart2);
   
-        const heart3 = new THREE.Mesh(heartGeometry, redHeartMaterial);
+        const heart3 = new THREE.Mesh(heartGeometry, sliverMaterial);
         heart3.scale.set(0.3, 0.3, 0.3);
-        heart3.position.set(0.23, -0.5, 0.3); // Position it in front of the body
+        heart3.position.set(0.23, -0.5, 0.3);
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
         bearGroup.add(heart3);
         
-        const heart4 = new THREE.Mesh(heartGeometry, bodyMaterial);
-        heart4.scale.set(0.4, 0.4, 0.4);
-        heart4.position.set(0.27, 0, 0.35); // Position it in front of the body
+        const heart4 = new THREE.Mesh(heartGeometry, sliverMaterial);
+        heart4.scale.set(0.35, 0.35, 0.35);
+        heart4.position.set(0.23, -0.2, -0.3);
         heart4.rotation.y = Math.PI;
         heart4.rotation.x = Math.PI;
-        // bearGroup.add(heart4);
+        bearGroup.add(heart4);
         
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -530,7 +485,7 @@ updateReflection();  // Start reflection updates
     
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
+        const tail = new THREE.Mesh(tailGeometry, pinkSliverHeartMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
     
@@ -543,8 +498,7 @@ updateReflection();  // Start reflection updates
             depth: 0.05,
          });
         
-        const xEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const xEye = new THREE.Mesh(xEyeGeometry, bodyMaterial);
+        const xEye = new THREE.Mesh(xEyeGeometry, pinkSliverHeartMaterial);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
         xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -557,16 +511,13 @@ updateReflection();  // Start reflection updates
         depth: 0.1, // Thickness of the O
         });
   
-        const oEyeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 }); // Black color
-        const oEye = new THREE.Mesh(oEyeGeometry, bodyMaterial);
+        const oEye = new THREE.Mesh(oEyeGeometry, pinkSliverHeartMaterial);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
         bearGroup.add(oEye);
       });
-  
-      // Update heart renderOrder to ensure it's always drawn last
-  
+    
       tail.renderOrder = 1;
   
       // Add bear group to the scene
@@ -681,35 +632,32 @@ updateReflection();  // Start reflection updates
 
     window.addEventListener('mousemove', onMouseStopForFacing);
         
-        // Animation function
-        function animate() {
+       function animate() {
           requestAnimationFrame(animate);
-  
+          bluePinkHeartMaterial.uniforms.time.value += 0.07;
+          pinkSliverHeartMaterial.uniforms.time.value += 0.07;
+
         if (isRotatingRight.value) {
-          bearGroup.rotation.y += 0.03; // Rotate to the right
+          bearGroup.rotation.y += 0.03; 
         } else if (isRotatingLeft.value) {
-          bearGroup.rotation.y -= 0.03; // Rotate to the left
+          bearGroup.rotation.y -= 0.03;
         }
           renderer.render(scene, camera);
         }
     
-        bigHeartMaterial.uniforms.time.value += 0.04; // Same animation speed
+        bigHeartMaterial.uniforms.time.value += 0.04; 
   
-        // Start animation
         animate();
   
-      // Watch for changes in bodyPosition
       watch(() => props.bodyPosition, (newPos) => {
         bearGroup.position.set(newPos.x, newPos.y, newPos.z);
       });
   
-      // Watch for changes in cameraPosition
       watch(() => props.cameraPosition, (newPos) => {
         camera.position.set(props.bodyPosition.x, 1, newPos);
         camera.lookAt(props.bodyPosition.x, 0, 0);
       });
     
-        // Handle window resize
         window.addEventListener('resize', () => {
           camera.aspect = window.innerWidth / window.innerHeight;
           camera.updateProjectionMatrix();
@@ -724,7 +672,8 @@ updateReflection();  // Start reflection updates
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000);
+    /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
+    background-color: rgba(0, 0, 0, 0.6);
     background-size: 100% 100%;
     background-repeat: no-repeat;
     animation: waterEffect 5s infinite ease-in-out;
@@ -773,4 +722,3 @@ updateReflection();  // Start reflection updates
             }
           
     </style>
-    
