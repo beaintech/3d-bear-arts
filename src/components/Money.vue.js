@@ -44,6 +44,7 @@ onMounted(() => {
         scene.add(pointLight);
         // Load gradient-like texture
         const textureLoader = new THREE.TextureLoader();
+        const circleMap = textureLoader.load('/3d-bear-arts/assets/cashwings.jpg');
         // Configure cube render target for reflections
         const cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256, {
             format: THREE.RGBAFormat,
@@ -54,7 +55,7 @@ onMounted(() => {
         const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
         // Transparent reflective material using gradient texture as envMap
         const transparentBlurrMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xC0C0C0, // Silver color for transparency
+            color: 'sliver', // Silver color for transparency
             metalness: 1.0, // Full metalness for reflectivity
             roughness: 0.05, // Lower roughness for sharper reflections
             clearcoat: 1.0, // High clearcoat for added shine
@@ -85,16 +86,25 @@ onMounted(() => {
         //   '/3d-bear-arts/assets/christmas_sky.jpg'
         // ]);
         const environmentMap = mirrorLoader.load([
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg'
+            '/3d-bear-arts/assets/cash1.jpg',
+            '/3d-bear-arts/assets/cash2.jpg',
+            '/3d-bear-arts/assets/cash3.jpg',
+            '/3d-bear-arts/assets/cash4.jpg',
+            '/3d-bear-arts/assets/cash3.jpg',
+            '/3d-bear-arts/assets/cash4.jpg'
         ]);
         scene.environment = environmentMap;
+        const environmentMap1 = mirrorLoader.load([
+            '/3d-bear-arts/assets/cashwings.jpg',
+            '/3d-bear-arts/assets/cashwings.jpg',
+            '/3d-bear-arts/assets/cashwings.jpg',
+            '/3d-bear-arts/assets/cashwings.jpg',
+            '/3d-bear-arts/assets/cashwings.jpg',
+            '/3d-bear-arts/assets/cashwings.jpg'
+        ]);
+        scene.environment = environmentMap1;
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFF69B4, // Silver color
+            color: 'sliver', // Silver color
             metalness: 1.0, // Full metalness for maximum reflectivity
             roughness: 0.05, // Low roughness for sharper reflections
             clearcoat: 1.0, // High clearcoat for added shine
@@ -102,15 +112,32 @@ onMounted(() => {
             envMap: environmentMap, // Link the environment map
             reflectivity: 1, // Maximum reflectivity
         });
+        const circleMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'sliver', // Silver color
+            metalness: 1.0, // Full metalness for maximum reflectivity
+            roughness: 0.05, // Low roughness for sharper reflections
+            clearcoat: 1.0, // High clearcoat for added shine
+            clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
+            envMap: environmentMap1, // Link the environment map
+            reflectivity: 1, // Maximum reflectivity
+        });
+        const transparentCircleMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'sliver', // Bright yellow color for the head
+            map: circleMap, // Apply a halftone or abstract texture
+            metalness: 0.3, // Slight metalness for a subtle shine
+            roughness: 0.5, // Some roughness to reduce reflections
+            transparent: true,
+            opacity: 1
+        });
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'pink', // Silver color
+            color: 'sliver', // Silver color
             metalness: 1.0, // High metalness
             roughness: 0.05, // Low roughness for reflective effect
             clearcoat: 1.0, // High clearcoat for added shine
             clearcoatRoughness: 0.05, // Low roughness for clear reflections
             transparent: true, // Enable transparency
-            opacity: 0.25, // Semi-transparent
+            opacity: 0.2, // Semi-transparent
             envMap: environmentMap, // Link the environment map
             reflectivity: 0, // Maximum reflectivity
         });
@@ -244,7 +271,7 @@ onMounted(() => {
         leftBody.rotation.y = Math.PI * 1.5;
         // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, sliverMaterial);
+        const circle = new THREE.Mesh(circleGeometry, transparentCircleMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         // Position the circle to cover the flat side
         circle.position.set(0, -0.2, 0); // Position should match the flat side of the half-sphere
@@ -276,7 +303,7 @@ onMounted(() => {
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
         const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
-        const headCircle = new THREE.Mesh(headCircleGeometry, sliverMaterial);
+        const headCircle = new THREE.Mesh(headCircleGeometry, transparentCircleMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
         headCircle.rotation.y = Math.PI / 2; // Rotate the circle to match the half-sphere's orientation
@@ -320,7 +347,7 @@ onMounted(() => {
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, sliverMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, transparentCircleMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side

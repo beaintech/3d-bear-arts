@@ -10,7 +10,6 @@ import Santa from '../components/Santa.vue';
 import Coffee from '../components/Aquar.vue';
 import Bears from '../components/SliverBear.vue';
 import Money from '../components/Money.vue';
-
 const routes = [
     { path: '/3d-bear-arts/leather', name: 'Leather', component: MetalBear },
     { path: '/3d-bear-arts/pop-art', name: 'Pop', component: PopArtBear },
@@ -24,7 +23,6 @@ const routes = [
     { path: '/3d-bear-arts/coffee', name: 'Coffee', component: Coffee },
     { path: '/3d-bear-arts/bears', name: 'Bears', component: Bears },
     { path: '/3d-bear-arts/', name: 'Money', component: Money },
-
     // { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     // { path: '/3d-bear-arts/half', name: 'Haltransparent', component: HalfBear },
     // { path: '/3d-bear-arts/halfTransparent', name: 'Transparent', component: Transparent },
