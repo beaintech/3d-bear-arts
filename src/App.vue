@@ -9,9 +9,10 @@
       <router-link to="/3d-bear-arts/water">Water</router-link>
       <router-link to="/3d-bear-arts/ghost-bear">Pumpkin</router-link>
       <router-link to="/3d-bear-arts/white-ghost-bear">Ghost</router-link>
-      <router-link to="/3d-bear-arts/">Santa</router-link>
+      <router-link to="/3d-bear-arts/santa">Santa</router-link>
       <router-link to="/3d-bear-arts/coffee">Coffee</router-link>
-      <router-link to="/3d-bear-arts/christmas-ball-pink">Christmas Pink</router-link>
+      <router-link to="/3d-bear-arts/bears">Bears</router-link>
+      <router-link to="/3d-bear-arts/">Money</router-link>
 
 
       <!-- <router-link to="/3d-bear-arts">Home</router-link>

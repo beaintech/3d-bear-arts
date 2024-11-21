@@ -104,13 +104,13 @@ onMounted(() => {
         });
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xFF69B4, // Silver color
+            color: 'sliver', // Silver color
             metalness: 1.0, // High metalness
             roughness: 0.05, // Low roughness for reflective effect
             clearcoat: 1.0, // High clearcoat for added shine
             clearcoatRoughness: 0.05, // Low roughness for clear reflections
             transparent: true, // Enable transparency
-            opacity: 0.2, // Semi-transparent
+            opacity: 0.3, // Semi-transparent
             envMap: environmentMap, // Link the environment map
             reflectivity: 0, // Maximum reflectivity
         });
