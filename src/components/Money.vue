@@ -1,6 +1,5 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
-    <div><BearFace class="bear-background"/></div>
     <div class="pixel-controls">
     <button class="pixel-btn up border-gold" @mousedown="onUpButtonDown" @mouseup="stopRotation">▲</button>
     <div class="side-buttons">
@@ -16,8 +15,6 @@
     import * as THREE from 'three';
     import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'; 
     import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'; 
-    import BearFace from './BearFaceWhite.vue';
-
   
     const props = defineProps({
     background: {
@@ -116,12 +113,12 @@
         // ]);
         
         const environmentMap = mirrorLoader.load([
-          '/3d-bear-arts/assets/cash1.jpg',
           '/3d-bear-arts/assets/cash2.jpg',
-          '/3d-bear-arts/assets/cash3.jpg',
+          '/3d-bear-arts/assets/cash8.jpg',
+          '/3d-bear-arts/assets/cash1.jpg',
+          '/3d-bear-arts/assets/cash11.jpg',
           '/3d-bear-arts/assets/cash4.jpg',
-          '/3d-bear-arts/assets/cash3.jpg',
-          '/3d-bear-arts/assets/cash4.jpg'
+          '/3d-bear-arts/assets/cash3.jpg'
         ]);
         
         scene.environment = environmentMap;
@@ -169,12 +166,12 @@
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
           color: 'sliver', // Silver color
-          metalness: 1.0, // High metalness
+          metalness: .75, // High metalness
           roughness: 0.05, // Low roughness for reflective effect
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
-          opacity: 0.2, // Semi-transparent
+          opacity: 0.4, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
         });
@@ -228,7 +225,7 @@
         
                 // Color gradient based on the angle and distance from the center
                 vec3 color1 = vec3(1.0, 0.078, 0.576); 
-                vec3 color2 = vec3(0.878, 0.878, 0.878); 
+                vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
                 vec3 color3 = vec3(1.0, 0.0, 0.8); 
         
                 // Mix the colors based on wave and angle for a dynamic effect
@@ -441,14 +438,14 @@
     
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        const heart = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
+        const heart = new THREE.Mesh(heartGeometry, transparentBlurrMaterial);
         heart.scale.set(0.38, 0.38, 0.38);
         heart.position.set(0.35, 0, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         bearGroup.add(heart);
     
-        const heart1 = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
+        const heart1 = new THREE.Mesh(heartGeometry, sliverMaterial);
         heart1.scale.set(0.35, 0.35, 0.35);
         heart1.position.set(0.3, 0, 0);
         heart1.rotation.y = Math.PI;
@@ -538,7 +535,7 @@
             depth: 0.05,
          });
         
-        const xEye = new THREE.Mesh(xEyeGeometry, pinkSliverHeartMaterial);
+        const xEye = new THREE.Mesh(xEyeGeometry, sliverMaterial);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
         xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -551,7 +548,7 @@
         depth: 0.1, // Thickness of the O
         });
   
-        const oEye = new THREE.Mesh(oEyeGeometry, pinkSliverHeartMaterial);
+        const oEye = new THREE.Mesh(oEyeGeometry, sliverMaterial);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -764,8 +761,7 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
-        background-color: rgba(0, 0, 0, 0.85);
+        background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000);
         background-size: 100% 100%;
         background-repeat: no-repeat;
         animation: waterEffect 5s infinite ease-in-out;
