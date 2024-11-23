@@ -1,6 +1,6 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
-    <div><BearFace class="bear-background"/></div>
+    <div><BearFace class="bear-background" :color="'#FF69B4'"/></div>
     <div class="pixel-controls">
     <button class="pixel-btn up border-gold" @mousedown="onUpButtonDown" @mouseup="stopRotation">▲</button>
     <div class="side-buttons">
@@ -396,7 +396,7 @@
   
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, sliverMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, transparentCircleMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side

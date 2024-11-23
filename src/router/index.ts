@@ -21,6 +21,7 @@ import Santa from '../components/Santa.vue';
 import Coffee from '../components/Aquar.vue';
 import Bears from '../components/SliverBear.vue';
 import Money from '../components/Money.vue';
+import Snowman from '../components/Snowman.vue';
 
 
 const routes = [
@@ -35,7 +36,8 @@ const routes = [
     { path: '/3d-bear-arts/santa', name: 'Santa', component: Santa },
     { path: '/3d-bear-arts/coffee', name: 'Coffee', component: Coffee },
     { path: '/3d-bear-arts/bears', name: 'Bears', component: Bears },
-    { path: '/3d-bear-arts/', name: 'Money', component: Money },
+    { path: '/3d-bear-arts/money', name: 'Money', component: Money },
+    { path: '/3d-bear-arts/', name: 'Snowman', component: Snowman },
 
 
     // { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },

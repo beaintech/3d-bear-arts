@@ -5,7 +5,7 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, defineProps } from 'vue';
   
   const bearCanvas = ref<HTMLCanvasElement | null>(null);
   const isHidden = ref(false); // Controls the visibility of the entire component
@@ -14,6 +14,13 @@
   const toggleComponent = () => {
     isHidden.value = true; // Hides the component when the button is clicked
   };
+
+  const props = defineProps({
+    color: {
+      type: Boolean,
+      default: false
+    },
+  })
   
 onMounted(() => {
   const canvas = bearCanvas.value;
@@ -49,7 +56,7 @@ onMounted(() => {
 
         // Ears (Stroke)
         ctx.lineWidth = 15;
-        ctx.strokeStyle = '#FF69B4';
+        ctx.strokeStyle = props.color;
         ctx.beginPath();
         ctx.arc(centerX - faceRadius * 0.85, centerY - strokeFaceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
         ctx.stroke();
@@ -95,7 +102,7 @@ onMounted(() => {
         ctx.clip(); // Clip right half
 
         // Ears (Color)
-        ctx.fillStyle = '#FF69B4'; // Pink color
+        ctx.fillStyle = props.color; // Pink color
         ctx.beginPath();
         ctx.arc(centerX - faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
         ctx.fill();
@@ -110,7 +117,7 @@ onMounted(() => {
         ctx.fill();
 
         // Eyes (Color)
-        ctx.fillStyle = '#FF69B4';
+        ctx.fillStyle = props.color;
         ctx.beginPath();
         ctx.arc(centerX - faceRadius * 0.4, centerY - faceRadius * 0.2, eyeRadius, 0, Math.PI * 2, true); // O eye
         ctx.fill();
@@ -131,7 +138,7 @@ onMounted(() => {
         ctx.ellipse(centerX, centerY + faceRadius * 0.4, snoutRadius * 1.5, snoutRadius, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = '#FF69B4'; // Nose color
+        ctx.fillStyle = props.color; // Nose color
         ctx.beginPath();
         ctx.arc(centerX, centerY + faceRadius * 0.3, noseRadius * 1.2, 0, Math.PI * 2, true);
         ctx.fill();
