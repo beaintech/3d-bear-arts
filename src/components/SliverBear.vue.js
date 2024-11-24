@@ -329,7 +329,7 @@ onMounted(() => {
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
         // Circle to cover the flat sides
         const snoutCircleGeometry = new THREE.CircleGeometry(0.25, 32);
-        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, sliverMaterial);
+        const snoutCircle = new THREE.Mesh(snoutCircleGeometry, transparentCircleMaterial);
         snoutCircle.scale.set(0.8, 0.6, 0.8);
         // Position and rotate the circle to align with the vertical side of the snout
         snoutCircle.position.set(0, 0.84, 0.5); // Adjust position to align with the snout's vertical flat side
@@ -658,8 +658,8 @@ function __VLS_template() {
     // @ts-ignore
     [BearFace,];
     // @ts-ignore
-    const __VLS_0 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-background") }, }));
-    const __VLS_1 = __VLS_0({ ...{ class: ("bear-background") }, }, ...__VLS_functionalComponentArgsRest(__VLS_0));
+    const __VLS_0 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-background") }, color: (('#FF69B4')), }));
+    const __VLS_1 = __VLS_0({ ...{ class: ("bear-background") }, color: (('#FF69B4')), }, ...__VLS_functionalComponentArgsRest(__VLS_0));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("pixel-controls") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onUpButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn up border-gold") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("side-buttons") }, });

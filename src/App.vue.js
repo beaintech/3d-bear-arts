@@ -111,15 +111,22 @@ function __VLS_template() {
     const __VLS_60 = __VLS_resolvedLocalAndGlobalComponents.RouterLink;
     /** @type { [typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, ] } */
     // @ts-ignore
-    const __VLS_61 = __VLS_asFunctionalComponent(__VLS_60, new __VLS_60({ to: ("/3d-bear-arts/"), }));
-    const __VLS_62 = __VLS_61({ to: ("/3d-bear-arts/"), }, ...__VLS_functionalComponentArgsRest(__VLS_61));
+    const __VLS_61 = __VLS_asFunctionalComponent(__VLS_60, new __VLS_60({ to: ("/3d-bear-arts/money"), }));
+    const __VLS_62 = __VLS_61({ to: ("/3d-bear-arts/money"), }, ...__VLS_functionalComponentArgsRest(__VLS_61));
     __VLS_nonNullable(__VLS_65.slots).default;
     const __VLS_65 = __VLS_pickFunctionalComponentCtx(__VLS_60, __VLS_62);
-    const __VLS_66 = __VLS_resolvedLocalAndGlobalComponents.RouterView;
+    const __VLS_66 = __VLS_resolvedLocalAndGlobalComponents.RouterLink;
+    /** @type { [typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, typeof __VLS_components.RouterLink, typeof __VLS_components.routerLink, ] } */
+    // @ts-ignore
+    const __VLS_67 = __VLS_asFunctionalComponent(__VLS_66, new __VLS_66({ to: ("/3d-bear-arts/"), }));
+    const __VLS_68 = __VLS_67({ to: ("/3d-bear-arts/"), }, ...__VLS_functionalComponentArgsRest(__VLS_67));
+    __VLS_nonNullable(__VLS_71.slots).default;
+    const __VLS_71 = __VLS_pickFunctionalComponentCtx(__VLS_66, __VLS_68);
+    const __VLS_72 = __VLS_resolvedLocalAndGlobalComponents.RouterView;
     /** @type { [typeof __VLS_components.RouterView, typeof __VLS_components.routerView, typeof __VLS_components.RouterView, typeof __VLS_components.routerView, ] } */
     // @ts-ignore
-    const __VLS_67 = __VLS_asFunctionalComponent(__VLS_66, new __VLS_66({}));
-    const __VLS_68 = __VLS_67({}, ...__VLS_functionalComponentArgsRest(__VLS_67));
+    const __VLS_73 = __VLS_asFunctionalComponent(__VLS_72, new __VLS_72({}));
+    const __VLS_74 = __VLS_73({}, ...__VLS_functionalComponentArgsRest(__VLS_73));
     var __VLS_slots;
     var __VLS_inheritedAttrs;
     const __VLS_refs = {};

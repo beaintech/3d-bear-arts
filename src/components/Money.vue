@@ -1,6 +1,6 @@
 <template>
     <div ref="threeCanvas" :class="background? 'no-bg':'three-canvas'"></div>
-    <div><BearFace class="bear-background" :color="'lightGreen'"/></div>
+    <div><BearFace class="bear-background" :color="'lightgreen'"/></div>
     <div class="pixel-controls">
     <button class="pixel-btn up border-gold" @mousedown="onUpButtonDown" @mouseup="stopRotation">▲</button>
     <div class="side-buttons">

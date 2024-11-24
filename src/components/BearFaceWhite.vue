@@ -17,8 +17,8 @@
 
   const props = defineProps({
     color: {
-      type: Boolean,
-      default: false
+      type: String,
+      default: 'white'
     },
   })
   

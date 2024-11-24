@@ -88,7 +88,7 @@ const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
     metalness: 0.3,
     roughness: 0.05,
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.6,
     transmission: 1,
     ior: 1.33,
     thickness: 0.01,
@@ -99,16 +99,32 @@ const rightSnowMaterial = new THREE.MeshPhysicalMaterial({
     side: THREE.DoubleSide,
 });
 
+const rightBodyMaterial = new THREE.MeshPhysicalMaterial({
+  color: 0xFFFFFF,
+    metalness: 0.3,
+    roughness: 0.05,
+    transparent: true,
+    opacity: 0.35,
+    transmission: 1,
+    ior: 1.33,
+    thickness: 0.01,
+    depthWrite: true,
+    envMapIntensity: 2.0,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+    side: THREE.DoubleSide,
+});
+
+
 const leftTransparentSnowMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xFFFFFF,
     metalness: 0.3,
-    map: houseTexture,
     roughness: 0.05,
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.4,
     transmission: 0.7,
     ior: 1.33,
-    thickness: 0.4,
+    thickness: 0.5,
     depthWrite: true,
     envMapIntensity: 2.0,
     clearcoat: 1.0,
@@ -210,8 +226,8 @@ const fragmentShader = `
             Math.PI       // phiLength (half of the sphere)
         );
 
-      const rightBody = new THREE.Mesh(bodyGeometry, rightSnowMaterial);
-      const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentPureMaterial);
+      const rightBody = new THREE.Mesh(bodyGeometry, rightBodyMaterial);
+      const leftBody = new THREE.Mesh(bodyGeometry, leftTransparentSnowMaterial);
   
       rightBody.scale.set(0.85, 0.85, 0.8);
       leftBody.scale.set(0.85, 0.85, 0.8);
@@ -257,7 +273,7 @@ const fragmentShader = `
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
 
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, rightSnowMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, rightBodyMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
@@ -1016,7 +1032,7 @@ const fragmentShader = `
 
       // Set initial positions for bearGroup and camera
       bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
-      camera.position.set(props.bodyPosition.x, 1, props.cameraPosition);
+      camera.position.set(props.bodyPosition.x, 1.25, props.cameraPosition);
       camera.lookAt(props.bodyPosition.x, 0, 0);
 
       camera.position.z = 4;

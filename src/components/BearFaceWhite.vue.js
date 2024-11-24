@@ -1,11 +1,17 @@
-import { ref, onMounted } from 'vue';
-const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
+import { ref, onMounted, defineProps } from 'vue';
+const { defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const bearCanvas = ref(null);
 const isHidden = ref(false); // Controls the visibility of the entire component
 // Function to hide the entire component
 const toggleComponent = () => {
     isHidden.value = true; // Hides the component when the button is clicked
 };
+const props = defineProps({
+    color: {
+        type: Boolean,
+        default: false
+    },
+});
 onMounted(() => {
     const canvas = bearCanvas.value;
     if (canvas) {
@@ -33,7 +39,7 @@ onMounted(() => {
                 ctx.clip(); // Clip left half
                 // Ears (Stroke)
                 ctx.lineWidth = 15;
-                ctx.strokeStyle = '#FF69B4';
+                ctx.strokeStyle = props.color;
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.85, centerY - strokeFaceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
                 ctx.stroke();
@@ -71,7 +77,7 @@ onMounted(() => {
                 ctx.rect(canvas.width / 2, 0, canvas.width / 2, canvas.height); // Right half
                 ctx.clip(); // Clip right half
                 // Ears (Color)
-                ctx.fillStyle = '#FF69B4'; // Pink color
+                ctx.fillStyle = props.color; // Pink color
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.85, centerY - faceRadius * 0.8, earRadius, 0, Math.PI * 2, true); // Left ear
                 ctx.fill();
@@ -83,7 +89,7 @@ onMounted(() => {
                 ctx.arc(centerX, centerY, faceRadius, 0, Math.PI * 2, true); // Circle for the head
                 ctx.fill();
                 // Eyes (Color)
-                ctx.fillStyle = '#FF69B4';
+                ctx.fillStyle = props.color;
                 ctx.beginPath();
                 ctx.arc(centerX - faceRadius * 0.4, centerY - faceRadius * 0.2, eyeRadius, 0, Math.PI * 2, true); // O eye
                 ctx.fill();
@@ -101,7 +107,7 @@ onMounted(() => {
                 ctx.beginPath();
                 ctx.ellipse(centerX, centerY + faceRadius * 0.4, snoutRadius * 1.5, snoutRadius, 0, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.fillStyle = '#FF69B4'; // Nose color
+                ctx.fillStyle = props.color; // Nose color
                 ctx.beginPath();
                 ctx.arc(centerX, centerY + faceRadius * 0.3, noseRadius * 1.2, 0, Math.PI * 2, true);
                 ctx.fill();
@@ -111,7 +117,14 @@ onMounted(() => {
         }
     }
 });
-const __VLS_fnComponent = (await import('vue')).defineComponent({});
+const __VLS_fnComponent = (await import('vue')).defineComponent({
+    props: {
+        color: {
+            type: Boolean,
+            default: false
+        },
+    },
+});
 ;
 let __VLS_functionalComponentProps;
 function __VLS_template() {
@@ -159,10 +172,22 @@ const __VLS_self = (await import('vue')).defineComponent({
             isHidden: isHidden,
         };
     },
+    props: {
+        color: {
+            type: Boolean,
+            default: false
+        },
+    },
 });
 export default (await import('vue')).defineComponent({
     setup() {
         return {};
+    },
+    props: {
+        color: {
+            type: Boolean,
+            default: false
+        },
     },
 });
 ;
