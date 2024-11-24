@@ -29,7 +29,7 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 5;
+camera.position.z = 4;
 onMounted(() => {
     if (threeCanvas.value) {
         // Initialize the Three.js scene
@@ -836,7 +836,9 @@ onMounted(() => {
         scene.add(bearGroup);
         // Set initial positions for bearGroup and camera
         bearGroup.position.set(props.bodyPosition.x, props.bodyPosition.y, props.bodyPosition.z);
-        camera.position.set(props.bodyPosition.x, 1.25, props.cameraPosition);
+        bearGroup.position.y = -0.25;
+        camera.position.set(props.bodyPosition.x, 1.4, props.cameraPosition);
+        camera.position.set(0, 1, 4);
         camera.lookAt(props.bodyPosition.x, 0, 0);
         camera.position.z = 4;
         // New mouse tracking functionality

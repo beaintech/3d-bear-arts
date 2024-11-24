@@ -690,6 +690,18 @@ onMounted(() => {
             halo.position.set(0, 1.8, 0);
             halo.rotation.x = Math.PI / 2;
             angelGroup.add(halo);
+            const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 32); // Cylinder shape for the legs
+            // Left leg
+            const leftLeg = new THREE.Mesh(legGeometry, headMaterial);
+            leftLeg.position.set(-0.15, 0.55, 0); // Adjust position (left of the body)
+            leftLeg.rotation.z = Math.PI / 1; // Slight angle
+            // Right leg
+            const rightLeg = new THREE.Mesh(legGeometry, headMaterial);
+            rightLeg.position.set(0.15, 0.55, 0); // Adjust position (right of the body)
+            rightLeg.rotation.z = -Math.PI / 1; // Slight angle
+            // Add legs to the bear group
+            angelGroup.add(leftLeg);
+            angelGroup.add(rightLeg);
             return angelGroup;
         }
         let angle1 = 0; // For the first angel
