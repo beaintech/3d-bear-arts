@@ -542,44 +542,50 @@
         bearGroup.add(oEye);
       });
 
-    // Create a red-and-white striped texture with vertical stripes
-    function createVerticalStripedTexture() {
-        const canvas = document.createElement('canvas');
-        const context: any = canvas.getContext('2d');
+      function createVerticalStripedTexture() {
+    const canvas = document.createElement('canvas');
+    const context: any = canvas.getContext('2d');
 
-        canvas.width = 512; // Width of the texture
-        canvas.height = 512; // Height of the texture
+    canvas.width = 512; // Width of the texture
+    canvas.height = 512; // Height of the texture
 
-        const stripeWidth = canvas.width / 25; // Width of each stripe
+    const stripeWidth = canvas.width / 8; // Width of each stripe
 
-        // Draw alternating red and white vertical stripes
-        for (let i = 0; i < 25; i++) {
-            context.fillStyle = i % 2 === 0 ? '#FF0000' : '#FFFFFF'; // Red and white
-            context.fillRect(i * stripeWidth, 0, stripeWidth, canvas.height);
-        }
-
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
-        texture.wrapT = THREE.RepeatWrapping; // Repeat vertically
-        texture.repeat.set(1, 0); // Adjust to scale the stripes vertically
-
-        return texture;
+    // Draw alternating red and white vertical stripes
+    for (let i = 0; i < 8; i++) {
+        context.fillStyle = i % 2 === 0 ? '#FF0000' : '#FFFFFF'; // Red and white
+        context.fillRect(i * stripeWidth, 0, stripeWidth, canvas.height);
     }
 
-    // Create striped material for the scarf
-    const verticalStripedTexture = createVerticalStripedTexture();
-    const scarfMaterial = new THREE.MeshStandardMaterial({
-        map: verticalStripedTexture,
-        metalness: 0.1,
-        roughness: 0.8,
-    });
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
+    texture.wrapT = THREE.RepeatWrapping; // Repeat vertically
+    texture.repeat.set(1, 0); // Adjust to scale the stripes vertically
 
-    // Create the scarf geometry and mesh
-    const scarfGeometry = new THREE.TorusGeometry(0.5, 0.1, 24, 100);
-    const scarf = new THREE.Mesh(scarfGeometry, scarfMaterial);
-    scarf.position.set(0, 0.54, 0);
-    scarf.rotation.x = Math.PI / 2;
-    bearGroup.add(scarf);
+    return texture;
+}
+
+// Create striped material for the scarf
+// Create striped material for the scarf
+const verticalStripedTexture = createVerticalStripedTexture();
+const scarfMaterial = new THREE.MeshStandardMaterial({
+    map: verticalStripedTexture,
+    metalness: 0.1,
+    roughness: 0.8,
+});
+
+// Create a half-circle geometry for the scarf
+const rightHalfScarfGeometry = new THREE.TorusGeometry(0.5, 0.1, 24, 100, Math.PI); // Half-circle arc
+const rightHalfScarf = new THREE.Mesh(rightHalfScarfGeometry, scarfMaterial);
+
+// Position and rotate the scarf correctly
+rightHalfScarf.position.set(0, 0.54, 0); // Align around the neck
+rightHalfScarf.rotation.x = Math.PI / 2; // Rotate for a horizontal orientation
+rightHalfScarf.rotation.y = Math.PI / 1; // Rotate to the right side
+rightHalfScarf.rotation.z = Math.PI / -2;
+// Add to the bear group
+bearGroup.add(rightHalfScarf);
+
 
 
 function createSnowman() {
