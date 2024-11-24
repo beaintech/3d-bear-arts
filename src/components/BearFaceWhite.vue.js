@@ -8,8 +8,8 @@ const toggleComponent = () => {
 };
 const props = defineProps({
     color: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: 'white'
     },
 });
 onMounted(() => {
@@ -120,8 +120,8 @@ onMounted(() => {
 const __VLS_fnComponent = (await import('vue')).defineComponent({
     props: {
         color: {
-            type: Boolean,
-            default: false
+            type: String,
+            default: 'white'
         },
     },
 });
@@ -174,8 +174,8 @@ const __VLS_self = (await import('vue')).defineComponent({
     },
     props: {
         color: {
-            type: Boolean,
-            default: false
+            type: String,
+            default: 'white'
         },
     },
 });
@@ -185,8 +185,8 @@ export default (await import('vue')).defineComponent({
     },
     props: {
         color: {
-            type: Boolean,
-            default: false
+            type: String,
+            default: 'white'
         },
     },
 });

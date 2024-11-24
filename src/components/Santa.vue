@@ -501,14 +501,14 @@ const fragmentShader = `
         bearGroup.add(xEye);
 
        // Create the O eye
-        const oEyeGeometry = new TextGeometry('O', {
+       const oEyeGeometry = new TextGeometry('+', {
         font: font,
-        size: 0.2, // Size of the O
-        depth: 0.05, // Thickness of the O
+        size: 0.25, // Size of the O
+        depth: 0.1, // Thickness of the O
         });
-
+  
         const oEye = new THREE.Mesh(oEyeGeometry, snowWhiteMaterial);
-        oEye.position.set(0.14, .99, 0.53); // Position on the head
+        oEye.position.set(0.12, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
         bearGroup.add(oEye);
@@ -1153,7 +1153,34 @@ const fragmentShader = `
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-}
+    animation: waterEffect 5s infinite ease-in-out;
+      }
+      /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
+
+      /* background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f); */
+      
+      @keyframes waterEffect {
+        0% {
+          background-size: 100% 100%;
+          background-position: 0% 50%;
+        }
+        25% {
+          background-size: 150% 150%;
+          background-position: 50% 100%;
+        }
+        50% {
+          background-size: 200% 200%;
+          background-position: 100% 50%;
+        }
+        75% {
+          background-size: 150% 150%;
+          background-position: 50% 0%;
+        }
+        100% {
+          background-size: 100% 100%;
+          background-position: 0% 50%;
+        }
+      }
 
 
 /* Red sparkles */

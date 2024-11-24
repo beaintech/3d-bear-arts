@@ -130,13 +130,24 @@ onMounted(() => {
         });
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'sliver', // Silver color
+            color: 'white', // Silver color
             metalness: .75, // High metalness
             roughness: 0.05, // Low roughness for reflective effect
             clearcoat: 1.0, // High clearcoat for added shine
             clearcoatRoughness: 0.05, // Low roughness for clear reflections
             transparent: true, // Enable transparency
-            opacity: 0.4, // Semi-transparent
+            opacity: 0.3, // Semi-transparent
+            envMap: environmentMap, // Link the environment map
+            reflectivity: 0, // Maximum reflectivity
+        });
+        const transparentMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'white', // Silver color
+            metalness: .75, // High metalness
+            roughness: 0.05, // Low roughness for reflective effect
+            clearcoat: 1.0, // High clearcoat for added shine
+            clearcoatRoughness: 0.05, // Low roughness for clear reflections
+            transparent: true, // Enable transparency
+            opacity: 0.7, // Semi-transparent
             envMap: environmentMap, // Link the environment map
             reflectivity: 0, // Maximum reflectivity
         });
@@ -319,7 +330,7 @@ onMounted(() => {
         const leftEar = new THREE.Mesh(earGeometry, sliverMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, transparentSliverMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, transparentMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -340,7 +351,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentSliverMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -367,43 +378,19 @@ onMounted(() => {
         heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
         const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
         const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        const heart = new THREE.Mesh(heartGeometry, transparentBlurrMaterial);
-        heart.scale.set(0.38, 0.38, 0.38);
-        heart.position.set(0.35, 0, 0);
+        const heart = new THREE.Mesh(heartGeometry, sliverMaterial);
+        heart.scale.set(0.23, 0.23, 0.23);
+        heart.position.set(0.25, 1.2, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         // bearGroup.add(heart);
-        const heart1 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart1.scale.set(0.35, 0.35, 0.35);
-        heart1.position.set(0.3, 0, 0);
-        heart1.rotation.y = Math.PI;
-        heart1.rotation.x = Math.PI;
-        // bearGroup.add(heart1);
-        const heart2 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart2.scale.set(0.22, 0.22, 0.22);
-        heart2.position.set(0.27, 0.4, 0);
-        heart2.rotation.y = Math.PI;
-        heart2.rotation.x = Math.PI;
-        // bearGroup.add(heart2);
-        const heart3 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart3.scale.set(0.25, 0.25, 0.25);
-        heart3.position.set(0.23, -0.5, 0.3);
-        heart3.rotation.y = Math.PI;
-        heart3.rotation.x = Math.PI;
-        // bearGroup.add(heart3);
-        const heart4 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart4.scale.set(0.3, 0.3, 0.3);
-        heart4.position.set(0.23, 0.2, -0.4);
-        heart4.rotation.y = Math.PI;
-        heart4.rotation.x = Math.PI;
-        // bearGroup.add(heart4);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
         const leftArm = new THREE.Mesh(armGeometry, sliverMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, transparentSliverMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, transparentMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
@@ -412,7 +399,7 @@ onMounted(() => {
         const leftLeg = new THREE.Mesh(legGeometry, sliverMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, transparentSliverMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, transparentMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
@@ -423,7 +410,7 @@ onMounted(() => {
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentSliverMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
@@ -432,7 +419,7 @@ onMounted(() => {
         const leftButtock = new THREE.Mesh(buttockGeometry, sliverMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, transparentSliverMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, transparentMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
@@ -461,12 +448,74 @@ onMounted(() => {
                 depth: 0.1, // Thickness of the O
             });
             const oEye = new THREE.Mesh(oEyeGeometry, sliverMaterial);
-            oEye.position.set(0.14, .99, 0.53); // Position on the head
+            oEye.position.set(0.13, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);
         });
         function createSnowman() {
+            const snowmanGroup = new THREE.Group();
+            // Materials
+            const snowMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
+            const coalMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+            const carrotMaterial = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
+            const scarfMaterial = new THREE.MeshStandardMaterial({ color: 0xFF0000 });
+            const hatMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+            // Snowman Body Parts
+            const bottomSphere = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), snowMaterial);
+            bottomSphere.position.set(0, 0.6, 0);
+            snowmanGroup.add(bottomSphere);
+            const middleSphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 32), snowMaterial);
+            middleSphere.position.set(0, 1.2, 0);
+            snowmanGroup.add(middleSphere);
+            const headSphere = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), snowMaterial);
+            headSphere.position.set(0, 1.7, 0);
+            snowmanGroup.add(headSphere);
+            // Eyes
+            const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), coalMaterial);
+            leftEye.position.set(-0.1, 1.75, 0.25);
+            snowmanGroup.add(leftEye);
+            const rightEye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), coalMaterial);
+            rightEye.position.set(0.1, 1.75, 0.25);
+            snowmanGroup.add(rightEye);
+            // Carrot Nose
+            const noseGeometry = new THREE.ConeGeometry(0.05, 0.2, 32);
+            const nose = new THREE.Mesh(noseGeometry, carrotMaterial);
+            nose.position.set(0, 1.7, 0.35);
+            nose.rotation.x = Math.PI / 2;
+            snowmanGroup.add(nose);
+            // Buttons
+            for (let i = 0; i < 3; i++) {
+                const button = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), coalMaterial);
+                button.position.set(0, 1.0 - i * 0.3, 0.4);
+                snowmanGroup.add(button);
+            }
+            // Scarf
+            const scarfGeometry = new THREE.TorusGeometry(0.3, 0.08, 16, 100);
+            const scarf = new THREE.Mesh(scarfGeometry, scarfMaterial);
+            scarf.position.set(0, 1.45, 0);
+            scarf.rotation.x = Math.PI / 2;
+            snowmanGroup.add(scarf);
+            const scarfTailGeometry = new THREE.BoxGeometry(0.1, 0.4, 0.05);
+            const scarfTail = new THREE.Mesh(scarfTailGeometry, scarfMaterial);
+            scarfTail.position.set(0.25, 1.3, 0);
+            snowmanGroup.add(scarfTail);
+            // Top Hat
+            const hatBaseGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.05, 32);
+            const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
+            hatBase.position.set(0, 1.9, 0);
+            snowmanGroup.add(hatBase);
+            const hatTopGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.3, 32);
+            const hatTop = new THREE.Mesh(hatTopGeometry, hatMaterial);
+            hatTop.position.set(0, 2.05, 0);
+            snowmanGroup.add(hatTop);
+            return snowmanGroup;
+        }
+        const snowman = createSnowman();
+        snowman.scale.set(0.38, 0.38, 0.38);
+        snowman.position.set(0.3, -0.45, 0);
+        bearGroup.add(snowman);
+        function createSnowman2() {
             const snowmanGroup = new THREE.Group();
             // Materials
             const snowMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
@@ -524,10 +573,14 @@ onMounted(() => {
             snowmanGroup.add(hatTop);
             return snowmanGroup;
         }
-        const snowman = createSnowman();
-        snowman.scale.set(0.38, 0.38, 0.38);
-        snowman.position.set(0.3, -0.5, 0);
-        bearGroup.add(snowman);
+        const snowman2 = createSnowman2();
+        snowman2.scale.set(0.2, 0.2, 0.2);
+        snowman2.position.set(0.5, -0.3, 0.3);
+        bearGroup.add(snowman2);
+        const snowman3 = createSnowman2();
+        snowman3.scale.set(0.12, 0.12, 0.12);
+        snowman3.position.set(0.2, -0.3, 0.5);
+        bearGroup.add(snowman3);
         function createAngel() {
             const angelGroup = new THREE.Group();
             // Materials
@@ -536,8 +589,6 @@ onMounted(() => {
             const haloMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00 }); // Golden halo
             const wingMaterial = new THREE.MeshStandardMaterial({
                 color: 0xF8F8FF, // Light ghost white for wings
-                transparent: true,
-                opacity: 0.8,
             });
             // Head
             const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
@@ -545,8 +596,8 @@ onMounted(() => {
             head.position.set(0, 1.5, 0);
             angelGroup.add(head);
             // Body (Slender Cylinder)
-            const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.35, 0.8, 32);
-            const body = new THREE.Mesh(bodyGeometry, sliverMaterial);
+            const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.35, 0.6, 32);
+            const body = new THREE.Mesh(bodyGeometry, headMaterial);
             body.position.set(0, 1, 0);
             angelGroup.add(body);
             // Wings (Curved and Open)
@@ -560,17 +611,47 @@ onMounted(() => {
             });
             // Left Wing
             const leftWing = new THREE.Mesh(wingGeometry, wingMaterial);
-            leftWing.position.set(-0.5, 1.2, -0.1); // Positioned outward
-            leftWing.rotation.y = Math.PI / 6; // Tilt backward for open effect
+            leftWing.position.set(-0.2, 1.2, -0.05); // Mirrored position
+            leftWing.rotation.y = Math.PI / 12; // Mirrored backward tilt
+            leftWing.rotation.z = Math.PI / 4; // Mirrored vertical tilt
+            leftWing.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
             angelGroup.add(leftWing);
+            const leftWing1 = new THREE.Mesh(wingGeometry, wingMaterial);
+            leftWing1.position.set(-0.1, 1.1, -0.05); // Mirrored position
+            leftWing1.rotation.y = Math.PI / 10; // Mirrored backward tilt
+            leftWing1.rotation.z = Math.PI / 3; // Mirrored vertical tilt
+            leftWing1.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+            angelGroup.add(leftWing1);
+            const leftWing2 = new THREE.Mesh(wingGeometry, wingMaterial);
+            leftWing2.position.set(0, 1, -0.05); // Mirrored position
+            leftWing2.rotation.y = Math.PI / 8; // Mirrored backward tilt
+            leftWing2.rotation.z = Math.PI / 2.5; // Mirrored vertical tilt
+            leftWing2.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+            angelGroup.add(leftWing2);
             // Right Wing
             const rightWing = new THREE.Mesh(wingGeometry, wingMaterial);
-            rightWing.position.set(0.5, 1.2, -0.1); // Positioned outward
-            rightWing.rotation.y = -Math.PI / 6; // Tilt backward for open effect
-            rightWing.scale.x = -1; // Flip for symmetry
+            rightWing.position.set(0.2, 1.2, -0.05); // Positioned closer to the body
+            rightWing.rotation.y = -Math.PI / 12; // Slight backward tilt
+            rightWing.rotation.z = -Math.PI / 4; // More vertical
+            rightWing.scale.set(0.5, 0.5, 0.5);
+            ; // Flip for symmetry
             angelGroup.add(rightWing);
+            const rightWing1 = new THREE.Mesh(wingGeometry, wingMaterial);
+            rightWing1.position.set(0.1, 1.1, -0.05); // Positioned closer to the body
+            rightWing1.rotation.y = -Math.PI / 10; // Slight backward tilt
+            rightWing1.rotation.z = -Math.PI / 3; // More vertical
+            rightWing1.scale.set(0.5, 0.5, 0.5);
+            ; // Flip for symmetry
+            angelGroup.add(rightWing1);
+            const rightWing2 = new THREE.Mesh(wingGeometry, wingMaterial);
+            rightWing2.position.set(0, 1, -0.05); // Positioned closer to the body
+            rightWing2.rotation.y = -Math.PI / 8; // Slight backward tilt
+            rightWing2.rotation.z = -Math.PI / 2.5; // More vertical
+            rightWing2.scale.set(0.5, 0.5, 0.5);
+            ; // Flip for symmetry
+            angelGroup.add(rightWing2);
             // Halo
-            const haloGeometry = new THREE.TorusGeometry(0.15, 0.03, 16, 100);
+            const haloGeometry = new THREE.TorusGeometry(0.15, 0.05, 16, 100);
             const halo = new THREE.Mesh(haloGeometry, haloMaterial);
             halo.position.set(0, 1.8, 0);
             halo.rotation.x = Math.PI / 2;
@@ -578,8 +659,8 @@ onMounted(() => {
             return angelGroup;
         }
         const angel = createAngel();
-        angel.scale.set(0.38, 0.38, 0.38);
-        angel.position.set(0.3, 0.5, 0);
+        angel.scale.set(0.3, 0.3, 0.3);
+        angel.position.set(0.8, 0.5, 0);
         bearGroup.add(angel);
         const snowHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
         const snowMaterial = new THREE.MeshPhysicalMaterial({

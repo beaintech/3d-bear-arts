@@ -542,10 +542,48 @@
         bearGroup.add(oEye);
       });
 
+    // Create a red-and-white striped texture with vertical stripes
+    function createVerticalStripedTexture() {
+        const canvas = document.createElement('canvas');
+        const context: any = canvas.getContext('2d');
+
+        canvas.width = 512; // Width of the texture
+        canvas.height = 512; // Height of the texture
+
+        const stripeWidth = canvas.width / 25; // Width of each stripe
+
+        // Draw alternating red and white vertical stripes
+        for (let i = 0; i < 25; i++) {
+            context.fillStyle = i % 2 === 0 ? '#FF0000' : '#FFFFFF'; // Red and white
+            context.fillRect(i * stripeWidth, 0, stripeWidth, canvas.height);
+        }
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.wrapS = THREE.RepeatWrapping; // Repeat horizontally
+        texture.wrapT = THREE.RepeatWrapping; // Repeat vertically
+        texture.repeat.set(1, 0); // Adjust to scale the stripes vertically
+
+        return texture;
+    }
+
+    // Create striped material for the scarf
+    const verticalStripedTexture = createVerticalStripedTexture();
+    const scarfMaterial = new THREE.MeshStandardMaterial({
+        map: verticalStripedTexture,
+        metalness: 0.1,
+        roughness: 0.8,
+    });
+
+    // Create the scarf geometry and mesh
+    const scarfGeometry = new THREE.TorusGeometry(0.5, 0.1, 24, 100);
+    const scarf = new THREE.Mesh(scarfGeometry, scarfMaterial);
+    scarf.position.set(0, 0.54, 0);
+    scarf.rotation.x = Math.PI / 2;
+    bearGroup.add(scarf);
+
+
 function createSnowman() {
     const snowmanGroup = new THREE.Group();
-
-    // Materials
     const snowMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
     const coalMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
     const carrotMaterial = new THREE.MeshStandardMaterial({ color: 0xFFA500 });
@@ -614,12 +652,12 @@ function createSnowman() {
     return snowmanGroup;
 }
 
-const snowman = createSnowman();
-snowman.scale.set(0.38, 0.38, 0.38);
-snowman.position.set(0.3, -0.45, 0);
-bearGroup.add(snowman);
+  const snowman = createSnowman();
+  snowman.scale.set(0.38, 0.38, 0.38);
+  snowman.position.set(0.3, -0.45, 0);
+  bearGroup.add(snowman);
 
-function createSnowman2() {
+  function createSnowman2() {
     const snowmanGroup = new THREE.Group();
 
     // Materials
@@ -787,10 +825,59 @@ function createAngel() {
 
     return angelGroup;
 }
-const angel = createAngel();
-angel.scale.set(0.3, 0.3, 0.3);
-angel.position.set(0.8, 0.5, 0);
-bearGroup.add(angel);
+
+  let angle1 = 0; // For the first angel
+  let angle2 = Math.PI; // Offset by 180 degrees for the second angel (to keep distance)
+  let verticalOffset1 = 0;
+  let verticalOffset2 = 0;
+  let verticalDirection1 = 1;
+  let verticalDirection2 = -1;
+
+  function animateTwoAngels() {
+      requestAnimationFrame(animateTwoAngels);
+
+      const radius = 1.5; // Circular motion radius
+      const verticalRange = 0.5; // Vertical motion range
+
+      // Update the first angel
+      angle1 += 0.03; // Circular speed for the first angel
+      verticalOffset1 += 0.005 * verticalDirection1;
+      if (verticalOffset1 > verticalRange) verticalDirection1 = -1;
+      if (verticalOffset1 < -verticalRange) verticalDirection1 = 1;
+
+      angel.position.x = Math.cos(angle1) * radius;
+      angel.position.z = Math.sin(angle1) * radius;
+      angel.position.y = verticalOffset1 + 1; // Vertical movement
+
+      // Update the second angel
+      angle2 += 0.03; // Same circular speed as the first angel
+      verticalOffset2 += 0.005 * verticalDirection2;
+      if (verticalOffset2 > verticalRange) verticalDirection2 = -1;
+      if (verticalOffset2 < -verticalRange) verticalDirection2 = 1;
+
+      angel2.position.x = Math.cos(angle2) * radius;
+      angel2.position.z = Math.sin(angle2) * radius;
+      angel2.position.y = verticalOffset2 + 1; // Vertical movement
+
+      // Ensure the angels always face the bear
+      angel.lookAt(bearGroup.position);
+      angel2.lookAt(bearGroup.position);
+
+      renderer.render(scene, camera);
+  }
+
+  // Add the first angel
+  const angel = createAngel();
+  angel.scale.set(0.4, 0.4, 0.4);
+  scene.add(angel);
+
+  // Add the second angel
+  const angel2 = createAngel();
+  angel2.scale.set(0.4, 0.4, 0.4);
+  scene.add(angel2);
+
+  // Start the animation
+  animateTwoAngels();
 
 
 const snowHalfSphereGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -1211,8 +1298,8 @@ const snowflakeCount = 1000;
       font-size: 24px;
       font-family: "Comic Sans MS", "Arial", sans-serif; /* Pop-art font */
       font-weight: bold;
-      color: #000000; /* Black text for contrast */
-      background: lightgreen; /* Hot pink background */
+      color: #FFFFFF; /* Black text for contrast */
+      background: #edc0d6; /* Hot pink background */
       border: 3px solid #ffffff; /* White border (default) */
       border-radius: 5px; /* Slightly rounded corners */
       box-shadow: 4px 4px 0px #000000; /* Strong shadow for a comic effect */
