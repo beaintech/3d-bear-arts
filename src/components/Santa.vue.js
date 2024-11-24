@@ -416,13 +416,13 @@ onMounted(() => {
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
             bearGroup.add(xEye);
             // Create the O eye
-            const oEyeGeometry = new TextGeometry('O', {
+            const oEyeGeometry = new TextGeometry('+', {
                 font: font,
-                size: 0.2, // Size of the O
-                depth: 0.05, // Thickness of the O
+                size: 0.25, // Size of the O
+                depth: 0.1, // Thickness of the O
             });
             const oEye = new THREE.Mesh(oEyeGeometry, snowWhiteMaterial);
-            oEye.position.set(0.14, .99, 0.53); // Position on the head
+            oEye.position.set(0.12, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
             bearGroup.add(oEye);

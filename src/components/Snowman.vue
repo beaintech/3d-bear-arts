@@ -549,10 +549,10 @@
     canvas.width = 512; // Width of the texture
     canvas.height = 512; // Height of the texture
 
-    const stripeWidth = canvas.width / 8; // Width of each stripe
+    const stripeWidth = canvas.width / 10; // Width of each stripe
 
     // Draw alternating red and white vertical stripes
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 10; i++) {
         context.fillStyle = i % 2 === 0 ? '#FF0000' : '#FFFFFF'; // Red and white
         context.fillRect(i * stripeWidth, 0, stripeWidth, canvas.height);
     }
