@@ -191,7 +191,7 @@ onMounted(() => {
         
                 // Color gradient based on the angle and distance from the center
                 vec3 color1 = vec3(1.0, 0.078, 0.576); 
-                vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
+                vec3 color2 = vec3(0.6, 1.0, 0.6); // Blueish
                 vec3 color3 = vec3(1.0, 0.0, 0.8); 
         
                 // Mix the colors based on wave and angle for a dynamic effect
@@ -541,17 +541,17 @@ onMounted(() => {
             angelGroup.add(rightWing2);
             // Halo
             const haloGeometry = new THREE.TorusGeometry(0.15, 0.05, 16, 100);
-            const halo = new THREE.Mesh(haloGeometry, bluePinkHeartMaterial);
+            const halo = new THREE.Mesh(haloGeometry, pinkSliverHeartMaterial);
             halo.position.set(0, 1.8, 0);
             halo.rotation.x = Math.PI / 2;
             angelGroup.add(halo);
             const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 32); // Cylinder shape for the legs
             // Left leg
-            const leftLeg = new THREE.Mesh(legGeometry, bluePinkHeartMaterial);
+            const leftLeg = new THREE.Mesh(legGeometry, pinkSliverHeartMaterial);
             leftLeg.position.set(-0.15, 0.55, 0); // Adjust position (left of the body)
             leftLeg.rotation.z = Math.PI / 1; // Slight angle
             // Right leg
-            const rightLeg = new THREE.Mesh(legGeometry, bluePinkHeartMaterial);
+            const rightLeg = new THREE.Mesh(legGeometry, pinkSliverHeartMaterial);
             rightLeg.position.set(0.15, 0.55, 0); // Adjust position (right of the body)
             rightLeg.rotation.z = -Math.PI / 1; // Slight angle
             // Add legs to the bear group
@@ -655,8 +655,8 @@ onMounted(() => {
         window.addEventListener('mousemove', onMouseStopForFacing);
         let floatSpeed = 0.05;
         let floatHeartSpeed = 0.06;
-        let floatHeartAmplitude = -0.2;
-        let floatAmplitude = 0;
+        let floatHeartAmplitude = 0.2;
+        let floatAmplitude = 0.25;
         let time = 0;
         let heartTime = 0;
         function animate() {
@@ -671,7 +671,7 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.05;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.05;
-            bearGroup.rotation.y -= 0.03;
+            // bearGroup.rotation.y += 0.03;
             time += floatSpeed;
             heartTime += floatHeartSpeed;
             angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.5;
