@@ -129,7 +129,7 @@
         scene.environment = environmentMap1;
           
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
-          color: 'sliver', // Silver color
+          color: 'lightgreen', // Silver color
           metalness: 1.0,  // Full metalness for maximum reflectivity
           roughness: 0.05, // Low roughness for sharper reflections
           clearcoat: 1.0,  // High clearcoat for added shine
@@ -149,7 +149,7 @@
         });
 
         const transparentCircleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'sliver',  // Bright yellow color for the head
+            color: 'lightgreen',  // Bright yellow color for the head
             map: circleMap,  // Apply a halftone or abstract texture
             metalness: 0.3,  // Slight metalness for a subtle shine
             roughness: 0.5,  // Some roughness to reduce reflections
@@ -159,13 +159,25 @@
 
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-          color: 'sliver', // Silver color
+          color: 'lightgreen', // Silver color
           metalness: .75, // High metalness
           roughness: 0.05, // Low roughness for reflective effect
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
-          opacity: 0.4, // Semi-transparent
+          opacity: 0.6, // Semi-transparent
+          envMap: environmentMap, // Link the environment map
+          reflectivity: 0, // Maximum reflectivity
+        });
+
+        const transparentBodyMaterial = new THREE.MeshPhysicalMaterial({
+          color: 'lightgreen', // Silver color
+          metalness: .75, // High metalness
+          roughness: 0.05, // Low roughness for reflective effect
+          clearcoat: 1.0, // High clearcoat for added shine
+          clearcoatRoughness: 0.05, // Low roughness for clear reflections
+          transparent: true, // Enable transparency
+          opacity: 0.35, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
         });
@@ -299,7 +311,7 @@
             Math.PI       // phiLength (half of the sphere)
         );
 
-      const rightBody = new THREE.Mesh(bodyGeometry, transparentSliverMaterial);
+      const rightBody = new THREE.Mesh(bodyGeometry, transparentBodyMaterial);
       const leftBody = new THREE.Mesh(bodyGeometry, sliverMaterial);
   
       rightBody.scale.set(0.85, 0.85, 0.8);
@@ -437,35 +449,35 @@
         heart.position.set(0.35, 0, 0);
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
+        // bearGroup.add(heart);
     
         const heart1 = new THREE.Mesh(heartGeometry, sliverMaterial);
         heart1.scale.set(0.35, 0.35, 0.35);
         heart1.position.set(0.3, 0, 0);
         heart1.rotation.y = Math.PI;
         heart1.rotation.x = Math.PI;
-        bearGroup.add(heart1);
+        // bearGroup.add(heart1);
         
         const heart2 = new THREE.Mesh(heartGeometry, sliverMaterial);
         heart2.scale.set(0.22, 0.22, 0.22);
         heart2.position.set(0.27, 0.4, 0);
         heart2.rotation.y = Math.PI;
         heart2.rotation.x = Math.PI;
-        bearGroup.add(heart2);
+        // bearGroup.add(heart2);
   
         const heart3 = new THREE.Mesh(heartGeometry, sliverMaterial);
         heart3.scale.set(0.25, 0.25, 0.25);
         heart3.position.set(0.23, -0.5, 0.3);
         heart3.rotation.y = Math.PI;
         heart3.rotation.x = Math.PI;
-        bearGroup.add(heart3);
+        // bearGroup.add(heart3);
         
         const heart4 = new THREE.Mesh(heartGeometry, sliverMaterial);
         heart4.scale.set(0.3, 0.3, 0.3);
         heart4.position.set(0.23, 0.2, -0.4);
         heart4.rotation.y = Math.PI;
         heart4.rotation.x = Math.PI;
-        bearGroup.add(heart4);
+        // bearGroup.add(heart4);
         
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -550,6 +562,116 @@
       });
     
       tail.renderOrder = 1;
+
+      function createAngel() {
+          const angelGroup = new THREE.Group();
+
+          // Materials
+          const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White for the body
+          const headMaterial = new THREE.MeshStandardMaterial({ color: 0xFFE4C4 }); // Light skin tone for the head
+          const haloMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00 }); // Golden halo
+          const wingMaterial = new THREE.MeshStandardMaterial({
+              color: 0xF8F8FF, // Light ghost white for wings
+          });
+
+          // Head
+          const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+          const head = new THREE.Mesh(headGeometry, sliverMaterial);
+          head.position.set(0, 1.5, 0);
+          angelGroup.add(head);
+
+          // Body (Slender Cylinder)
+          const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.35, 0.6, 32);
+          const body = new THREE.Mesh(bodyGeometry, sliverMaterial);
+          body.position.set(0, 1, 0);
+          angelGroup.add(body);
+
+          // Wings (Curved and Open)
+          const wingShape = new THREE.Shape();
+          wingShape.moveTo(0, 0);
+          wingShape.bezierCurveTo(0.5, 0.2, 0.8, 0.7, 0.5, 1.5); // Outer curve
+          wingShape.bezierCurveTo(0.3, 1.3, 0, 0.8, 0, 0); // Inner curve
+
+          const wingGeometry = new THREE.ExtrudeGeometry(wingShape, {
+              depth: 0.05,
+              bevelEnabled: false,
+          });
+
+          // Left Wing
+          const leftWing = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+          leftWing.position.set(-0.2, 1.2, -0.05); // Mirrored position
+          leftWing.rotation.y = Math.PI / 12; // Mirrored backward tilt
+          leftWing.rotation.z = Math.PI / 4; // Mirrored vertical tilt
+          leftWing.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+          angelGroup.add(leftWing);
+
+          const leftWing1 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+          leftWing1.position.set(-0.1, 1.1, -0.05); // Mirrored position
+          leftWing1.rotation.y = Math.PI / 10; // Mirrored backward tilt
+          leftWing1.rotation.z = Math.PI / 3; // Mirrored vertical tilt
+          leftWing1.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+          angelGroup.add(leftWing1);
+
+          const leftWing2 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+          leftWing2.position.set(0, 1, -0.05); // Mirrored position
+          leftWing2.rotation.y = Math.PI / 8; // Mirrored backward tilt
+          leftWing2.rotation.z = Math.PI / 2.5; // Mirrored vertical tilt
+          leftWing2.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+          angelGroup.add(leftWing2);
+
+          // Right Wing
+          const rightWing = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+          rightWing.position.set(0.2, 1.2, -0.05); // Positioned closer to the body
+          rightWing.rotation.y = -Math.PI / 12; // Slight backward tilt
+          rightWing.rotation.z = -Math.PI / 4; // More vertical
+          rightWing.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
+          angelGroup.add(rightWing);
+
+          const rightWing1 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+          rightWing1.position.set(0.1, 1.1, -0.05); // Positioned closer to the body
+          rightWing1.rotation.y = -Math.PI / 10; // Slight backward tilt
+          rightWing1.rotation.z = -Math.PI / 3; // More vertical
+          rightWing1.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
+          angelGroup.add(rightWing1);
+
+          const rightWing2 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+          rightWing2.position.set(0, 1, -0.05); // Positioned closer to the body
+          rightWing2.rotation.y = -Math.PI / 8; // Slight backward tilt
+          rightWing2.rotation.z = -Math.PI / 2.5; // More vertical
+          rightWing2.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
+          angelGroup.add(rightWing2);
+
+          // Halo
+          const haloGeometry = new THREE.TorusGeometry(0.15, 0.05, 16, 100);
+          const halo = new THREE.Mesh(haloGeometry, bluePinkHeartMaterial);
+          halo.position.set(0, 1.8, 0);
+          halo.rotation.x = Math.PI / 2;
+          angelGroup.add(halo);
+
+
+          const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 32); // Cylinder shape for the legs
+
+          // Left leg
+          const leftLeg = new THREE.Mesh(legGeometry, bluePinkHeartMaterial);
+          leftLeg.position.set(-0.15, 0.55, 0); // Adjust position (left of the body)
+          leftLeg.rotation.z = Math.PI / 1;    // Slight angle
+
+          // Right leg
+          const rightLeg = new THREE.Mesh(legGeometry, bluePinkHeartMaterial);
+          rightLeg.position.set(0.15, 0.55, 0); // Adjust position (right of the body)
+          rightLeg.rotation.z = -Math.PI / 1;  // Slight angle
+
+          // Add legs to the bear group
+          angelGroup.add(leftLeg);
+          angelGroup.add(rightLeg);
+
+      return angelGroup;
+      }
+
+      const angel = createAngel();
+        angel.scale.set(0.37, 0.37, 0.37);
+        angel.position.set(0.35, -0.5, 0.25);
+        bearGroup.add(angel);
   
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -663,6 +785,14 @@
 
     window.addEventListener('mousemove', onMouseStopForFacing);
         
+        let floatSpeed = 0.05; 
+        let floatHeartSpeed = 0.06; 
+
+        let floatHeartAmplitude = -0.2; 
+        let floatAmplitude = 0; 
+        let time = 0;
+        let heartTime = 0;
+
        function animate() {
           requestAnimationFrame(animate);
           bluePinkHeartMaterial.uniforms.time.value += 0.05;
@@ -673,6 +803,12 @@
           if (isRotatingUp.value) bearGroup.rotation.x -= 0.05;
           if (isRotatingDown.value) bearGroup.rotation.x += 0.05;
 
+          bearGroup.rotation.y -= 0.03;
+            
+            time += floatSpeed;
+            heartTime += floatHeartSpeed;
+            angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.5;     
+            angel.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude - 0.5;  
 
         // if (isRotatingRight.value) {
         //   bearGroup.rotation.y += 0.03; 
@@ -755,8 +891,8 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
-        background-color: rgba(0, 0, 0, 0.85);
+        background: radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.8), rgba(76, 153, 255, 0.48), rgba(255, 0, 204, 0.8), rgba(0, 0, 0, 0.6));
+        background-color: rgba(0, 0, 0, 0.5);
         background-size: 100% 100%;
         background-repeat: no-repeat;
         animation: waterEffect 5s infinite ease-in-out;

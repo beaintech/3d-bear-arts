@@ -745,6 +745,7 @@
         height: 100vh;
         overflow: hidden;
         /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
+        background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f);
         background-color: rgba(0, 0, 0, 0.85);
         background-size: 100% 100%;
         background-repeat: no-repeat;
