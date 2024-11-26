@@ -231,7 +231,7 @@
         
                 // Color gradient based on the angle and distance from the center
                 vec3 color1 = vec3(1.0, 0.078, 0.576); 
-                vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
+                vec3 color2 = vec3(0.6, 1.0, 0.6); // Blueish
                 vec3 color3 = vec3(1.0, 0.0, 0.8); 
         
                 // Mix the colors based on wave and angle for a dynamic effect
@@ -564,114 +564,114 @@
       tail.renderOrder = 1;
 
       function createAngel() {
-          const angelGroup = new THREE.Group();
+    const angelGroup = new THREE.Group();
 
-          // Materials
-          const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White for the body
-          const headMaterial = new THREE.MeshStandardMaterial({ color: 0xFFE4C4 }); // Light skin tone for the head
-          const haloMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00 }); // Golden halo
-          const wingMaterial = new THREE.MeshStandardMaterial({
-              color: 0xF8F8FF, // Light ghost white for wings
-          });
+    // Materials
+    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White for the body
+    const headMaterial = new THREE.MeshStandardMaterial({ color: 0xFFE4C4 }); // Light skin tone for the head
+    const haloMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFF00 }); // Golden halo
+    const wingMaterial = new THREE.MeshStandardMaterial({
+        color: 0xF8F8FF, // Light ghost white for wings
+    });
 
-          // Head
-          const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-          const head = new THREE.Mesh(headGeometry, sliverMaterial);
-          head.position.set(0, 1.5, 0);
-          angelGroup.add(head);
+    // Head
+    const headGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+    const head = new THREE.Mesh(headGeometry, sliverMaterial);
+    head.position.set(0, 1.5, 0);
+    angelGroup.add(head);
 
-          // Body (Slender Cylinder)
-          const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.35, 0.6, 32);
-          const body = new THREE.Mesh(bodyGeometry, sliverMaterial);
-          body.position.set(0, 1, 0);
-          angelGroup.add(body);
+    // Body (Slender Cylinder)
+    const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.35, 0.6, 32);
+    const body = new THREE.Mesh(bodyGeometry, sliverMaterial);
+    body.position.set(0, 1, 0);
+    angelGroup.add(body);
 
-          // Wings (Curved and Open)
-          const wingShape = new THREE.Shape();
-          wingShape.moveTo(0, 0);
-          wingShape.bezierCurveTo(0.5, 0.2, 0.8, 0.7, 0.5, 1.5); // Outer curve
-          wingShape.bezierCurveTo(0.3, 1.3, 0, 0.8, 0, 0); // Inner curve
+    // Wings (Curved and Open)
+    const wingShape = new THREE.Shape();
+    wingShape.moveTo(0, 0);
+    wingShape.bezierCurveTo(0.5, 0.2, 0.8, 0.7, 0.5, 1.5); // Outer curve
+    wingShape.bezierCurveTo(0.3, 1.3, 0, 0.8, 0, 0); // Inner curve
 
-          const wingGeometry = new THREE.ExtrudeGeometry(wingShape, {
-              depth: 0.05,
-              bevelEnabled: false,
-          });
+    const wingGeometry = new THREE.ExtrudeGeometry(wingShape, {
+        depth: 0.05,
+        bevelEnabled: false,
+    });
 
-          // Left Wing
-          const leftWing = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
-          leftWing.position.set(-0.2, 1.2, -0.05); // Mirrored position
-          leftWing.rotation.y = Math.PI / 12; // Mirrored backward tilt
-          leftWing.rotation.z = Math.PI / 4; // Mirrored vertical tilt
-          leftWing.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
-          angelGroup.add(leftWing);
+    // Left Wing
+    const leftWing = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+    leftWing.position.set(-0.2, 1.2, -0.05); // Mirrored position
+    leftWing.rotation.y = Math.PI / 12; // Mirrored backward tilt
+    leftWing.rotation.z = Math.PI / 4; // Mirrored vertical tilt
+    leftWing.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+    angelGroup.add(leftWing);
 
-          const leftWing1 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
-          leftWing1.position.set(-0.1, 1.1, -0.05); // Mirrored position
-          leftWing1.rotation.y = Math.PI / 10; // Mirrored backward tilt
-          leftWing1.rotation.z = Math.PI / 3; // Mirrored vertical tilt
-          leftWing1.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
-          angelGroup.add(leftWing1);
+    const leftWing1 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+    leftWing1.position.set(-0.1, 1.1, -0.05); // Mirrored position
+    leftWing1.rotation.y = Math.PI / 10; // Mirrored backward tilt
+    leftWing1.rotation.z = Math.PI / 3; // Mirrored vertical tilt
+    leftWing1.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+    angelGroup.add(leftWing1);
 
-          const leftWing2 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
-          leftWing2.position.set(0, 1, -0.05); // Mirrored position
-          leftWing2.rotation.y = Math.PI / 8; // Mirrored backward tilt
-          leftWing2.rotation.z = Math.PI / 2.5; // Mirrored vertical tilt
-          leftWing2.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
-          angelGroup.add(leftWing2);
+    const leftWing2 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+    leftWing2.position.set(0, 1, -0.05); // Mirrored position
+    leftWing2.rotation.y = Math.PI / 8; // Mirrored backward tilt
+    leftWing2.rotation.z = Math.PI / 2.5; // Mirrored vertical tilt
+    leftWing2.scale.set(-0.5, 0.5, 0.5); // Flip on the X-axis
+    angelGroup.add(leftWing2);
 
-          // Right Wing
-          const rightWing = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
-          rightWing.position.set(0.2, 1.2, -0.05); // Positioned closer to the body
-          rightWing.rotation.y = -Math.PI / 12; // Slight backward tilt
-          rightWing.rotation.z = -Math.PI / 4; // More vertical
-          rightWing.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
-          angelGroup.add(rightWing);
+    // Right Wing
+    const rightWing = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+    rightWing.position.set(0.2, 1.2, -0.05); // Positioned closer to the body
+    rightWing.rotation.y = -Math.PI / 12; // Slight backward tilt
+    rightWing.rotation.z = -Math.PI / 4; // More vertical
+    rightWing.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
+    angelGroup.add(rightWing);
 
-          const rightWing1 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
-          rightWing1.position.set(0.1, 1.1, -0.05); // Positioned closer to the body
-          rightWing1.rotation.y = -Math.PI / 10; // Slight backward tilt
-          rightWing1.rotation.z = -Math.PI / 3; // More vertical
-          rightWing1.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
-          angelGroup.add(rightWing1);
+    const rightWing1 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+    rightWing1.position.set(0.1, 1.1, -0.05); // Positioned closer to the body
+    rightWing1.rotation.y = -Math.PI / 10; // Slight backward tilt
+    rightWing1.rotation.z = -Math.PI / 3; // More vertical
+    rightWing1.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
+    angelGroup.add(rightWing1);
 
-          const rightWing2 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
-          rightWing2.position.set(0, 1, -0.05); // Positioned closer to the body
-          rightWing2.rotation.y = -Math.PI / 8; // Slight backward tilt
-          rightWing2.rotation.z = -Math.PI / 2.5; // More vertical
-          rightWing2.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
-          angelGroup.add(rightWing2);
+    const rightWing2 = new THREE.Mesh(wingGeometry, pinkSliverHeartMaterial);
+    rightWing2.position.set(0, 1, -0.05); // Positioned closer to the body
+    rightWing2.rotation.y = -Math.PI / 8; // Slight backward tilt
+    rightWing2.rotation.z = -Math.PI / 2.5; // More vertical
+    rightWing2.scale.set(0.5, 0.5, 0.5);; // Flip for symmetry
+    angelGroup.add(rightWing2);
 
-          // Halo
-          const haloGeometry = new THREE.TorusGeometry(0.15, 0.05, 16, 100);
-          const halo = new THREE.Mesh(haloGeometry, bluePinkHeartMaterial);
-          halo.position.set(0, 1.8, 0);
-          halo.rotation.x = Math.PI / 2;
-          angelGroup.add(halo);
+    // Halo
+    const haloGeometry = new THREE.TorusGeometry(0.15, 0.05, 16, 100);
+    const halo = new THREE.Mesh(haloGeometry, pinkSliverHeartMaterial);
+    halo.position.set(0, 1.8, 0);
+    halo.rotation.x = Math.PI / 2;
+    angelGroup.add(halo);
 
 
-          const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 32); // Cylinder shape for the legs
+    const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 32); // Cylinder shape for the legs
 
-          // Left leg
-          const leftLeg = new THREE.Mesh(legGeometry, bluePinkHeartMaterial);
-          leftLeg.position.set(-0.15, 0.55, 0); // Adjust position (left of the body)
-          leftLeg.rotation.z = Math.PI / 1;    // Slight angle
+    // Left leg
+    const leftLeg = new THREE.Mesh(legGeometry, pinkSliverHeartMaterial);
+    leftLeg.position.set(-0.15, 0.55, 0); // Adjust position (left of the body)
+    leftLeg.rotation.z = Math.PI / 1;    // Slight angle
 
-          // Right leg
-          const rightLeg = new THREE.Mesh(legGeometry, bluePinkHeartMaterial);
-          rightLeg.position.set(0.15, 0.55, 0); // Adjust position (right of the body)
-          rightLeg.rotation.z = -Math.PI / 1;  // Slight angle
+    // Right leg
+    const rightLeg = new THREE.Mesh(legGeometry, pinkSliverHeartMaterial);
+    rightLeg.position.set(0.15, 0.55, 0); // Adjust position (right of the body)
+    rightLeg.rotation.z = -Math.PI / 1;  // Slight angle
 
-          // Add legs to the bear group
-          angelGroup.add(leftLeg);
-          angelGroup.add(rightLeg);
+    // Add legs to the bear group
+    angelGroup.add(leftLeg);
+    angelGroup.add(rightLeg);
 
-      return angelGroup;
-      }
+return angelGroup;
+}
 
-      const angel = createAngel();
-        angel.scale.set(0.37, 0.37, 0.37);
-        angel.position.set(0.35, -0.5, 0.25);
-        bearGroup.add(angel);
+const angel = createAngel();
+  angel.scale.set(0.37, 0.37, 0.37);
+  angel.position.set(0.35, -0.5, 0.25);
+  bearGroup.add(angel);
   
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -788,8 +788,8 @@
         let floatSpeed = 0.05; 
         let floatHeartSpeed = 0.06; 
 
-        let floatHeartAmplitude = -0.2; 
-        let floatAmplitude = 0; 
+        let floatHeartAmplitude = 0.2; 
+        let floatAmplitude = 0.25; 
         let time = 0;
         let heartTime = 0;
 
@@ -803,7 +803,7 @@
           if (isRotatingUp.value) bearGroup.rotation.x -= 0.05;
           if (isRotatingDown.value) bearGroup.rotation.x += 0.05;
 
-          bearGroup.rotation.y -= 0.03;
+          // bearGroup.rotation.y += 0.03;
             
             time += floatSpeed;
             heartTime += floatHeartSpeed;

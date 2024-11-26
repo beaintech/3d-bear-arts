@@ -143,6 +143,18 @@
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
+          opacity: 0.5, // Semi-transparent
+          envMap: environmentMap, // Link the environment map
+          reflectivity: 0, // Maximum reflectivity
+        });
+
+        const transparentBodyMaterial = new THREE.MeshPhysicalMaterial({
+          color: 'hotpink', // Silver color
+          metalness: 1.0, // High metalness
+          roughness: 0.05, // Low roughness for reflective effect
+          clearcoat: 1.0, // High clearcoat for added shine
+          clearcoatRoughness: 0.05, // Low roughness for clear reflections
+          transparent: true, // Enable transparency
           opacity: 0.3, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
@@ -288,7 +300,7 @@
             Math.PI       // phiLength (half of the sphere)
         );
 
-      const rightBody = new THREE.Mesh(bodyGeometry, transparentSliverMaterial);
+      const rightBody = new THREE.Mesh(bodyGeometry, transparentBodyMaterial);
       const leftBody = new THREE.Mesh(bodyGeometry, sliverMaterial);
   
       rightBody.scale.set(0.85, 0.85, 0.8);
@@ -746,7 +758,11 @@
         overflow: hidden;
         /* background: radial-gradient(circle at 50% 50%, #FF69B4, #4C99FF, #FF00CC, #000000); */
         background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f);
-        background-color: rgba(0, 0, 0, 0.85);
+        background: radial-gradient(circle at 50% 50%, 
+        rgba(255, 105, 180, 0.8), 
+        rgba(76, 153, 255, 0.48), 
+        rgba(255, 0, 204, 0.8), 
+        rgba(0, 0, 0, 0.6));
         background-size: 100% 100%;
         background-repeat: no-repeat;
         animation: waterEffect 5s infinite ease-in-out;
