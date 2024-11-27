@@ -165,7 +165,7 @@
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
-          opacity: 0.6, // Semi-transparent
+          opacity: 0.45, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
         });
@@ -230,8 +230,8 @@
                 float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
         
                 // Color gradient based on the angle and distance from the center
-                vec3 color1 = vec3(1.0, 0.078, 0.576); 
-                vec3 color2 = vec3(0.6, 1.0, 0.6); // Blueish
+                vec3 color1 = vec3(0.6, 1.0, 0.6); 
+                vec3 color2 = vec3(0.878, 0.878, 0.878); 
                 vec3 color3 = vec3(1.0, 0.0, 0.8); 
         
                 // Mix the colors based on wave and angle for a dynamic effect
@@ -358,7 +358,7 @@
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
   
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentSliverMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, transparentBodyMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
@@ -387,7 +387,7 @@
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
     
-        const rightEar = new THREE.Mesh(earGeometry, transparentSliverMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, transparentBodyMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
     
@@ -412,7 +412,7 @@
             Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
             Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentSliverMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentBodyMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -450,34 +450,6 @@
         heart.rotation.y = Math.PI;
         heart.rotation.x = Math.PI;
         // bearGroup.add(heart);
-    
-        const heart1 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart1.scale.set(0.35, 0.35, 0.35);
-        heart1.position.set(0.3, 0, 0);
-        heart1.rotation.y = Math.PI;
-        heart1.rotation.x = Math.PI;
-        // bearGroup.add(heart1);
-        
-        const heart2 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart2.scale.set(0.22, 0.22, 0.22);
-        heart2.position.set(0.27, 0.4, 0);
-        heart2.rotation.y = Math.PI;
-        heart2.rotation.x = Math.PI;
-        // bearGroup.add(heart2);
-  
-        const heart3 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart3.scale.set(0.25, 0.25, 0.25);
-        heart3.position.set(0.23, -0.5, 0.3);
-        heart3.rotation.y = Math.PI;
-        heart3.rotation.x = Math.PI;
-        // bearGroup.add(heart3);
-        
-        const heart4 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart4.scale.set(0.3, 0.3, 0.3);
-        heart4.position.set(0.23, 0.2, -0.4);
-        heart4.rotation.y = Math.PI;
-        heart4.rotation.x = Math.PI;
-        // bearGroup.add(heart4);
         
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
@@ -541,7 +513,7 @@
             depth: 0.05,
          });
         
-        const xEye = new THREE.Mesh(xEyeGeometry, sliverMaterial);
+        const xEye = new THREE.Mesh(xEyeGeometry, pinkSliverHeartMaterial);
         xEye.position.set(-0.3, .99, 0.53); // Position on the head
         xEye.rotation.x = THREE.MathUtils.degToRad(-5);
         xEye.rotation.y = THREE.MathUtils.degToRad(-15);
@@ -554,7 +526,7 @@
         depth: 0.1, // Thickness of the O
         });
   
-        const oEye = new THREE.Mesh(oEyeGeometry, sliverMaterial);
+        const oEye = new THREE.Mesh(oEyeGeometry, pinkSliverHeartMaterial);
         oEye.position.set(0.14, .99, 0.53); // Position on the head
         oEye.rotation.y = THREE.MathUtils.degToRad(12);
         oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -668,10 +640,61 @@
 return angelGroup;
 }
 
-const angel = createAngel();
+  const angel = createAngel();
   angel.scale.set(0.37, 0.37, 0.37);
   angel.position.set(0.35, -0.5, 0.25);
   bearGroup.add(angel);
+
+  function createCrown() {
+            const crownGroup = new THREE.Group();
+
+            // Crown Base
+            const baseGeometry = new THREE.CylinderGeometry(0.8, 0.8, 0.25, 32);
+            const base = new THREE.Mesh(baseGeometry, sliverMaterial);
+            crownGroup.add(base);
+
+            // Spikes
+            const spikeGeometry = new THREE.ConeGeometry(0.2, 0.4, 32);
+
+            const spikePositions = 8; // Number of spikes
+            const radius = 0.6; // Radius for placing spikes
+
+            for (let i = 0; i < spikePositions; i++) {
+                const angle = (i / spikePositions) * Math.PI * 2;
+                const spike = new THREE.Mesh(spikeGeometry, sliverMaterial);
+                spike.position.set(Math.cos(angle) * radius, 0.23, Math.sin(angle) * radius);
+                spike.rotation.y = -angle;
+                crownGroup.add(spike);
+            }
+
+            // Gems
+            const gemGeometry = new THREE.SphereGeometry(0.08, 16, 16);
+
+            for (let i = 0; i < spikePositions; i++) {
+                const angle = (i / spikePositions) * Math.PI * 2;
+                const gem = new THREE.Mesh(gemGeometry, pinkSliverHeartMaterial);
+                gem.position.set(Math.cos(angle) * radius, 0.45, Math.sin(angle) * radius);
+                crownGroup.add(gem);
+            }
+
+            return crownGroup;
+        }
+
+        // Create and add the crown to the scene
+        const crown = createCrown();
+        crown.scale.set(0.3, .3, .3);
+        crown.position.set(-0.06, 1.6, .1);
+        crown.rotation.set(0, 0, Math.PI / 20)
+        bearGroup.add(crown);
+
+        function crownAnimate() {
+            requestAnimationFrame(crownAnimate);
+
+            crown.rotation.y += 0.01; 
+            renderer.render(scene, camera);
+        }
+
+        crownAnimate();
   
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -807,8 +830,8 @@ const angel = createAngel();
             
             time += floatSpeed;
             heartTime += floatHeartSpeed;
-            angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.5;     
-            angel.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude - 0.5;  
+            angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.7;     
+            angel.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude - 0.6;  
 
         // if (isRotatingRight.value) {
         //   bearGroup.rotation.y += 0.03; 
@@ -999,6 +1022,7 @@ const angel = createAngel();
       left: 0;
       width: 100vw;
       height: 100vh;
+      opacity: 0.4;
       }
 
 </style>

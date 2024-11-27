@@ -126,7 +126,7 @@
         scene.environment = environmentMap;
           
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
-          color: 0xFF69B4, // Silver color
+          color: 'hotpink', // Silver color
           metalness: 1.0,  // Full metalness for maximum reflectivity
           roughness: 0.05, // Low roughness for sharper reflections
           clearcoat: 1.0,  // High clearcoat for added shine
@@ -138,24 +138,24 @@
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
           color: 'hotpink', // Silver color
-          metalness: 1.0, // High metalness
+          metalness: 0.75, // High metalness
           roughness: 0.05, // Low roughness for reflective effect
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
-          opacity: 0.5, // Semi-transparent
+          opacity: 0.6, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
         });
 
         const transparentBodyMaterial = new THREE.MeshPhysicalMaterial({
           color: 'hotpink', // Silver color
-          metalness: 1.0, // High metalness
+          metalness: 0.75, // High metalness
           roughness: 0.05, // Low roughness for reflective effect
           clearcoat: 1.0, // High clearcoat for added shine
           clearcoatRoughness: 0.05, // Low roughness for clear reflections
           transparent: true, // Enable transparency
-          opacity: 0.3, // Semi-transparent
+          opacity: 0.35, // Semi-transparent
           envMap: environmentMap, // Link the environment map
           reflectivity: 0, // Maximum reflectivity
         });
@@ -551,6 +551,88 @@
       });
     
       tail.renderOrder = 1;
+
+      function createRichDonaldDuck() {
+    const duckGroup = new THREE.Group();
+
+    // Materials
+    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White for the body
+    const beakMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500 }); // Orange for the beak and legs
+    const hatMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Black for the top hat
+    const bowtieMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red for the bowtie
+    const caneMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 }); // Brown for the cane
+
+    // Head
+    const headGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+    const head = new THREE.Mesh(headGeometry, bodyMaterial);
+    head.position.set(0, 1.5, 0);
+    duckGroup.add(head);
+
+    // Beak
+    const beakGeometry = new THREE.CylinderGeometry(0.25, 0.2, 0.5, 32);
+    const beak = new THREE.Mesh(beakGeometry, beakMaterial);
+    beak.position.set(0, 1.3, 0.5);
+    beak.rotation.x = Math.PI / 2;
+    duckGroup.add(beak);
+
+    // Body
+    const bodyGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+    const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+    body.position.set(0, 0.6, 0);
+    duckGroup.add(body);
+
+    // Legs
+    const legGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.6, 32);
+    const leftLeg = new THREE.Mesh(legGeometry, beakMaterial);
+    leftLeg.position.set(-0.3, -0.6, 0);
+    duckGroup.add(leftLeg);
+
+    const rightLeg = new THREE.Mesh(legGeometry, beakMaterial);
+    rightLeg.position.set(0.3, -0.6, 0);
+    duckGroup.add(rightLeg);
+
+    // Feet
+    const footGeometry = new THREE.BoxGeometry(0.5, 0.2, 0.3);
+    const leftFoot = new THREE.Mesh(footGeometry, beakMaterial);
+    leftFoot.position.set(-0.3, -0.9, 0.15);
+    duckGroup.add(leftFoot);
+
+    const rightFoot = new THREE.Mesh(footGeometry, beakMaterial);
+    rightFoot.position.set(0.3, -0.9, 0.15);
+    duckGroup.add(rightFoot);
+
+    // Top Hat
+    const hatBaseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32);
+    const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
+    hatBase.position.set(0, 2.1, 0);
+    duckGroup.add(hatBase);
+
+    const hatTopGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.6, 32);
+    const hatTop = new THREE.Mesh(hatTopGeometry, hatMaterial);
+    hatTop.position.set(0, 2.4, 0);
+    duckGroup.add(hatTop);
+
+    // Bowtie
+    const bowtieGeometry = new THREE.TorusGeometry(0.2, 0.05, 16, 100);
+    const bowtie = new THREE.Mesh(bowtieGeometry, bowtieMaterial);
+    bowtie.position.set(0, 1, 0.5);
+    duckGroup.add(bowtie);
+
+    // Cane
+    const caneGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 32);
+    const cane = new THREE.Mesh(caneGeometry, caneMaterial);
+    cane.position.set(0.5, 0, 0);
+    cane.rotation.z = Math.PI / 8;
+    duckGroup.add(cane);
+
+    return duckGroup;
+}
+
+const richDonaldDuck = createRichDonaldDuck();
+richDonaldDuck.scale.set(0.2, 0.2, 0.2);
+richDonaldDuck.position.set(1, 0.6, 0.3);
+
+bearGroup.add(richDonaldDuck);
   
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -760,7 +842,7 @@
         background: radial-gradient(circle at 50% 50%, #ffffff, #70ebeb, #f097de, #efef9f);
         background: radial-gradient(circle at 50% 50%, 
         rgba(255, 105, 180, 0.8), 
-        rgba(76, 153, 255, 0.48), 
+        rgba(76, 153, 255, 0.5), 
         rgba(255, 0, 204, 0.8), 
         rgba(0, 0, 0, 0.6));
         background-size: 100% 100%;
@@ -808,6 +890,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            opacity: 0.4;
           }
           
     .pixel-controls {
