@@ -190,8 +190,8 @@ onMounted(() => {
                 float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
         
                 // Color gradient based on the angle and distance from the center
-                vec3 color1 = vec3(0.6, 1.0, 0.6); 
-                vec3 color2 = vec3(1.0, 0.078, 0.576); 
+                vec3 color1 = vec3(0.878, 0.878, 0.878); 
+                vec3 color2 = vec3(0.6, 1.0, 0.6); 
                 vec3 color3 = vec3(1.0, 0.0, 0.8); 
         
                 // Mix the colors based on wave and angle for a dynamic effect
@@ -689,8 +689,8 @@ onMounted(() => {
             // bearGroup.rotation.y += 0.03;
             time += floatSpeed;
             heartTime += floatHeartSpeed;
-            angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.7;
-            angel.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude - 0.6;
+            // angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.7;     
+            // angel.position.y = props.bodyPosition.y + Math.sin(heartTime) * floatHeartAmplitude - 0.6;  
             // if (isRotatingRight.value) {
             //   bearGroup.rotation.y += 0.03; 
             // } else if (isRotatingLeft.value) {
