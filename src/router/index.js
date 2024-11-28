@@ -11,6 +11,8 @@ import Coffee from '../components/Aquar.vue';
 import Bears from '../components/SliverBear.vue';
 import Money from '../components/Money.vue';
 import Snowman from '../components/Snowman.vue';
+import Duck from '../components/Duck.vue';
+
 const routes = [
     { path: '/3d-bear-arts/leather', name: 'Leather', component: MetalBear },
     { path: '/3d-bear-arts/pop-art', name: 'Pop', component: PopArtBear },
@@ -20,11 +22,13 @@ const routes = [
     { path: '/3d-bear-arts/water', name: 'Water', component: Water },
     { path: '/3d-bear-arts/ghost-bear', name: 'GhostBear', component: GhostBear },
     { path: '/3d-bear-arts/white-ghost-bear', name: 'GhostBallonBear', component: GhostBallonBear },
-    { path: '/3d-bear-arts/santa', name: 'Santa', component: Santa },
     { path: '/3d-bear-arts/coffee', name: 'Coffee', component: Coffee },
     { path: '/3d-bear-arts/bears', name: 'Bears', component: Bears },
     { path: '/3d-bear-arts/money', name: 'Money', component: Money },
-    { path: '/3d-bear-arts/', name: 'Snowman', component: Snowman },
+    { path: '/3d-bear-arts/santa', name: 'Santa', component: Santa },
+    { path: '/3d-bear-arts/snowman', name: 'Snowman', component: Snowman },
+    { path: '/3d-bear-arts/', name: 'Duck', component: Duck },
+
     // { path: '/3d-bear-arts', name: 'ThreeScene', component: ThreeScene },
     // { path: '/3d-bear-arts/half', name: 'Haltransparent', component: HalfBear },
     // { path: '/3d-bear-arts/halfTransparent', name: 'Transparent', component: Transparent },
