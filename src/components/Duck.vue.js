@@ -85,16 +85,16 @@ onMounted(() => {
         //   '/3d-bear-arts/assets/christmas_sky.jpg'
         // ]);
         const environmentMap = mirrorLoader.load([
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg',
-            '/3d-bear-arts/assets/popbear1.jpg'
+            '/3d-bear-arts/assets/richduck.jpg',
+            '/3d-bear-arts/assets/richduck.jpg',
+            '/3d-bear-arts/assets/richduck.jpg',
+            '/3d-bear-arts/assets/richduck.jpg',
+            '/3d-bear-arts/assets/richduck.jpg',
+            '/3d-bear-arts/assets/richduck.jpg'
         ]);
         scene.environment = environmentMap;
         const sliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'hotpink', // Silver color
+            color: 'white', // Silver color
             metalness: 1.0, // Full metalness for maximum reflectivity
             roughness: 0.05, // Low roughness for sharper reflections
             clearcoat: 1.0, // High clearcoat for added shine
@@ -104,7 +104,7 @@ onMounted(() => {
         });
         //Import to keep this sliver material
         const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'hotpink', // Silver color
+            color: 'white', // Silver color
             metalness: 0.75, // High metalness
             roughness: 0.05, // Low roughness for reflective effect
             clearcoat: 1.0, // High clearcoat for added shine
@@ -115,7 +115,7 @@ onMounted(() => {
             reflectivity: 0, // Maximum reflectivity
         });
         const transparentBodyMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'hotpink', // Silver color
+            color: 'white', // Silver color
             metalness: 0.75, // High metalness
             roughness: 0.05, // Low roughness for reflective effect
             clearcoat: 1.0, // High clearcoat for added shine
@@ -474,10 +474,16 @@ onMounted(() => {
             head.position.set(0, 1.5, 0);
             duckGroup.add(head);
             // Beak
-            const beakGeometry = new THREE.CylinderGeometry(0.25, 0.2, 0.5, 32);
+            const beakShape = new THREE.Shape();
+            beakShape.moveTo(0, 0);
+            beakShape.quadraticCurveTo(0.25, 0.15, 0.5, 0); // Rounded edges
+            beakShape.lineTo(0.5, -0.15);
+            beakShape.quadraticCurveTo(0.25, -0.3, 0, -0.15);
+            beakShape.closePath();
+            const beakGeometry = new THREE.ExtrudeGeometry(beakShape, { depth: 0.2, bevelEnabled: false });
             const beak = new THREE.Mesh(beakGeometry, beakMaterial);
-            beak.position.set(0, 1.3, 0.5);
             beak.rotation.x = Math.PI / 2;
+            beak.position.set(0, 1.3, 0.5);
             duckGroup.add(beak);
             // Body
             const bodyGeometry = new THREE.SphereGeometry(0.8, 32, 32);
@@ -485,20 +491,29 @@ onMounted(() => {
             body.position.set(0, 0.6, 0);
             duckGroup.add(body);
             // Legs
-            const legGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.6, 32);
+            const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
             const leftLeg = new THREE.Mesh(legGeometry, beakMaterial);
-            leftLeg.position.set(-0.3, -0.6, 0);
+            leftLeg.position.set(-0.3, -0.4, 0);
             duckGroup.add(leftLeg);
             const rightLeg = new THREE.Mesh(legGeometry, beakMaterial);
-            rightLeg.position.set(0.3, -0.6, 0);
+            rightLeg.position.set(0.3, -0.4, 0);
             duckGroup.add(rightLeg);
             // Feet
-            const footGeometry = new THREE.BoxGeometry(0.5, 0.2, 0.3);
+            const footShape = new THREE.Shape();
+            footShape.moveTo(0, 0);
+            footShape.lineTo(0.3, 0.1);
+            footShape.lineTo(0.15, -0.1);
+            footShape.lineTo(-0.15, -0.1);
+            footShape.lineTo(-0.3, 0.1);
+            footShape.closePath();
+            const footGeometry = new THREE.ExtrudeGeometry(footShape, { depth: 0.1, bevelEnabled: false });
             const leftFoot = new THREE.Mesh(footGeometry, beakMaterial);
-            leftFoot.position.set(-0.3, -0.9, 0.15);
+            leftFoot.position.set(-0.3, -0.7, 0.1);
+            leftFoot.rotation.x = Math.PI / 2;
             duckGroup.add(leftFoot);
             const rightFoot = new THREE.Mesh(footGeometry, beakMaterial);
-            rightFoot.position.set(0.3, -0.9, 0.15);
+            rightFoot.position.set(0.3, -0.7, 0.1);
+            rightFoot.rotation.x = Math.PI / 2;
             duckGroup.add(rightFoot);
             // Top Hat
             const hatBaseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32);
@@ -525,7 +540,7 @@ onMounted(() => {
         const richDonaldDuck = createRichDonaldDuck();
         richDonaldDuck.scale.set(0.2, 0.2, 0.2);
         richDonaldDuck.position.set(1, 0.6, 0.3);
-        // bearGroup.add(richDonaldDuck);
+        bearGroup.add(richDonaldDuck);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
