@@ -163,7 +163,7 @@
         const circleMap = textureLoader.load('/3d-bear-arts/assets/popbear1.jpg');
 
         const transparentCircleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'hotpink',  // Bright yellow color for the head
+            color: 'pink',  // Bright yellow color for the head
             map: circleMap,  // Apply a halftone or abstract texture
             metalness: 0.3,  // Slight metalness for a subtle shine
             roughness: 0.5,  // Some roughness to reduce reflections
@@ -347,7 +347,7 @@
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
   
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentSliverMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, transparentBodyMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
@@ -376,7 +376,7 @@
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
     
-        const rightEar = new THREE.Mesh(earGeometry, transparentSliverMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, transparentBodyMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
     
@@ -553,86 +553,86 @@
       tail.renderOrder = 1;
 
       function createRichDonaldDuck() {
-    const duckGroup = new THREE.Group();
+          const duckGroup = new THREE.Group();
 
-    // Materials
-    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White for the body
-    const beakMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500 }); // Orange for the beak and legs
-    const hatMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Black for the top hat
-    const bowtieMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red for the bowtie
-    const caneMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 }); // Brown for the cane
+          // Materials
+          const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White for the body
+          const beakMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500 }); // Orange for the beak and legs
+          const hatMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Black for the top hat
+          const bowtieMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red for the bowtie
+          const caneMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 }); // Brown for the cane
 
-    // Head
-    const headGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-    const head = new THREE.Mesh(headGeometry, bodyMaterial);
-    head.position.set(0, 1.5, 0);
-    duckGroup.add(head);
+          // Head
+          const headGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+          const head = new THREE.Mesh(headGeometry, bodyMaterial);
+          head.position.set(0, 1.5, 0);
+          duckGroup.add(head);
 
-    // Beak
-    const beakGeometry = new THREE.CylinderGeometry(0.25, 0.2, 0.5, 32);
-    const beak = new THREE.Mesh(beakGeometry, beakMaterial);
-    beak.position.set(0, 1.3, 0.5);
-    beak.rotation.x = Math.PI / 2;
-    duckGroup.add(beak);
+          // Beak
+          const beakGeometry = new THREE.CylinderGeometry(0.25, 0.2, 0.5, 32);
+          const beak = new THREE.Mesh(beakGeometry, beakMaterial);
+          beak.position.set(0, 1.3, 0.5);
+          beak.rotation.x = Math.PI / 2;
+          duckGroup.add(beak);
 
-    // Body
-    const bodyGeometry = new THREE.SphereGeometry(0.8, 32, 32);
-    const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-    body.position.set(0, 0.6, 0);
-    duckGroup.add(body);
+          // Body
+          const bodyGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+          const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+          body.position.set(0, 0.6, 0);
+          duckGroup.add(body);
 
-    // Legs
-    const legGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.6, 32);
-    const leftLeg = new THREE.Mesh(legGeometry, beakMaterial);
-    leftLeg.position.set(-0.3, -0.6, 0);
-    duckGroup.add(leftLeg);
+          // Legs
+          const legGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.6, 32);
+          const leftLeg = new THREE.Mesh(legGeometry, beakMaterial);
+          leftLeg.position.set(-0.3, -0.6, 0);
+          duckGroup.add(leftLeg);
 
-    const rightLeg = new THREE.Mesh(legGeometry, beakMaterial);
-    rightLeg.position.set(0.3, -0.6, 0);
-    duckGroup.add(rightLeg);
+          const rightLeg = new THREE.Mesh(legGeometry, beakMaterial);
+          rightLeg.position.set(0.3, -0.6, 0);
+          duckGroup.add(rightLeg);
 
-    // Feet
-    const footGeometry = new THREE.BoxGeometry(0.5, 0.2, 0.3);
-    const leftFoot = new THREE.Mesh(footGeometry, beakMaterial);
-    leftFoot.position.set(-0.3, -0.9, 0.15);
-    duckGroup.add(leftFoot);
+          // Feet
+          const footGeometry = new THREE.BoxGeometry(0.5, 0.2, 0.3);
+          const leftFoot = new THREE.Mesh(footGeometry, beakMaterial);
+          leftFoot.position.set(-0.3, -0.9, 0.15);
+          duckGroup.add(leftFoot);
 
-    const rightFoot = new THREE.Mesh(footGeometry, beakMaterial);
-    rightFoot.position.set(0.3, -0.9, 0.15);
-    duckGroup.add(rightFoot);
+          const rightFoot = new THREE.Mesh(footGeometry, beakMaterial);
+          rightFoot.position.set(0.3, -0.9, 0.15);
+          duckGroup.add(rightFoot);
 
-    // Top Hat
-    const hatBaseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32);
-    const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
-    hatBase.position.set(0, 2.1, 0);
-    duckGroup.add(hatBase);
+          // Top Hat
+          const hatBaseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32);
+          const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
+          hatBase.position.set(0, 2.1, 0);
+          duckGroup.add(hatBase);
 
-    const hatTopGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.6, 32);
-    const hatTop = new THREE.Mesh(hatTopGeometry, hatMaterial);
-    hatTop.position.set(0, 2.4, 0);
-    duckGroup.add(hatTop);
+          const hatTopGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.6, 32);
+          const hatTop = new THREE.Mesh(hatTopGeometry, hatMaterial);
+          hatTop.position.set(0, 2.4, 0);
+          duckGroup.add(hatTop);
 
-    // Bowtie
-    const bowtieGeometry = new THREE.TorusGeometry(0.2, 0.05, 16, 100);
-    const bowtie = new THREE.Mesh(bowtieGeometry, bowtieMaterial);
-    bowtie.position.set(0, 1, 0.5);
-    duckGroup.add(bowtie);
+          // Bowtie
+          const bowtieGeometry = new THREE.TorusGeometry(0.2, 0.05, 16, 100);
+          const bowtie = new THREE.Mesh(bowtieGeometry, bowtieMaterial);
+          bowtie.position.set(0, 1, 0.5);
+          duckGroup.add(bowtie);
 
-    // Cane
-    const caneGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 32);
-    const cane = new THREE.Mesh(caneGeometry, caneMaterial);
-    cane.position.set(0.5, 0, 0);
-    cane.rotation.z = Math.PI / 8;
-    duckGroup.add(cane);
+          // Cane
+          const caneGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 32);
+          const cane = new THREE.Mesh(caneGeometry, caneMaterial);
+          cane.position.set(0.5, 0, 0);
+          cane.rotation.z = Math.PI / 8;
+          duckGroup.add(cane);
 
-    return duckGroup;
-}
+          return duckGroup;
+      }
 
-const richDonaldDuck = createRichDonaldDuck();
-richDonaldDuck.scale.set(0.2, 0.2, 0.2);
-richDonaldDuck.position.set(1, 0.6, 0.3);
+      const richDonaldDuck = createRichDonaldDuck();
+      richDonaldDuck.scale.set(0.2, 0.2, 0.2);
+      richDonaldDuck.position.set(1, 0.6, 0.3);
 
-bearGroup.add(richDonaldDuck);
+      // bearGroup.add(richDonaldDuck);
   
       // Add bear group to the scene
       bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -755,7 +755,7 @@ bearGroup.add(richDonaldDuck);
           if (isRotatingLeft.value) bearGroup.rotation.y -= 0.07;
           if (isRotatingUp.value) bearGroup.rotation.x -= 0.05;
           if (isRotatingDown.value) bearGroup.rotation.x += 0.05;
-
+          // bearGroup.rotation.y -= 0.03;
 
         // if (isRotatingRight.value) {
         //   bearGroup.rotation.y += 0.03; 

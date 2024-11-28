@@ -190,10 +190,10 @@ onMounted(() => {
                 float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
         
                 // Color gradient based on the angle and distance from the center
-                vec3 color1 = vec3(0.878, 0.878, 0.878); 
-                vec3 color2 = vec3(0.6, 1.0, 0.6); 
-                vec3 color3 = vec3(1.0, 0.0, 0.8); 
-        
+                vec3 color1 = vec3(0.6, 1.0, 0.6);  // green
+                vec3 color3 = vec3(0.878, 0.878, 0.878);
+                vec3 color2 = vec3(1.0, 0.078, 0.576); 
+
                 // Mix the colors based on wave and angle for a dynamic effect
                 vec3 color = mix(color1, color2, wave);
                 color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
