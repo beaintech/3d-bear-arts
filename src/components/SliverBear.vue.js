@@ -127,7 +127,7 @@ onMounted(() => {
         });
         const circleMap = textureLoader.load('/3d-bear-arts/assets/popbear1.jpg');
         const transparentCircleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'hotpink', // Bright yellow color for the head
+            color: 'pink', // Bright yellow color for the head
             map: circleMap, // Apply a halftone or abstract texture
             metalness: 0.3, // Slight metalness for a subtle shine
             roughness: 0.5, // Some roughness to reduce reflections
@@ -290,7 +290,7 @@ onMounted(() => {
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentSliverMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, transparentBodyMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
@@ -313,7 +313,7 @@ onMounted(() => {
         const leftEar = new THREE.Mesh(earGeometry, sliverMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, transparentSliverMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, transparentBodyMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -525,7 +525,7 @@ onMounted(() => {
         const richDonaldDuck = createRichDonaldDuck();
         richDonaldDuck.scale.set(0.2, 0.2, 0.2);
         richDonaldDuck.position.set(1, 0.6, 0.3);
-        bearGroup.add(richDonaldDuck);
+        // bearGroup.add(richDonaldDuck);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -628,6 +628,7 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.05;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.05;
+            // bearGroup.rotation.y -= 0.03;
             // if (isRotatingRight.value) {
             //   bearGroup.rotation.y += 0.03; 
             // } else if (isRotatingLeft.value) {

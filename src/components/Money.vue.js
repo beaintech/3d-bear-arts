@@ -191,8 +191,8 @@ onMounted(() => {
         
                 // Color gradient based on the angle and distance from the center
                 vec3 color1 = vec3(0.6, 1.0, 0.6);  // green
-                vec3 color3 = vec3(0.878, 0.878, 0.878);
-                vec3 color2 = vec3(1.0, 0.078, 0.576); 
+                vec3 color3 = vec3(0.878, 0.878, 0.878); // sliver
+                vec3 color2 = vec3(1.0, 0.078, 0.576); // pink
 
                 // Mix the colors based on wave and angle for a dynamic effect
                 vec3 color = mix(color1, color2, wave);
@@ -344,7 +344,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentBodyMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentSliverMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -686,7 +686,7 @@ onMounted(() => {
                 bearGroup.rotation.x -= 0.05;
             if (isRotatingDown.value)
                 bearGroup.rotation.x += 0.05;
-            // bearGroup.rotation.y += 0.03;
+            //  bearGroup.rotation.y -= 0.03;
             time += floatSpeed;
             heartTime += floatHeartSpeed;
             // angel.position.y = props.bodyPosition.y + Math.sin(time) * floatAmplitude - 0.7;     
