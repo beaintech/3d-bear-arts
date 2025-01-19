@@ -121,7 +121,7 @@ onMounted(() => {
                 cash.rotation.y = Math.random() * Math.PI;
                 return cash;
             }
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 60; i++) {
                 const cashBill = createFloatingCash();
                 poolGroup.add(cashBill);
                 // 🌀 Floating animation for cash bills
@@ -142,27 +142,27 @@ onMounted(() => {
             }
             function jumpDuck(duck) {
                 gsap.to(duck.position, {
-                    y: "+=0.2", // **Lower jump height (before: 0.5, now: 0.2)**
-                    duration: 0.3,
+                    y: .5, // Jump up
+                    duration: 0.5,
                     ease: "power2.out",
                     yoyo: true,
                     repeat: 1,
                     onComplete: () => {
-                        gsap.to(duck.position, { y: "-=0.1", duration: 0.2, ease: "bounce.out" }); // **Less bounce downward**
+                        gsap.to(duck.position, { y: -0.2, duration: 0.3, ease: "bounce.out" });
                     },
                 });
             }
-            // Reduce jump frequency for smoother animation
             setInterval(() => {
                 jumpDuck(redDuck);
-                setTimeout(() => jumpDuck(greenDuck), 400);
-                setTimeout(() => jumpDuck(blueDuck), 800);
-            }, 3000); // Jump every 3 seconds
+                setTimeout(() => jumpDuck(greenDuck), 500);
+                setTimeout(() => jumpDuck(blueDuck), 1000);
+                setTimeout(() => jumpDuck(richDonaldDuck), 1500);
+            }, 3000);
             return poolGroup;
         }
         // Usage: Attach inside the Bear’s Body
         const cashPool = createVisibleCashPool();
-        cashPool.position.set(0.4, -0.3, 0); // Adjusted position to fit inside the bear
+        cashPool.position.set(0.4, -0.4, 0); // Adjusted position to fit inside the bear
         bearGroup.add(cashPool);
         const leftMaterialSkin = textureLoader.load('/3d-bear-arts/assets/threeDucks.jpg');
         leftMaterialSkin.wrapS = leftMaterialSkin.wrapT = THREE.RepeatWrapping;
@@ -673,15 +673,15 @@ onMounted(() => {
         }
         const redDuck = createSmallDuck(0xff0000, 0xff0000); // Red pants and red hat
         redDuck.scale.set(0.12, 0.12, 0.12);
-        redDuck.position.set(0.4, -0.2, 0.15);
+        redDuck.position.set(0.3, -0.2, 0.15); // Before: -0.5, now: -0.2
         bearGroup.add(redDuck);
         const greenDuck = createSmallDuck(0x00ff00, 0x00ff00); // Green pants and green hat
         greenDuck.scale.set(0.12, 0.12, 0.12);
-        greenDuck.position.set(0.15, -0.2, 0.19);
+        greenDuck.position.set(0.2, -0.15, 0.4); // Before: -0.5, now: -0.15
         bearGroup.add(greenDuck);
         const blueDuck = createSmallDuck(0x0000ff, 0x0000ff); // Blue pants and blue hat
         blueDuck.scale.set(0.12, 0.12, 0.12);
-        blueDuck.position.set(0.6, -0.2, 0.18);
+        blueDuck.position.set(0.5, -0.15, 0.35); // Before: -0.5, now: -0.15
         bearGroup.add(blueDuck);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);

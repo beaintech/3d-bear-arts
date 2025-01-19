@@ -371,7 +371,7 @@ bearGroup.add(cashPool);
     clearcoat: 1.0,  // Strong clearcoat for extra gloss
     clearcoatRoughness: 0.2, // A bit rough for natural variation
     transparent: true, // Enable transparency
-    opacity: 0.75, // Adjust transparency (lower = more transparent)
+    opacity: 0.7, // Adjust transparency (lower = more transparent)
     transmission: 0.4, // Light passes through the material (0 = opaque, 1 = full transparency)
     ior: 1.2, // Index of refraction (for a slightly glassy effect)
 });
