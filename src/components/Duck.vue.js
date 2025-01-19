@@ -2,7 +2,6 @@ import { ref, onMounted, watch } from 'vue';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-import BearFace from './BearFaceWhite.vue';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const props = defineProps({
     background: {
@@ -52,18 +51,6 @@ onMounted(() => {
         });
         // Create CubeCamera with the correct WebGLCubeRenderTarget
         const cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
-        // Transparent reflective material using gradient texture as envMap
-        const transparentBlurrMaterial = new THREE.MeshPhysicalMaterial({
-            color: 0xC0C0C0, // Silver color for transparency
-            metalness: 1.0, // Full metalness for reflectivity
-            roughness: 0.05, // Lower roughness for sharper reflections
-            clearcoat: 1.0, // High clearcoat for added shine
-            clearcoatRoughness: 0.1, // Low clearcoat roughness for shininess
-            transparent: true, // Enable transparency
-            opacity: 0.4, // Semi-transparent
-            envMap: cubeRenderTarget.texture, // Use cube render target texture for reflections
-            envMapIntensity: 1.5, // Increase reflection intensity
-        });
         // Add the cubeCamera and bear group to the scene
         scene.add(cubeCamera);
         scene.environment = cubeRenderTarget.texture; // Set environment map for reflections
@@ -76,24 +63,58 @@ onMounted(() => {
         }
         updateReflection(); // Start reflection updates
         const mirrorLoader = new THREE.CubeTextureLoader();
-        // const environmentMap = mirrorLoader.load([
-        //   '/3d-bear-arts/assets/christmas_garden.jpg',
-        //   '/3d-bear-arts/assets/christmas_ground.jpg',
-        //   '/3d-bear-arts/assets/christmas_front.jpg',
-        //   '/3d-bear-arts/assets/christmas_house.jpg',
-        //   '/3d-bear-arts/assets/christmas_tree.jpg',
-        //   '/3d-bear-arts/assets/christmas_sky.jpg'
-        // ]);
         const environmentMap = mirrorLoader.load([
-            '/3d-bear-arts/assets/richduck.jpg',
-            '/3d-bear-arts/assets/richduck.jpg',
-            '/3d-bear-arts/assets/richduck.jpg',
-            '/3d-bear-arts/assets/richduck.jpg',
-            '/3d-bear-arts/assets/richduck.jpg',
-            '/3d-bear-arts/assets/richduck.jpg'
+            '/3d-bear-arts/assets/threeDucks.jpg',
+            '/3d-bear-arts/assets/threeDucks.jpg',
+            '/3d-bear-arts/assets/threeDucks.jpg',
+            '/3d-bear-arts/assets/threeDucks.jpg',
+            '/3d-bear-arts/assets/threeDucks.jpg',
+            '/3d-bear-arts/assets/threeDucks.jpg'
         ]);
         scene.environment = environmentMap;
-        const sliverMaterial = new THREE.MeshPhysicalMaterial({
+        const leftMaterialSkin = textureLoader.load('/3d-bear-arts/assets/threeDucks.jpg');
+        leftMaterialSkin.wrapS = leftMaterialSkin.wrapT = THREE.RepeatWrapping;
+        leftMaterialSkin.repeat.set(1, 1);
+        const rightMaterialSkin = textureLoader.load('/3d-bear-arts/assets/richduck.jpg');
+        const leftMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF,
+            map: leftMaterialSkin, // Apply the abstract or halftone texture
+            metalness: 0.2, // Lower metalness for less reflective look
+            roughness: 0.7, // Increase roughness for a more matte finish
+            clearcoat: 0.05, // Lower clearcoat to reduce gloss
+            clearcoatRoughness: 0.9, // Increase clearcoat roughness for less shine
+        });
+        const rightMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xFFFFFF, // Bright yellow color for the head
+            map: rightMaterialSkin, // Apply a halftone or abstract texture
+            metalness: 0.3, // Slight metalness for a subtle shine
+            roughness: 0.5, // Some roughness to reduce reflections
+            transparent: true, // Enable transparency
+            opacity: 0.2,
+        });
+        // const leftMaterial = new THREE.MeshPhysicalMaterial({
+        //   color: 'white', 
+        //   // map: leftMaterialSkin,  // Apply the abstract or halftone texture
+        //   metalness: 1.0,  // Full metalness for maximum reflectivity
+        //   roughness: 0.05, // Low roughness for sharper reflections
+        //   clearcoat: 1.0,  // High clearcoat for added shine
+        //   clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
+        //   envMap: environmentMap, // Link the environment map
+        //   reflectivity: 1, // Maximum reflectivity
+        // });
+        // const rightMaterial = new THREE.MeshPhysicalMaterial({
+        //   color: 'white', 
+        //   map: rightMaterialSkin,  // Apply a halftone or abstract texture
+        //   transparent: true, // Enable transparency
+        //   opacity: 0.3,
+        //   metalness: 1.0,  // Full metalness for maximum reflectivity
+        //   roughness: 0.05, // Low roughness for sharper reflections
+        //   clearcoat: 1.0,  // High clearcoat for added shine
+        //   clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
+        //   envMap: environmentMap, // Link the environment map
+        //   reflectivity: 1, // Maximum reflectivity
+        // });
+        const eyeMaterial = new THREE.MeshPhysicalMaterial({
             color: 'white', // Silver color
             metalness: 1.0, // Full metalness for maximum reflectivity
             roughness: 0.05, // Low roughness for sharper reflections
@@ -102,33 +123,19 @@ onMounted(() => {
             envMap: environmentMap, // Link the environment map
             reflectivity: 1, // Maximum reflectivity
         });
-        //Import to keep this sliver material
-        const transparentSliverMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'white', // Silver color
-            metalness: 0.75, // High metalness
-            roughness: 0.05, // Low roughness for reflective effect
-            clearcoat: 1.0, // High clearcoat for added shine
-            clearcoatRoughness: 0.05, // Low roughness for clear reflections
-            transparent: true, // Enable transparency
-            opacity: 0.6, // Semi-transparent
-            envMap: environmentMap, // Link the environment map
-            reflectivity: 0, // Maximum reflectivity
-        });
-        const transparentBodyMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'white', // Silver color
-            metalness: 0.75, // High metalness
-            roughness: 0.05, // Low roughness for reflective effect
-            clearcoat: 1.0, // High clearcoat for added shine
-            clearcoatRoughness: 0.05, // Low roughness for clear reflections
-            transparent: true, // Enable transparency
-            opacity: 0.35, // Semi-transparent
-            envMap: environmentMap, // Link the environment map
-            reflectivity: 0, // Maximum reflectivity
-        });
-        const circleMap = textureLoader.load('/3d-bear-arts/assets/popbear1.jpg');
+        const circleMap = textureLoader.load('/3d-bear-arts/assets/threeDucks.jpg');
+        const circleMap2 = textureLoader.load('/3d-bear-arts/assets/richduck.jpg');
         const transparentCircleMaterial = new THREE.MeshPhysicalMaterial({
-            color: 'hotpink', // Bright yellow color for the head
+            color: 'pink', // Bright yellow color for the head
             map: circleMap, // Apply a halftone or abstract texture
+            metalness: 0.3, // Slight metalness for a subtle shine
+            roughness: 0.5, // Some roughness to reduce reflections
+            transparent: true,
+            opacity: 1
+        });
+        const bodyCircleMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'pink', // Bright yellow color for the head
+            map: circleMap2, // Apply a halftone or abstract texture
             metalness: 0.3, // Slight metalness for a subtle shine
             roughness: 0.5, // Some roughness to reduce reflections
             transparent: true,
@@ -141,57 +148,57 @@ onMounted(() => {
                 color2: { value: new THREE.Color(0xF44336) }, // Hotpink color
             },
             vertexShader: `
-            varying vec2 vUv;
-            void main() {
-              vUv = uv;
-              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-          `,
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
             fragmentShader: `
-            uniform float time;
-            uniform vec3 color1;
-            uniform vec3 color2;
-            varying vec2 vUv;
-            void main() {
-              vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
-              gl_FragColor = vec4(color, 1.0);
-            }
-          `,
+          uniform float time;
+          uniform vec3 color1;
+          uniform vec3 color2;
+          varying vec2 vUv;
+          void main() {
+            vec3 color = mix(color1, color2, sin(vUv.y * 10.0 + time) * 0.5 + 0.5);
+            gl_FragColor = vec4(color, 1.0);
+          }
+        `,
         });
         const vertexShader1 = `
-      varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-      `;
+    varying vec2 vUv;
+          void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+    `;
         const fragmentShader1 = `
-        uniform float time;
-            uniform float opacity; // Add opacity uniform
-            varying vec2 vUv;
-        
-            void main() {
-                // Dynamic water-like gradient effect
-                vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
-                float len = length(p); // Get the length of the vector (distance from center)
-                float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
-        
-                // Create a time-based oscillating value for smooth gradient transitions
-                float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
-        
-                // Color gradient based on the angle and distance from the center
-                vec3 color1 = vec3(1.0, 0.078, 0.576); 
-                vec3 color2 = vec3(0.878, 0.878, 0.878); 
-                vec3 color3 = vec3(1.0, 0.0, 0.8); 
-        
-                // Mix the colors based on wave and angle for a dynamic effect
-                vec3 color = mix(color1, color2, wave);
-                color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
-        
-                // Set the fragment color with opacity
-                gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
-            }
-      `;
+      uniform float time;
+          uniform float opacity; // Add opacity uniform
+          varying vec2 vUv;
+      
+          void main() {
+              // Dynamic water-like gradient effect
+              vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
+              float len = length(p); // Get the length of the vector (distance from center)
+              float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
+      
+              // Create a time-based oscillating value for smooth gradient transitions
+              float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
+      
+              // Color gradient based on the angle and distance from the center
+              vec3 color1 = vec3(1.0, 0.078, 0.576); 
+              vec3 color2 = vec3(0.878, 0.878, 0.878); 
+              vec3 color3 = vec3(1.0, 0.0, 0.8); 
+      
+              // Mix the colors based on wave and angle for a dynamic effect
+              vec3 color = mix(color1, color2, wave);
+              color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
+      
+              // Set the fragment color with opacity
+              gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
+          }
+    `;
         const pinkSliverHeartMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0.0 }, // Time uniform to animate the shader
@@ -202,51 +209,6 @@ onMounted(() => {
             transparent: false, // Enable transparency in the material
             depthWrite: true // Disable depth writing to ensure proper rendering
         });
-        const vertexShader = `
-      varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            }
-      `;
-        // Fragment shader
-        const fragmentShader = `
-        uniform float time;
-            uniform float opacity; // Add opacity uniform
-            varying vec2 vUv;
-        
-            void main() {
-                // Dynamic water-like gradient effect
-                vec2 p = vUv * 2.0 - vec2(1.0); // Normalize UV coordinates to [-1, 1]
-                float len = length(p); // Get the length of the vector (distance from center)
-                float angle = atan(p.y, p.x); // Calculate the angle in polar coordinates
-        
-                // Create a time-based oscillating value for smooth gradient transitions
-                float wave = sin(len * 10.0 - time * 3.0) * 1.0 + 0.5;
-        
-                // Color gradient based on the angle and distance from the center
-                vec3 color1 = vec3(1.0, 0.3, 0.5); // Pinkish
-                vec3 color2 = vec3(0.3, 0.6, 1.0); // Blueish
-                vec3 color3 = vec3(1.0, 0.0, 0.8); // Magenta
-        
-                // Mix the colors based on wave and angle for a dynamic effect
-                vec3 color = mix(color1, color2, wave);
-                color = mix(color, color3, sin(angle + time) * 0.5 + 0.5);
-        
-                // Set the fragment color with opacity
-                gl_FragColor = vec4(color, opacity); // Use the opacity uniform for transparency
-            }
-      `;
-        const bluePinkHeartMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0.0 }, // Time uniform to animate the shader
-                opacity: { value: 1 } // Opacity uniform (set to 0.6 for 60% transparency)
-            },
-            vertexShader,
-            fragmentShader: fragmentShader,
-            transparent: false, // Enable transparency in the material
-            depthWrite: true // Disable depth writing to ensure proper rendering
-        });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
         32, // Width segments
@@ -254,8 +216,8 @@ onMounted(() => {
         0, // phiStart
         Math.PI // phiLength (half of the sphere)
         );
-        const rightBody = new THREE.Mesh(bodyGeometry, transparentBodyMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, sliverMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, rightMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, leftMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -264,7 +226,7 @@ onMounted(() => {
         leftBody.rotation.y = Math.PI * 1.5;
         // Create a circular geometry to fill the flat side
         const circleGeometry = new THREE.CircleGeometry(1, 32); // Radius should match the half-sphere
-        const circle = new THREE.Mesh(circleGeometry, transparentCircleMaterial);
+        const circle = new THREE.Mesh(circleGeometry, bodyCircleMaterial);
         circle.scale.set(0.85, 0.85, 0.8);
         // Position the circle to cover the flat side
         circle.position.set(0, -0.2, 0); // Position should match the flat side of the half-sphere
@@ -285,12 +247,12 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, sliverMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, leftMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, transparentBodyMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, rightMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
@@ -310,10 +272,10 @@ onMounted(() => {
         bearGroup.add(halfHeadSphereGroup);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, sliverMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, leftMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, transparentBodyMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, rightMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -323,7 +285,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, sliverMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -334,7 +296,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, transparentSliverMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, rightMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -352,108 +314,69 @@ onMounted(() => {
         halfSnoutGroup.add(snoutCircle);
         // Add the snout group to the bear group
         bearGroup.add(halfSnoutGroup);
-        // Heart shape
-        const heartShape = new THREE.Shape();
-        heartShape.moveTo(0, 0);
-        heartShape.bezierCurveTo(0, -0.3, -0.6, -0.3, -0.6, 0);
-        heartShape.bezierCurveTo(-0.6, 0.3, 0, 0.6, 0, 1);
-        heartShape.bezierCurveTo(0, 0.6, 0.6, 0.3, 0.6, 0);
-        heartShape.bezierCurveTo(0.6, -0.3, 0, -0.3, 0, 0);
-        const extrudeHeartSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
-        const heartGeometry = new THREE.ExtrudeGeometry(heartShape, extrudeHeartSettings);
-        const heart = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
-        heart.scale.set(0.38, 0.38, 0.38);
-        heart.position.set(0.35, 0, 0);
-        heart.rotation.y = Math.PI;
-        heart.rotation.x = Math.PI;
-        bearGroup.add(heart);
-        const heart1 = new THREE.Mesh(heartGeometry, pinkSliverHeartMaterial);
-        heart1.scale.set(0.35, 0.35, 0.35);
-        heart1.position.set(0.3, 0, 0);
-        heart1.rotation.y = Math.PI;
-        heart1.rotation.x = Math.PI;
-        bearGroup.add(heart1);
-        const heart2 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart2.scale.set(0.22, 0.22, 0.22);
-        heart2.position.set(0.27, 0.4, 0);
-        heart2.rotation.y = Math.PI;
-        heart2.rotation.x = Math.PI;
-        bearGroup.add(heart2);
-        const heart3 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart3.scale.set(0.25, 0.25, 0.25);
-        heart3.position.set(0.23, -0.5, 0.3);
-        heart3.rotation.y = Math.PI;
-        heart3.rotation.x = Math.PI;
-        bearGroup.add(heart3);
-        const heart4 = new THREE.Mesh(heartGeometry, sliverMaterial);
-        heart4.scale.set(0.3, 0.3, 0.3);
-        heart4.position.set(0.23, 0.2, -0.4);
-        heart4.rotation.y = Math.PI;
-        heart4.rotation.x = Math.PI;
-        bearGroup.add(heart4);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, sliverMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, leftMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, transparentSliverMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, rightMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, sliverMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, leftMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, transparentSliverMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, rightMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, sliverMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, transparentSliverMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, rightMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
         // Create rounded buttocks
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-        const leftButtock = new THREE.Mesh(buttockGeometry, sliverMaterial);
+        const leftButtock = new THREE.Mesh(buttockGeometry, leftMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
-        const rightButtock = new THREE.Mesh(buttockGeometry, transparentSliverMaterial);
+        const rightButtock = new THREE.Mesh(buttockGeometry, rightMaterial);
         rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, sliverMaterial);
+        const tail = new THREE.Mesh(tailGeometry, leftMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
         const loader = new FontLoader();
         loader.load('https://threejs.org/examples/fonts/helvetiker_bold.typeface.json', function (font) {
-            const xEyeGeometry = new TextGeometry('X', {
+            const xEyeGeometry = new TextGeometry('$', {
                 font: font,
-                size: 0.18, // Size of the X
-                depth: 0.05,
+                size: 0.2, // Size of the X
+                depth: 0.1,
             });
-            const xEye = new THREE.Mesh(xEyeGeometry, pinkSliverHeartMaterial);
+            const xEye = new THREE.Mesh(xEyeGeometry, eyeMaterial);
             xEye.position.set(-0.3, .99, 0.53); // Position on the head
             xEye.rotation.x = THREE.MathUtils.degToRad(-5);
             xEye.rotation.y = THREE.MathUtils.degToRad(-15);
             bearGroup.add(xEye);
             // Create the O eye
-            const oEyeGeometry = new TextGeometry('+', {
+            const oEyeGeometry = new TextGeometry('$', {
                 font: font,
-                size: 0.25, // Size of the O
+                size: 0.2, // Size of the O
                 depth: 0.1, // Thickness of the O
             });
-            const oEye = new THREE.Mesh(oEyeGeometry, pinkSliverHeartMaterial);
+            const oEye = new THREE.Mesh(oEyeGeometry, eyeMaterial);
             oEye.position.set(0.14, .99, 0.53); // Position on the head
             oEye.rotation.y = THREE.MathUtils.degToRad(12);
             oEye.rotation.x = THREE.MathUtils.degToRad(-5);
@@ -466,37 +389,54 @@ onMounted(() => {
             const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White for the body
             const beakMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500 }); // Orange for the beak and legs
             const hatMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Black for the top hat
-            const bowtieMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red for the bowtie
+            const tieMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // Red for the tie
             const caneMaterial = new THREE.MeshStandardMaterial({ color: 0x8b4513 }); // Brown for the cane
+            const pantsMaterial = new THREE.MeshStandardMaterial({ color: 0x0000ff }); // Blue for the pants
+            const glassesMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 }); // Black for the glasses
             // Head
             const headGeometry = new THREE.SphereGeometry(0.5, 32, 32);
             const head = new THREE.Mesh(headGeometry, bodyMaterial);
-            head.position.set(0, 1.5, 0);
+            head.position.set(0, 1.7, 0);
             duckGroup.add(head);
             // Beak
-            const beakShape = new THREE.Shape();
-            beakShape.moveTo(0, 0);
-            beakShape.quadraticCurveTo(0.25, 0.15, 0.5, 0); // Rounded edges
-            beakShape.lineTo(0.5, -0.15);
-            beakShape.quadraticCurveTo(0.25, -0.3, 0, -0.15);
-            beakShape.closePath();
-            const beakGeometry = new THREE.ExtrudeGeometry(beakShape, { depth: 0.2, bevelEnabled: false });
+            const beakGeometry = new THREE.CylinderGeometry(0.15, 0.1, 0.3, 32, 1, true);
+            const beakCapGeometry = new THREE.SphereGeometry(0.15, 32, 16, 0, Math.PI);
             const beak = new THREE.Mesh(beakGeometry, beakMaterial);
+            const beakCap = new THREE.Mesh(beakCapGeometry, beakMaterial);
+            beak.position.set(0, 1.6, 0.45);
             beak.rotation.x = Math.PI / 2;
-            beak.position.set(0, 1.3, 0.5);
+            beakCap.position.set(0, 1.6, 0.6);
             duckGroup.add(beak);
+            duckGroup.add(beakCap);
+            // Glasses
+            const frameGeometry = new THREE.TorusGeometry(0.15, 0.015, 16, 100);
+            const leftFrame = new THREE.Mesh(frameGeometry, glassesMaterial);
+            leftFrame.position.set(-0.25, 1.8, 0.5);
+            const rightFrame = new THREE.Mesh(frameGeometry, glassesMaterial);
+            rightFrame.position.set(0.25, 1.8, 0.5);
+            const bridgeGeometry = new THREE.CylinderGeometry(0.01, 0.01, 0.3, 16);
+            const bridge = new THREE.Mesh(bridgeGeometry, glassesMaterial);
+            bridge.position.set(0, 1.85, 0.5);
+            bridge.rotation.z = Math.PI / 2;
+            duckGroup.add(leftFrame, rightFrame, bridge);
             // Body
-            const bodyGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+            const bodyGeometry = new THREE.SphereGeometry(0.6, 32, 32);
             const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-            body.position.set(0, 0.6, 0);
+            body.position.set(0, 0.7, 0);
             duckGroup.add(body);
+            // Pants
+            const pantsGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI); // Half-sphere for pants
+            const pants = new THREE.Mesh(pantsGeometry, pantsMaterial);
+            pants.position.set(0, 0.6, 0);
+            pants.rotation.x = Math.PI / 2;
+            duckGroup.add(pants);
             // Legs
             const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
             const leftLeg = new THREE.Mesh(legGeometry, beakMaterial);
-            leftLeg.position.set(-0.3, -0.4, 0);
+            leftLeg.position.set(-0.3, -0.1, 0);
             duckGroup.add(leftLeg);
             const rightLeg = new THREE.Mesh(legGeometry, beakMaterial);
-            rightLeg.position.set(0.3, -0.4, 0);
+            rightLeg.position.set(0.3, -0.1, 0);
             duckGroup.add(rightLeg);
             // Feet
             const footShape = new THREE.Shape();
@@ -508,13 +448,25 @@ onMounted(() => {
             footShape.closePath();
             const footGeometry = new THREE.ExtrudeGeometry(footShape, { depth: 0.1, bevelEnabled: false });
             const leftFoot = new THREE.Mesh(footGeometry, beakMaterial);
-            leftFoot.position.set(-0.3, -0.7, 0.1);
+            leftFoot.position.set(-0.3, -0.3, 0.1);
             leftFoot.rotation.x = Math.PI / 2;
             duckGroup.add(leftFoot);
             const rightFoot = new THREE.Mesh(footGeometry, beakMaterial);
-            rightFoot.position.set(0.3, -0.7, 0.1);
+            rightFoot.position.set(0.3, -0.3, 0.1);
             rightFoot.rotation.x = Math.PI / 2;
             duckGroup.add(rightFoot);
+            // Tie
+            const tieShape = new THREE.Shape();
+            tieShape.moveTo(0, 0);
+            tieShape.lineTo(-0.15, -0.3);
+            tieShape.lineTo(0, -0.5);
+            tieShape.lineTo(0.15, -0.3);
+            tieShape.closePath();
+            const tieGeometry = new THREE.ExtrudeGeometry(tieShape, { depth: 0.05, bevelEnabled: true, bevelSize: 0.01 });
+            const tie = new THREE.Mesh(tieGeometry, tieMaterial);
+            tie.position.set(0, 1.3, 0.45);
+            tie.rotation.x = Math.PI / 8;
+            duckGroup.add(tie);
             // Top Hat
             const hatBaseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32);
             const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
@@ -524,23 +476,99 @@ onMounted(() => {
             const hatTop = new THREE.Mesh(hatTopGeometry, hatMaterial);
             hatTop.position.set(0, 2.4, 0);
             duckGroup.add(hatTop);
-            // Bowtie
-            const bowtieGeometry = new THREE.TorusGeometry(0.2, 0.05, 16, 100);
-            const bowtie = new THREE.Mesh(bowtieGeometry, bowtieMaterial);
-            bowtie.position.set(0, 1, 0.5);
-            duckGroup.add(bowtie);
             // Cane
-            const caneGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 32);
+            const caneGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1.5, 16);
             const cane = new THREE.Mesh(caneGeometry, caneMaterial);
-            cane.position.set(0.5, 0, 0);
+            cane.position.set(0.85, 0.5, 0);
             cane.rotation.z = Math.PI / 8;
             duckGroup.add(cane);
             return duckGroup;
         }
         const richDonaldDuck = createRichDonaldDuck();
-        richDonaldDuck.scale.set(0.2, 0.2, 0.2);
-        richDonaldDuck.position.set(1, 0.6, 0.3);
+        richDonaldDuck.scale.set(0.25, 0.25, 0.25);
+        richDonaldDuck.position.set(0.3, -0.3, 0);
         bearGroup.add(richDonaldDuck);
+        function createSmallDuck(pantsColor, hatColor) {
+            const duckGroup = new THREE.Group();
+            // Materials
+            const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White for the body
+            const beakMaterial = new THREE.MeshStandardMaterial({ color: 0xffa500 }); // Orange for the beak and legs
+            const pantsMaterial = new THREE.MeshStandardMaterial({ color: pantsColor }); // Custom color for the pants
+            const hatMaterial = new THREE.MeshStandardMaterial({ color: hatColor });
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const head = new THREE.Mesh(headGeometry, bodyMaterial);
+            head.position.set(0, 1.7, 0);
+            duckGroup.add(head);
+            // Beak
+            const beakGeometry = new THREE.CylinderGeometry(0.15, 0.1, 0.3, 32, 1, true);
+            const beakCapGeometry = new THREE.SphereGeometry(0.15, 32, 16, 0, Math.PI);
+            const beak = new THREE.Mesh(beakGeometry, beakMaterial);
+            const beakCap = new THREE.Mesh(beakCapGeometry, beakMaterial);
+            beak.position.set(0, 1.6, 0.45);
+            beak.rotation.x = Math.PI / 2;
+            beakCap.position.set(0, 1.6, 0.6);
+            duckGroup.add(beak);
+            duckGroup.add(beakCap);
+            // Body
+            const bodyGeometry = new THREE.SphereGeometry(0.6, 32, 32);
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.set(0, 0.7, 0);
+            duckGroup.add(body);
+            // Pants
+            const pantsGeometry = new THREE.SphereGeometry(0.6, 32, 32, 0, Math.PI); // Half-sphere for pants
+            const pants = new THREE.Mesh(pantsGeometry, pantsMaterial);
+            pants.position.set(0, 0.6, 0);
+            pants.rotation.x = Math.PI / 2;
+            duckGroup.add(pants);
+            // Legs
+            const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.5, 32);
+            const leftLeg = new THREE.Mesh(legGeometry, beakMaterial);
+            leftLeg.position.set(-0.3, -0.1, 0);
+            duckGroup.add(leftLeg);
+            const rightLeg = new THREE.Mesh(legGeometry, beakMaterial);
+            rightLeg.position.set(0.3, -0.1, 0);
+            duckGroup.add(rightLeg);
+            // Feet
+            const footShape = new THREE.Shape();
+            footShape.moveTo(0, 0);
+            footShape.lineTo(0.3, 0.1);
+            footShape.lineTo(0.15, -0.1);
+            footShape.lineTo(-0.15, -0.1);
+            footShape.lineTo(-0.3, 0.1);
+            footShape.closePath();
+            const footGeometry = new THREE.ExtrudeGeometry(footShape, { depth: 0.1, bevelEnabled: false });
+            const leftFoot = new THREE.Mesh(footGeometry, beakMaterial);
+            leftFoot.position.set(-0.3, -0.3, 0.1);
+            leftFoot.rotation.x = Math.PI / 2;
+            duckGroup.add(leftFoot);
+            const rightFoot = new THREE.Mesh(footGeometry, beakMaterial);
+            rightFoot.position.set(0.3, -0.3, 0.1);
+            rightFoot.rotation.x = Math.PI / 2;
+            duckGroup.add(rightFoot);
+            // Baseball Hat
+            const hatBaseGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.1, 32);
+            const hatBase = new THREE.Mesh(hatBaseGeometry, hatMaterial);
+            hatBase.position.set(0, 2.1, 0);
+            duckGroup.add(hatBase);
+            const hatTopGeometry = new THREE.CylinderGeometry(0.2, 0.2, 0.3, 32);
+            const hatTop = new THREE.Mesh(hatTopGeometry, hatMaterial);
+            hatTop.position.set(0, 2.4, 0);
+            duckGroup.add(hatTop);
+            return duckGroup;
+        }
+        const redDuck = createSmallDuck(0xff0000, 0xff0000); // Red pants and red hat
+        redDuck.scale.set(0.15, 0.15, 0.15);
+        redDuck.position.set(0.3, 0.6, 0.15);
+        bearGroup.add(redDuck);
+        const greenDuck = createSmallDuck(0x00ff00, 0x00ff00); // Green pants and green hat
+        greenDuck.scale.set(0.15, 0.15, 0.15);
+        greenDuck.position.set(0.2, -0.5, 0.4);
+        bearGroup.add(greenDuck);
+        const blueDuck = createSmallDuck(0x0000ff, 0x0000ff); // Blue pants and blue hat
+        blueDuck.scale.set(0.15, 0.15, 0.15);
+        blueDuck.position.set(0.5, -0.5, 0.35);
+        bearGroup.add(blueDuck);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
         scene.add(bearGroup);
@@ -554,7 +582,7 @@ onMounted(() => {
         let timeoutId = null; // To track the timeout when resuming the animation
         let currentRotationY = 0; // Current rotation for Y-axis
         let currentRotationX = 0; // Current rotation for X-axis
-        // let isRotatingRight = ref(false); // Is rotating to right
+        // let isRotatingody = ref(false); // Is rotating to right
         // let isRotatingLeft = ref(false);  // Is rotating to left
         let shouldFaceMouse = ref(false); // Should bear face the mouse?
         const storeCurrentRotation = () => {
@@ -633,7 +661,6 @@ onMounted(() => {
         window.addEventListener('mousemove', onMouseStopForFacing);
         function animate() {
             requestAnimationFrame(animate);
-            bluePinkHeartMaterial.uniforms.time.value += 0.05;
             pinkSliverHeartMaterial.uniforms.time.value += 0.05;
             if (isRotatingRight.value)
                 bearGroup.rotation.y += 0.05;
@@ -747,19 +774,12 @@ function __VLS_template() {
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ref: ("threeCanvas"), ...{ class: ((__VLS_ctx.background ? 'no-bg' : 'three-canvas')) }, });
     // @ts-ignore navigation for `const threeCanvas = ref()`
     __VLS_ctx.threeCanvas;
-    __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
-    // @ts-ignore
-    [BearFace,];
-    // @ts-ignore
-    const __VLS_0 = __VLS_asFunctionalComponent(BearFace, new BearFace({ ...{ class: ("bear-background") }, color: (('#FF69B4')), }));
-    const __VLS_1 = __VLS_0({ ...{ class: ("bear-background") }, color: (('#FF69B4')), }, ...__VLS_functionalComponentArgsRest(__VLS_0));
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("pixel-controls") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onUpButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn up border-gold") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({ ...{ class: ("side-buttons") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onLeftButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn left border-silver") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onRightButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn right border-silver") }, });
     __VLS_elementAsFunction(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({ ...{ onMousedown: (__VLS_ctx.onDownButtonDown) }, ...{ onMouseup: (__VLS_ctx.stopRotation) }, ...{ class: ("pixel-btn down border-gold") }, });
-    __VLS_styleScopedClasses['bear-background'];
     __VLS_styleScopedClasses['pixel-controls'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['up'];
@@ -790,7 +810,6 @@ function __VLS_template() {
 const __VLS_self = (await import('vue')).defineComponent({
     setup() {
         return {
-            BearFace: BearFace,
             threeCanvas: threeCanvas,
             onLeftButtonDown: onLeftButtonDown,
             onRightButtonDown: onRightButtonDown,
