@@ -161,7 +161,7 @@ function createVisibleCashPool() {
     return cash;
   }
 
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 60; i++) {
     const cashBill = createFloatingCash();
     poolGroup.add(cashBill);
 
@@ -184,24 +184,24 @@ function createVisibleCashPool() {
   }
 
   function jumpDuck(duck: THREE.Group) {
-  gsap.to(duck.position, {
-    y: "+=0.2", // **Lower jump height (before: 0.5, now: 0.2)**
-    duration: 0.3,
-    ease: "power2.out",
-    yoyo: true,
-    repeat: 1,
-    onComplete: () => {
-      gsap.to(duck.position, { y: "-=0.1", duration: 0.2, ease: "bounce.out" }); // **Less bounce downward**
-    },
-  });
-}
+    gsap.to(duck.position, {
+      y: .5,  // Jump up
+      duration: 0.5,
+      ease: "power2.out",
+      yoyo: true,
+      repeat: 1,
+      onComplete: () => {
+        gsap.to(duck.position, { y: -0.2, duration: 0.3, ease: "bounce.out" });
+      },
+    });
+  }
 
-// Reduce jump frequency for smoother animation
-setInterval(() => {
-  jumpDuck(redDuck);
-  setTimeout(() => jumpDuck(greenDuck), 400);
-  setTimeout(() => jumpDuck(blueDuck), 800);
-}, 3000); // Jump every 3 seconds
+  setInterval(() => {
+    jumpDuck(redDuck);
+    setTimeout(() => jumpDuck(greenDuck), 500);
+    setTimeout(() => jumpDuck(blueDuck), 1000);
+    setTimeout(() => jumpDuck(richDonaldDuck), 1500);
+  }, 3000);
 
 
   return poolGroup;
@@ -209,7 +209,7 @@ setInterval(() => {
 
 // Usage: Attach inside the Bear’s Body
 const cashPool = createVisibleCashPool();
-cashPool.position.set(0.4, -0.3, 0); // Adjusted position to fit inside the bear
+cashPool.position.set(0.4, -0.4, 0); // Adjusted position to fit inside the bear
 bearGroup.add(cashPool);
 
         
@@ -819,17 +819,18 @@ function createSmallDuck(pantsColor: any, hatColor: any) {
 
 const redDuck = createSmallDuck(0xff0000, 0xff0000); // Red pants and red hat
 redDuck.scale.set(0.12, 0.12, 0.12);
-redDuck.position.set(0.4, -0.2, 0.15);
+redDuck.position.set(0.3, -0.2, 0.15);  // Before: -0.5, now: -0.2
 bearGroup.add(redDuck);
+
 
 const greenDuck = createSmallDuck(0x00ff00, 0x00ff00); // Green pants and green hat
 greenDuck.scale.set(0.12, 0.12, 0.12);
-greenDuck.position.set(0.15, -0.2, 0.19);
+greenDuck.position.set(0.2, -0.15, 0.4);  // Before: -0.5, now: -0.15
 bearGroup.add(greenDuck);
 
 const blueDuck = createSmallDuck(0x0000ff, 0x0000ff); // Blue pants and blue hat
 blueDuck.scale.set(0.12, 0.12, 0.12);
-blueDuck.position.set(0.6, -0.2, 0.18);
+blueDuck.position.set(0.5, -0.15, 0.35);  // Before: -0.5, now: -0.15
 bearGroup.add(blueDuck);
 
     // Add bear group to the scene
@@ -1088,23 +1089,6 @@ bearGroup.add(blueDuck);
     width: 120px;
   }
 
-  .pixel-btn {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    font-family: "Comic Sans MS", "Arial", sans-serif; /* Pop-art font */
-    font-weight: bold;
-    color: #000000; /* Black text for contrast */
-    background: #ff69b4; /* Hot pink background */
-    border: 3px solid #ffffff; /* White border (default) */
-    border-radius: 5px; /* Slightly rounded corners */
-    box-shadow: 4px 4px 0px #000000; /* Strong shadow for a comic effect */
-    cursor: pointer;
-    text-align: center;
-    line-height: 50px; /* Center the arrow vertically */
-    transition: transform 0.2s ease, border-color 0.3s ease;
-  }
-
   /* Change border colors based on preference */
   .pixel-btn.border-silver {
     border-color: #c0c0c0; /* Silver */
@@ -1114,13 +1098,32 @@ bearGroup.add(blueDuck);
     border-color: #ffd700; /* Gold */
   }
 
-  .pixel-btn:hover {
-    transform: translateY(-2px); /* Hover effect */
-  }
+  .pixel-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    font-family: "Comic Sans MS", "Arial", sans-serif; /* Pop-art font */
+    font-weight: bold;
+    color: #000000; /* Black text for contrast */
+    background: #32CD32; /* Money Green */
+    border: 3px solid #FFD700; /* Gold Border */
+    border-radius: 5px; /* Slightly rounded corners */
+    box-shadow: 4px 4px 0px #006400; /* Dark Green shadow for comic effect */
+    cursor: pointer;
+    text-align: center;
+    line-height: 50px; /* Center the arrow vertically */
+    transition: transform 0.2s ease, border-color 0.3s ease;
+}
 
-  .pixel-btn:active {
+/* Hover Effect */
+.pixel-btn:hover {
+    background: #3EB489; /* Softer green to highlight hover */
+    border-color: #FFA500; /* Orange-Gold for contrast */
+}
+
+/* Pressed (Active) Effect */
+.pixel-btn:active {
     transform: translateY(2px); /* Pressed effect */
-    box-shadow: 2px 2px 0px #000000; /* Reduced shadow */
-  }
-
+    box-shadow: 2px 2px 0px #004d00; /* Darker green */
+}
 </style>

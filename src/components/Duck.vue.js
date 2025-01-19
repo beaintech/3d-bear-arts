@@ -2,6 +2,7 @@ import { ref, onMounted, watch } from 'vue';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import gsap from 'gsap';
 const { defineProps, defineSlots, defineEmits, defineExpose, defineModel, defineOptions, withDefaults, } = await import('vue');
 const props = defineProps({
     background: {
@@ -64,18 +65,109 @@ onMounted(() => {
         updateReflection(); // Start reflection updates
         const mirrorLoader = new THREE.CubeTextureLoader();
         const environmentMap = mirrorLoader.load([
-            '/3d-bear-arts/assets/threeDucks.jpg',
-            '/3d-bear-arts/assets/threeDucks.jpg',
-            '/3d-bear-arts/assets/threeDucks.jpg',
-            '/3d-bear-arts/assets/threeDucks.jpg',
-            '/3d-bear-arts/assets/threeDucks.jpg',
-            '/3d-bear-arts/assets/threeDucks.jpg'
+            '/3d-bear-arts/assets/cash.jpg',
+            '/3d-bear-arts/assets/cash.jpg',
+            '/3d-bear-arts/assets/cash.jpg',
+            '/3d-bear-arts/assets/cash.jpg',
+            '/3d-bear-arts/assets/cash.jpg',
+            '/3d-bear-arts/assets/cash.jpg'
         ]);
         scene.environment = environmentMap;
+        function createVisibleCashPool() {
+            const poolGroup = new THREE.Group();
+            const textureLoader = new THREE.TextureLoader();
+            // Load cash texture
+            const cashTexture = textureLoader.load('/3d-bear-arts/assets/dollar.jpg');
+            // 🏊 Smaller Pool Base (Shallower and Raised)
+            const poolBaseGeometry = new THREE.BoxGeometry(0.7, 0.15, 0.35); // Smaller and not deep
+            const poolBaseMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x32CD32, // Light Green (Brighter to stand out)
+                transparent: true,
+                opacity: 0.85, // More transparent for visibility
+                transmission: 0.9, // Light passes through
+                roughness: 0.15, // Some reflectivity for a wet look
+                metalness: 0.3, // Slight metallic shine for a cash-like texture
+                emissive: 0x2E8B57, // Greenish glow effect
+                emissiveIntensity: 0.3,
+            });
+            const poolBase = new THREE.Mesh(poolBaseGeometry, poolBaseMaterial);
+            poolBase.position.set(0, -0.25, 0); // Higher up so it’s not hidden
+            poolGroup.add(poolBase);
+            // 🏊 Pool Walls (Smaller)
+            const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 }); // Darker green for contrast
+            const wallThickness = 0.03;
+            const walls = [
+                new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.2, wallThickness), wallMaterial), // Front
+                new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.2, wallThickness), wallMaterial), // Back
+                new THREE.Mesh(new THREE.BoxGeometry(wallThickness, 0.2, 0.5), wallMaterial), // Left
+                new THREE.Mesh(new THREE.BoxGeometry(wallThickness, 0.2, 0.5), wallMaterial), // Right
+            ];
+            walls[0].position.set(0, -0.15, 0.25); // Front
+            walls[1].position.set(0, -0.15, -0.25); // Back
+            walls[2].position.set(-0.35, -0.15, 0); // Left
+            walls[3].position.set(0.35, -0.15, 0); // Right
+            walls.forEach(wall => poolGroup.add(wall));
+            // 💵 Floating Cash Bills (Smaller and More Visible)
+            function createFloatingCash() {
+                const cashGeometry = new THREE.PlaneGeometry(0.25, 0.15);
+                const cashMaterial = new THREE.MeshBasicMaterial({
+                    map: cashTexture,
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                });
+                const cash = new THREE.Mesh(cashGeometry, cashMaterial);
+                cash.position.set(Math.random() * 0.6 - 0.3, Math.random() * 0.1 - 0.07, // Slightly raised for visibility
+                Math.random() * 0.4 - 0.2);
+                cash.rotation.y = Math.random() * Math.PI;
+                return cash;
+            }
+            for (let i = 0; i < 40; i++) {
+                const cashBill = createFloatingCash();
+                poolGroup.add(cashBill);
+                // 🌀 Floating animation for cash bills
+                gsap.to(cashBill.position, {
+                    y: '+=0.02',
+                    duration: 1.5,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                });
+                gsap.to(cashBill.rotation, {
+                    z: Math.PI * (Math.random() - 0.5),
+                    duration: 2,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                });
+            }
+            function jumpDuck(duck) {
+                gsap.to(duck.position, {
+                    y: "+=0.2", // **Lower jump height (before: 0.5, now: 0.2)**
+                    duration: 0.3,
+                    ease: "power2.out",
+                    yoyo: true,
+                    repeat: 1,
+                    onComplete: () => {
+                        gsap.to(duck.position, { y: "-=0.1", duration: 0.2, ease: "bounce.out" }); // **Less bounce downward**
+                    },
+                });
+            }
+            // Reduce jump frequency for smoother animation
+            setInterval(() => {
+                jumpDuck(redDuck);
+                setTimeout(() => jumpDuck(greenDuck), 400);
+                setTimeout(() => jumpDuck(blueDuck), 800);
+            }, 3000); // Jump every 3 seconds
+            return poolGroup;
+        }
+        // Usage: Attach inside the Bear’s Body
+        const cashPool = createVisibleCashPool();
+        cashPool.position.set(0.4, -0.3, 0); // Adjusted position to fit inside the bear
+        bearGroup.add(cashPool);
         const leftMaterialSkin = textureLoader.load('/3d-bear-arts/assets/threeDucks.jpg');
         leftMaterialSkin.wrapS = leftMaterialSkin.wrapT = THREE.RepeatWrapping;
         leftMaterialSkin.repeat.set(1, 1);
-        const rightMaterialSkin = textureLoader.load('/3d-bear-arts/assets/richduck.jpg');
+        const rightMaterialSkin = textureLoader.load('/3d-bear-arts/assets/cash.jpg');
         const leftMaterial = new THREE.MeshPhysicalMaterial({
             color: 0xFFFFFF,
             map: leftMaterialSkin, // Apply the abstract or halftone texture
@@ -209,6 +301,28 @@ onMounted(() => {
             transparent: false, // Enable transparency in the material
             depthWrite: true // Disable depth writing to ensure proper rendering
         });
+        const glossyMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'white', // Base color remains white
+            metalness: 0.9, // High metalness for reflective effect
+            roughness: 0.1, // Low roughness for sharp reflections
+            clearcoat: 1.0, // Strong clearcoat for extra gloss
+            clearcoatRoughness: 0.2, // A bit rough for natural variation
+            transparent: true, // Enable transparency
+            opacity: 0.75, // Adjust transparency (lower = more transparent)
+            transmission: 0.4, // Light passes through the material (0 = opaque, 1 = full transparency)
+            ior: 1.2, // Index of refraction (for a slightly glassy effect)
+        });
+        const glossyRightMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'white', // Base color remains white
+            metalness: 0.9, // High metalness for reflective effect
+            roughness: 0.1, // Low roughness for sharp reflections
+            clearcoat: 1.0, // Strong clearcoat for extra gloss
+            clearcoatRoughness: 0.2, // A bit rough for natural variation
+            transparent: true, // Enable transparency
+            opacity: 0.5, // Adjust transparency (lower = more transparent)
+            transmission: 0.8, // Light passes through the material (0 = opaque, 1 = full transparency)
+            ior: 1.2, // Index of refraction (for a slightly glassy effect)
+        });
         // Create a half-sphere geometry
         const bodyGeometry = new THREE.SphereGeometry(1, // Radius
         32, // Width segments
@@ -217,7 +331,7 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         const rightBody = new THREE.Mesh(bodyGeometry, rightMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, leftMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, glossyMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -235,7 +349,7 @@ onMounted(() => {
         const halfSphereGroup = new THREE.Group();
         halfSphereGroup.add(rightBody);
         halfSphereGroup.add(leftBody);
-        halfSphereGroup.add(circle);
+        // halfSphereGroup.add(circle);
         // Add the combined geometry to the scene or parent group
         bearGroup.add(halfSphereGroup);
         // Bear head
@@ -247,17 +361,17 @@ onMounted(() => {
         Math.PI // phiLength (half of the sphere)
         );
         // Create the left half of the head
-        const leftHead = new THREE.Mesh(headGeometry, leftMaterial);
+        const leftHead = new THREE.Mesh(headGeometry, glossyMaterial);
         leftHead.scale.set(1, 0.95, 0.95);
         leftHead.position.set(0, 1, 0);
         leftHead.rotation.y = Math.PI * 1.5; // Rotate the left head to match orientation
         // Create the right half of the head
-        const rightHead = new THREE.Mesh(headGeometry, rightMaterial);
+        const rightHead = new THREE.Mesh(headGeometry, glossyRightMaterial);
         rightHead.scale.set(1, 0.95, 0.95);
         rightHead.position.set(0, 1, 0);
         rightHead.rotation.y = Math.PI / 2; // Rotate the right head to match orientation
         // Create a circular geometry to fill the flat side
-        const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radius matches the half-sphere
+        const headCircleGeometry = new THREE.CircleGeometry(0.6, 32); // Radileftsus matches the half-sphere
         const headCircle = new THREE.Mesh(headCircleGeometry, transparentCircleMaterial);
         // Position the circle to cover the flat side
         headCircle.position.set(0, 1, 0); // Set to the same height as the heads
@@ -272,10 +386,10 @@ onMounted(() => {
         bearGroup.add(halfHeadSphereGroup);
         // Bear ears
         const earGeometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const leftEar = new THREE.Mesh(earGeometry, leftMaterial);
+        const leftEar = new THREE.Mesh(earGeometry, glossyMaterial);
         leftEar.position.set(-0.45, 1.35, -0.1);
         bearGroup.add(leftEar);
-        const rightEar = new THREE.Mesh(earGeometry, rightMaterial);
+        const rightEar = new THREE.Mesh(earGeometry, glossyRightMaterial);
         rightEar.position.set(0.45, 1.35, -0.1);
         bearGroup.add(rightEar);
         // Geometry for the left half of the snout
@@ -285,7 +399,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at 90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const leftSnout = new THREE.Mesh(leftSnoutGeometry, leftMaterial);
+        const leftSnout = new THREE.Mesh(leftSnoutGeometry, glossyMaterial);
         leftSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         leftSnout.position.set(0, 0.84, 0.5); // Position the left half
         leftSnout.rotation.y = Math.PI; // Rotate to align correctly
@@ -296,7 +410,7 @@ onMounted(() => {
         Math.PI / 2, // phiStart: Start at -90 degrees to create a half-sphere
         Math.PI // phiLength: Cover 180 degrees to create the half shape
         );
-        const rightSnout = new THREE.Mesh(rightSnoutGeometry, rightMaterial);
+        const rightSnout = new THREE.Mesh(rightSnoutGeometry, glossyRightMaterial);
         rightSnout.scale.set(1.1, 0.6, 0.8); // Make it wider at the front
         rightSnout.position.set(0, 0.84, 0.5); // Position the right half
         rightSnout.rotation.y = 0; // Align correctly without additional rotation
@@ -316,7 +430,7 @@ onMounted(() => {
         bearGroup.add(halfSnoutGroup);
         // Bear arms
         const armGeometry = new THREE.SphereGeometry(0.35, 32, 32);
-        const leftArm = new THREE.Mesh(armGeometry, leftMaterial);
+        const leftArm = new THREE.Mesh(armGeometry, glossyMaterial);
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
@@ -326,27 +440,27 @@ onMounted(() => {
         bearGroup.add(rightArm);
         // Bear legs
         const legGeometry = new THREE.CylinderGeometry(0.2, 0.22, 0.6, 32);
-        const leftLeg = new THREE.Mesh(legGeometry, leftMaterial);
+        const leftLeg = new THREE.Mesh(legGeometry, glossyMaterial);
         leftLeg.position.set(-0.4, -1.05, 0);
         bearGroup.add(leftLeg);
-        const rightLeg = new THREE.Mesh(legGeometry, rightMaterial);
+        const rightLeg = new THREE.Mesh(legGeometry, glossyRightMaterial);
         rightLeg.position.set(0.4, -1.05, 0);
         bearGroup.add(rightLeg);
         // Define the boot front geometry
         const bootFrontGeometry = new THREE.SphereGeometry(0.3, 32, 32); // Front half-round for the boot
         // Left boot front
-        const leftBootFront = new THREE.Mesh(bootFrontGeometry, leftMaterial);
+        const leftBootFront = new THREE.Mesh(bootFrontGeometry, glossyMaterial);
         leftBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         leftBootFront.position.set(-0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(leftBootFront);
         // Right boot front
-        const rightBootFront = new THREE.Mesh(bootFrontGeometry, rightMaterial);
+        const rightBootFront = new THREE.Mesh(bootFrontGeometry, glossyRightMaterial);
         rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
         rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
         bearGroup.add(rightBootFront);
         // Create rounded buttocks
         const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-        const leftButtock = new THREE.Mesh(buttockGeometry, leftMaterial);
+        const leftButtock = new THREE.Mesh(buttockGeometry, glossyRightMaterial);
         leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
         bearGroup.add(leftButtock);
         const rightButtock = new THREE.Mesh(buttockGeometry, rightMaterial);
@@ -354,7 +468,7 @@ onMounted(() => {
         bearGroup.add(rightButtock);
         // Bear tail
         const tailGeometry = new THREE.SphereGeometry(0.18, 32, 32);
-        const tail = new THREE.Mesh(tailGeometry, leftMaterial);
+        const tail = new THREE.Mesh(tailGeometry, glossyMaterial);
         tail.position.set(0, -0.35, -0.8);
         bearGroup.add(tail);
         // Load font and create 3D text
@@ -485,8 +599,8 @@ onMounted(() => {
             return duckGroup;
         }
         const richDonaldDuck = createRichDonaldDuck();
-        richDonaldDuck.scale.set(0.25, 0.25, 0.25);
-        richDonaldDuck.position.set(0.3, -0.3, 0);
+        richDonaldDuck.scale.set(0.22, 0.22, 0.22);
+        richDonaldDuck.position.set(0.3, -0.2, 0);
         bearGroup.add(richDonaldDuck);
         function createSmallDuck(pantsColor, hatColor) {
             const duckGroup = new THREE.Group();
@@ -558,16 +672,16 @@ onMounted(() => {
             return duckGroup;
         }
         const redDuck = createSmallDuck(0xff0000, 0xff0000); // Red pants and red hat
-        redDuck.scale.set(0.15, 0.15, 0.15);
-        redDuck.position.set(0.3, 0.6, 0.15);
+        redDuck.scale.set(0.12, 0.12, 0.12);
+        redDuck.position.set(0.4, -0.2, 0.15);
         bearGroup.add(redDuck);
         const greenDuck = createSmallDuck(0x00ff00, 0x00ff00); // Green pants and green hat
-        greenDuck.scale.set(0.15, 0.15, 0.15);
-        greenDuck.position.set(0.2, -0.5, 0.4);
+        greenDuck.scale.set(0.12, 0.12, 0.12);
+        greenDuck.position.set(0.15, -0.2, 0.19);
         bearGroup.add(greenDuck);
         const blueDuck = createSmallDuck(0x0000ff, 0x0000ff); // Blue pants and blue hat
-        blueDuck.scale.set(0.15, 0.15, 0.15);
-        blueDuck.position.set(0.5, -0.5, 0.35);
+        blueDuck.scale.set(0.12, 0.12, 0.12);
+        blueDuck.position.set(0.6, -0.2, 0.18);
         bearGroup.add(blueDuck);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);
@@ -764,6 +878,7 @@ function __VLS_template() {
     };
     let __VLS_directives;
     let __VLS_styleScopedClasses;
+    __VLS_styleScopedClasses['three-canvas'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
     __VLS_styleScopedClasses['pixel-btn'];
