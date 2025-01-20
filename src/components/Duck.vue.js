@@ -65,93 +65,144 @@ onMounted(() => {
         updateReflection(); // Start reflection updates
         const mirrorLoader = new THREE.CubeTextureLoader();
         const environmentMap = mirrorLoader.load([
-            '/3d-bear-arts/assets/cash.jpg',
-            '/3d-bear-arts/assets/cash.jpg',
-            '/3d-bear-arts/assets/cash.jpg',
-            '/3d-bear-arts/assets/cash.jpg',
-            '/3d-bear-arts/assets/cash.jpg',
-            '/3d-bear-arts/assets/cash.jpg'
+            '/3d-bear-arts/assets/bg2.jpg',
+            '/3d-bear-arts/assets/bg2.jpg',
+            '/3d-bear-arts/assets/bg2.jpg',
+            '/3d-bear-arts/assets/bg2.jpg',
+            '/3d-bear-arts/assets/bg2.jpg',
+            '/3d-bear-arts/assets/bg2.jpg',
         ]);
         scene.environment = environmentMap;
         function createVisibleCashPool() {
             const poolGroup = new THREE.Group();
             const textureLoader = new THREE.TextureLoader();
-            // Load cash texture
+            // Load cash textures
             const cashTexture = textureLoader.load('/3d-bear-arts/assets/dollar.jpg');
-            // 🏊 Smaller Pool Base (Shallower and Raised)
-            const poolBaseGeometry = new THREE.BoxGeometry(0.7, 0.15, 0.35); // Smaller and not deep
+            // 🏊 Enlarged Pool Base (Still Fits Inside the Bear)
+            const poolBaseGeometry = new THREE.CircleGeometry(0.78, 64); // **Slightly bigger**
             const poolBaseMaterial = new THREE.MeshPhysicalMaterial({
-                color: 0x32CD32, // Light Green (Brighter to stand out)
-                transparent: true,
-                opacity: 0.85, // More transparent for visibility
-                transmission: 0.9, // Light passes through
-                roughness: 0.15, // Some reflectivity for a wet look
-                metalness: 0.3, // Slight metallic shine for a cash-like texture
-                emissive: 0x2E8B57, // Greenish glow effect
+                color: 0x32CD32, // Cash Green
+                transparent: false,
+                metalness: 0.3,
+                roughness: 0.15,
+                emissive: 0x2E8B57,
                 emissiveIntensity: 0.3,
             });
             const poolBase = new THREE.Mesh(poolBaseGeometry, poolBaseMaterial);
-            poolBase.position.set(0, -0.25, 0); // Higher up so it’s not hidden
+            poolBase.position.set(0, -0.35, 0);
+            poolBase.rotation.x = -Math.PI / 2; // **Ensure it's horizontal**
             poolGroup.add(poolBase);
-            // 🏊 Pool Walls (Smaller)
-            const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x228B22 }); // Darker green for contrast
-            const wallThickness = 0.03;
-            const walls = [
-                new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.2, wallThickness), wallMaterial), // Front
-                new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.2, wallThickness), wallMaterial), // Back
-                new THREE.Mesh(new THREE.BoxGeometry(wallThickness, 0.2, 0.5), wallMaterial), // Left
-                new THREE.Mesh(new THREE.BoxGeometry(wallThickness, 0.2, 0.5), wallMaterial), // Right
-            ];
-            walls[0].position.set(0, -0.15, 0.25); // Front
-            walls[1].position.set(0, -0.15, -0.25); // Back
-            walls[2].position.set(-0.35, -0.15, 0); // Left
-            walls[3].position.set(0.35, -0.15, 0); // Right
-            walls.forEach(wall => poolGroup.add(wall));
-            // 💵 Floating Cash Bills (Smaller and More Visible)
             function createFloatingCash() {
-                const cashGeometry = new THREE.PlaneGeometry(0.25, 0.15);
-                const cashMaterial = new THREE.MeshBasicMaterial({
-                    map: cashTexture,
-                    transparent: true,
-                    side: THREE.DoubleSide,
+                const cashGeometry = new THREE.PlaneGeometry(0.3, 0.15); // **Bigger bills**
+                const cashMaterial = new THREE.MeshPhysicalMaterial({
+                    map: cashTexture, // Apply dollar texture
+                    transparent: false, // **Fix: Ensure cash is fully visible**
+                    opacity: 1.0, // **Fix: No fading effect**
+                    side: THREE.DoubleSide, // **Ensure both sides are visible**
+                    metalness: 0.5, // Add slight shine
+                    roughness: 0.3, // Slightly reflective for pop
+                    emissive: new THREE.Color(0.1, 0.6, 0.1), // **Subtle green glow**
+                    emissiveIntensity: 0.2, // **Boost visibility**
+                    depthWrite: true, // **Fix: Prevents objects behind from making it invisible**
                 });
                 const cash = new THREE.Mesh(cashGeometry, cashMaterial);
-                cash.position.set(Math.random() * 0.6 - 0.3, Math.random() * 0.1 - 0.07, // Slightly raised for visibility
-                Math.random() * 0.4 - 0.2);
+                cash.position.set((Math.random() - 0.5) * 1.2, // Keep within the pool width
+                Math.random() * 0.05 - 0.3, // **Lowered cash bills (-0.08 instead of -0.05)**
+                (Math.random() - 0.5) * 1.0);
                 cash.rotation.y = Math.random() * Math.PI;
                 return cash;
             }
-            for (let i = 0; i < 60; i++) {
+            for (let i = 0; i < 100; i++) { // **Increase cash amount**
                 const cashBill = createFloatingCash();
                 poolGroup.add(cashBill);
-                // 🌀 Floating animation for cash bills
+                // 🌀 Floating Animation (Simulating Cash Flow)
                 gsap.to(cashBill.position, {
                     y: '+=0.02',
-                    duration: 1.5,
+                    duration: 1.5 + Math.random() * 0.5, // **Randomize speed slightly**
                     repeat: -1,
                     yoyo: true,
                     ease: "sine.inOut",
                 });
                 gsap.to(cashBill.rotation, {
                     z: Math.PI * (Math.random() - 0.5),
-                    duration: 2,
+                    duration: 2 + Math.random(), // **Vary rotation speed**
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                });
+                gsap.to(cashBill.position, {
+                    x: `+=${(Math.random() - 0.5) * 0.1}`, // **Slow horizontal drift**
+                    z: `+=${(Math.random() - 0.5) * 0.1}`,
+                    duration: 3,
                     repeat: -1,
                     yoyo: true,
                     ease: "sine.inOut",
                 });
             }
+            const waterSurfaceMaterial = new THREE.ShaderMaterial({
+                transparent: true,
+                depthWrite: true, // **Ensures reflections work properly**
+                depthTest: true,
+                uniforms: {
+                    u_time: { value: 0.0 },
+                    u_waveFrequency: { value: 7.0 }, // **More defined ripples**
+                    u_waveAmplitude: { value: 0.05 }, // **Lower amplitude for a metal effect**
+                    u_waveSpeed: { value: 0.2 },
+                    u_metalStrength: { value: 1.5 }, // **Stronger metallic reflections**
+                },
+                vertexShader: `
+        precision mediump float;
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            vec3 pos = position;
+            pos.z += sin(pos.x * 7.0 + u_time * 0.5) * 0.03; // **Adds subtle wave distortion**
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        }
+    `,
+                fragmentShader: `
+        precision mediump float;
+        uniform float u_time;
+        uniform float u_waveFrequency;
+        uniform float u_waveAmplitude;
+        uniform float u_waveSpeed;
+        uniform float u_metalStrength;
+        varying vec2 vUv;
+
+        void main() {
+            float waveX = sin(vUv.x * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+            float waveY = cos(vUv.y * u_waveFrequency + u_time * u_waveSpeed) * u_waveAmplitude;
+
+            // 🎨 **Dark Cash-Green Colors for Metallic Effect**
+            vec3 baseColor = vec3(0.04, 0.3, 0.12); // **Deep cash green**
+            vec3 highlightColor = vec3(0.2, 0.8, 0.3);  // **Brighter shimmering green**
+            
+            // 🏦 **Simulate Metallic Reflection**
+            float metalEffect = pow(abs(waveX * waveY * u_metalStrength), 2.5); 
+            vec3 metallicColor = mix(baseColor, highlightColor, metalEffect);
+
+            gl_FragColor = vec4(metallicColor, 0.95); // **More solid water surface with metallic reflection**
+        }
+    `,
+            });
+            const waterSurface = new THREE.Mesh(poolBaseGeometry, waterSurfaceMaterial);
+            waterSurface.position.set(0, -0.34, 0); // **Slightly raised**
+            waterSurface.rotation.x = -Math.PI / 2;
+            poolGroup.add(waterSurface);
+            // 🦆 **Duck Jumping Adjusted for Larger Pool**
             function jumpDuck(duck) {
                 gsap.to(duck.position, {
-                    y: .5, // Jump up
-                    duration: 0.5,
+                    y: 0.2, // **Raise ducks a bit higher in the larger pool**
+                    duration: 0.2,
                     ease: "power2.out",
                     yoyo: true,
-                    repeat: 1,
+                    repeat: 2,
                     onComplete: () => {
-                        gsap.to(duck.position, { y: -0.2, duration: 0.3, ease: "bounce.out" });
+                        gsap.to(duck.position, { y: -0.1, duration: 0.2, ease: "bounce.out" });
                     },
                 });
             }
+            // **Ducks Jump Every 3 Seconds**
             setInterval(() => {
                 jumpDuck(redDuck);
                 setTimeout(() => jumpDuck(greenDuck), 500);
@@ -160,9 +211,9 @@ onMounted(() => {
             }, 3000);
             return poolGroup;
         }
-        // Usage: Attach inside the Bear’s Body
+        // 🏊 Attach Pool to Bear Body
         const cashPool = createVisibleCashPool();
-        cashPool.position.set(0.4, -0.4, 0); // Adjusted position to fit inside the bear
+        cashPool.position.set(0, 0, 0); // **Ensure it's inside the bear**
         bearGroup.add(cashPool);
         const leftMaterialSkin = textureLoader.load('/3d-bear-arts/assets/threeDucks.jpg');
         leftMaterialSkin.wrapS = leftMaterialSkin.wrapT = THREE.RepeatWrapping;
@@ -214,6 +265,17 @@ onMounted(() => {
             clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
             envMap: environmentMap, // Link the environment map
             reflectivity: 1, // Maximum reflectivity
+        });
+        const metalMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'white', // Silver color
+            metalness: 1.0, // Full metalness for maximum reflectivity
+            roughness: 0.05, // Low roughness for sharper reflections
+            clearcoat: 1.0, // High clearcoat for added shine
+            clearcoatRoughness: 0.05, // Low clearcoat roughness for more shine
+            envMap: environmentMap, // Link the environment map
+            reflectivity: 1, // Maximum reflectivity
+            transparent: true,
+            opacity: 0.2
         });
         const circleMap = textureLoader.load('/3d-bear-arts/assets/threeDucks.jpg');
         const circleMap2 = textureLoader.load('/3d-bear-arts/assets/richduck.jpg');
@@ -319,7 +381,29 @@ onMounted(() => {
             clearcoat: 1.0, // Strong clearcoat for extra gloss
             clearcoatRoughness: 0.2, // A bit rough for natural variation
             transparent: true, // Enable transparency
-            opacity: 0.5, // Adjust transparency (lower = more transparent)
+            opacity: 0.35, // Adjust transparency (lower = more transparent)
+            transmission: 0.8, // Light passes through the material (0 = opaque, 1 = full transparency)
+            ior: 1.2, // Index of refraction (for a slightly glassy effect)
+        });
+        const glossyRightBodyMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'white', // Base color remains white
+            metalness: 0.9, // High metalness for reflective effect
+            roughness: 0.1, // Low roughness for sharp reflections
+            clearcoat: 1.0, // Strong clearcoat for extra gloss
+            clearcoatRoughness: 0.2, // A bit rough for natural variation
+            transparent: true, // Enable transparency
+            opacity: 0.2, // Adjust transparency (lower = more transparent)
+            transmission: 0.8, // Light passes through the material (0 = opaque, 1 = full transparency)
+            ior: 1.2, // Index of refraction (for a slightly glassy effect)
+        });
+        const glossyLeftBodyMaterial = new THREE.MeshPhysicalMaterial({
+            color: 'white', // Base color remains white
+            metalness: 0.9, // High metalness for reflective effect
+            roughness: 0.1, // Low roughness for sharp reflections
+            clearcoat: 1.0, // Strong clearcoat for extra gloss
+            clearcoatRoughness: 0.2, // A bit rough for natural variation
+            transparent: true, // Enable transparency
+            opacity: 0.4, // Adjust transparency (lower = more transparent)
             transmission: 0.8, // Light passes through the material (0 = opaque, 1 = full transparency)
             ior: 1.2, // Index of refraction (for a slightly glassy effect)
         });
@@ -330,8 +414,8 @@ onMounted(() => {
         0, // phiStart
         Math.PI // phiLength (half of the sphere)
         );
-        const rightBody = new THREE.Mesh(bodyGeometry, rightMaterial);
-        const leftBody = new THREE.Mesh(bodyGeometry, glossyMaterial);
+        const rightBody = new THREE.Mesh(bodyGeometry, glossyRightBodyMaterial);
+        const leftBody = new THREE.Mesh(bodyGeometry, glossyLeftBodyMaterial);
         rightBody.scale.set(0.85, 0.85, 0.8);
         leftBody.scale.set(0.85, 0.85, 0.8);
         rightBody.position.y = -0.2;
@@ -434,7 +518,7 @@ onMounted(() => {
         leftArm.scale.set(0.75, 1.25, 0.65);
         leftArm.position.set(-0.7, -0.15, 0.2);
         bearGroup.add(leftArm);
-        const rightArm = new THREE.Mesh(armGeometry, rightMaterial);
+        const rightArm = new THREE.Mesh(armGeometry, glossyRightMaterial);
         rightArm.scale.set(0.75, 1.25, 0.65);
         rightArm.position.set(0.7, -0.15, 0.2);
         bearGroup.add(rightArm);
@@ -600,7 +684,7 @@ onMounted(() => {
         }
         const richDonaldDuck = createRichDonaldDuck();
         richDonaldDuck.scale.set(0.22, 0.22, 0.22);
-        richDonaldDuck.position.set(0.3, -0.2, 0);
+        richDonaldDuck.position.set(0, -0.3, 0);
         bearGroup.add(richDonaldDuck);
         function createSmallDuck(pantsColor, hatColor) {
             const duckGroup = new THREE.Group();
@@ -673,15 +757,15 @@ onMounted(() => {
         }
         const redDuck = createSmallDuck(0xff0000, 0xff0000); // Red pants and red hat
         redDuck.scale.set(0.12, 0.12, 0.12);
-        redDuck.position.set(0.3, -0.2, 0.15); // Before: -0.5, now: -0.2
+        redDuck.position.set(0.2, -0.2, 0.15); // Before: -0.5, now: -0.2
         bearGroup.add(redDuck);
-        const greenDuck = createSmallDuck(0x00ff00, 0x00ff00); // Green pants and green hat
+        const greenDuck = createSmallDuck(0x008000, 0x008000); // Green pants and green hat
         greenDuck.scale.set(0.12, 0.12, 0.12);
-        greenDuck.position.set(0.2, -0.15, 0.4); // Before: -0.5, now: -0.15
+        greenDuck.position.set(-0.3, -0.15, 0.4); // Before: -0.5, now: -0.15
         bearGroup.add(greenDuck);
         const blueDuck = createSmallDuck(0x0000ff, 0x0000ff); // Blue pants and blue hat
         blueDuck.scale.set(0.12, 0.12, 0.12);
-        blueDuck.position.set(0.5, -0.15, 0.35); // Before: -0.5, now: -0.15
+        blueDuck.position.set(0.35, -0.15, 0.35); // Before: -0.5, now: -0.15
         bearGroup.add(blueDuck);
         // Add bear group to the scene
         bearGroup.scale.set(1.4, 1.4, 1.4);

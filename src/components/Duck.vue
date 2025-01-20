@@ -432,7 +432,7 @@ bearGroup.add(cashPool);
     clearcoat: 1.0,  // Strong clearcoat for extra gloss
     clearcoatRoughness: 0.2, // A bit rough for natural variation
     transparent: true, // Enable transparency
-    opacity: 0.7, // Adjust transparency (lower = more transparent)
+    opacity: 0.9, // Adjust transparency (lower = more transparent)
     transmission: 0.4, // Light passes through the material (0 = opaque, 1 = full transparency)
     ior: 1.2, // Index of refraction (for a slightly glassy effect)
 });
@@ -444,7 +444,7 @@ const glossyRightMaterial = new THREE.MeshPhysicalMaterial({
     clearcoat: 1.0,  // Strong clearcoat for extra gloss
     clearcoatRoughness: 0.2, // A bit rough for natural variation
     transparent: true, // Enable transparency
-    opacity: 0.35, // Adjust transparency (lower = more transparent)
+    opacity: 0.5, // Adjust transparency (lower = more transparent)
     transmission: 0.8, // Light passes through the material (0 = opaque, 1 = full transparency)
     ior: 1.2, // Index of refraction (for a slightly glassy effect)
 });
@@ -612,7 +612,7 @@ const glossyLeftBodyMaterial = new THREE.MeshPhysicalMaterial({
       leftArm.position.set(-0.7, -0.15, 0.2);
       bearGroup.add(leftArm);
   
-      const rightArm = new THREE.Mesh(armGeometry, glossyRightMaterial);
+      const rightArm = new THREE.Mesh(armGeometry, glossyMaterial);
       rightArm.scale.set(0.75, 1.25, 0.65);
       rightArm.position.set(0.7, -0.15, 0.2);
       bearGroup.add(rightArm);
@@ -623,7 +623,7 @@ const glossyLeftBodyMaterial = new THREE.MeshPhysicalMaterial({
       leftLeg.position.set(-0.4, -1.05, 0);
       bearGroup.add(leftLeg);
   
-      const rightLeg = new THREE.Mesh(legGeometry, glossyRightMaterial);
+      const rightLeg = new THREE.Mesh(legGeometry, glossyMaterial);
       rightLeg.position.set(0.4, -1.05, 0);
       bearGroup.add(rightLeg);
   
@@ -637,18 +637,18 @@ const glossyLeftBodyMaterial = new THREE.MeshPhysicalMaterial({
       bearGroup.add(leftBootFront);
     
       // Right boot front
-      const rightBootFront = new THREE.Mesh(bootFrontGeometry, glossyRightMaterial);
+      const rightBootFront = new THREE.Mesh(bootFrontGeometry, glossyMaterial);
       rightBootFront.scale.set(1, 0.72, 1.5); // Reduced size, flattened and extended front
       rightBootFront.position.set(0.4, -1.45, 0.17); // Position in front of the base
       bearGroup.add(rightBootFront);
   
       // Create rounded buttocks
       const buttockGeometry = new THREE.SphereGeometry(0.44, 32, 32); // Geometry for the buttocks
-      const leftButtock = new THREE.Mesh(buttockGeometry, glossyRightMaterial);
+      const leftButtock = new THREE.Mesh(buttockGeometry, glossyMaterial);
       leftButtock.position.set(-0.15, -.45, -0.4); // Position the left buttock behind the body
       bearGroup.add(leftButtock);
   
-      const rightButtock = new THREE.Mesh(buttockGeometry, rightMaterial);
+      const rightButtock = new THREE.Mesh(buttockGeometry, glossyMaterial);
       rightButtock.position.set(0.15, -.45, -0.4); // Position the right buttock behind the body
       bearGroup.add(rightButtock);
   
